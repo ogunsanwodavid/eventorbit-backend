@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import validateSchema from "../../middleware/validateSchema";
+import validateSchema from "./validateSchema";
 
 export const registerUserValidationSchema = validateSchema(
   z

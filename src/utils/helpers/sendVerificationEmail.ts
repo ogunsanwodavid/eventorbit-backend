@@ -23,7 +23,8 @@ export const sendVerificationEmail = async (to: string, token: string) => {
       clientSecret: googleAPIClientSecret,
       refreshToken: googleAPIRefreshToken,
       accessToken:
-        "ya29.a0AW4XtxhrqR3L4lAnWDMrYcwt_gDsSwrhr0XB84jUPfHa4vBeDuflAcmBz-FKiW_z3VSq9SQzgSSLrQQnn8JHF3Zq3M7SDuf4l9IqwtmTfoIBmClutYqksBOgjjxbPWwXXx1wBaJjm0zCxTcj2Ak5pDoZvv_WVb1pMkG7grIFaCgYKAcwSARISFQHGX2Miua1cJQAgyqX-0W17qc0e1Q0175",
+        "ya29.a0AW4Xtxi-qF-Uac-xOwy76vjAhc7rieeOvqUUwfdZxKODym3-10cVD0IXhHgQUkcOa-JnVnUd-gKTrFZA7owRaPips-TOk1nAxqOAe15VCquKWP3ZKnKcKwOnAGHdWCDEtjypDHaYnzz4DKyCQGV1_wduzsV9cBbXj9iOP0SjaCgYKAQ8SARISFQHGX2Mi6SlC-4NHRn_T-_VrN2p9QQ0175",
+      expires: 99999999999999,
     },
   });
 

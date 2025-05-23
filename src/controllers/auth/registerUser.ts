@@ -4,14 +4,9 @@ import bcrypt from "bcrypt";
 
 import jwt from "jsonwebtoken";
 
-import dotenv from "dotenv";
-
 import { IUser, User } from "../../mongoose/models/user";
 
 import { sendVerificationEmail } from "../../utils/helpers/sendVerificationEmail";
-
-//Configure the env variables
-dotenv.config();
 
 //JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
@@ -22,6 +17,7 @@ const registerUser = async (
   res: Response
 ): Promise<any> => {
   try {
+    //Destructure the values in the request body
     const { userType, firstName, lastName, organizationName, email, password } =
       req.body;
 
@@ -29,19 +25,6 @@ const registerUser = async (
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "Email already in use." });
-
-    // Validate based on userType :: if the user is an individual or organization
-    if (userType === "individual" && (!firstName || !lastName)) {
-      return res.status(400).json({
-        message: "First name and last name are required for individuals.",
-      });
-    }
-
-    if (userType === "organization" && !organizationName) {
-      return res
-        .status(400)
-        .json({ message: "Organization name is required for organizations." });
-    }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);

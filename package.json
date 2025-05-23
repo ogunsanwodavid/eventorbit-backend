@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ogunsanwodavid/eventorbit-backend#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.15.0",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
