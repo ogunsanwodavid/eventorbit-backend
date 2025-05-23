@@ -6,11 +6,17 @@ import connectDB from "./database/mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
+//Import routes
+import authRoutes from "./routes/authRoutes";
+
 const app = express();
 
+//Port which app runs or 5000
 const PORT = process.env.PORT || 5000;
 
+//Use app and routes
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 //Mongo URI
 const mongoURI = process.env.MONGO_URI;
