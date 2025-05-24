@@ -1,14 +1,20 @@
 import { Request, Response, Router } from "express";
 
-import registerUserHandler from "../controllers/auth/registerUser";
-import verifyEmailHandler from "../controllers/auth/verifyEmail";
+import AuthRequest from "../types/auth/AuthRequest";
 
-import { registerUserValidationSchema } from "../utils/schema-validations/registerUserSchemaValidation";
-import { verifyEmailValidationSchema } from "../utils/schema-validations/verifyEmailSchemaValidation";
+import registerUserHandler from "../controllers/auth/registerUser";
+import verifyUserEmailHandler from "../controllers/auth/verifyUserEmail";
+import signInUserHandler from "../controllers/auth/signInUser";
+
+import registerUserValidationSchema from "../utils/schema-validations/registerUserSchemaValidation";
+import verifyEmailValidationSchema from "../utils/schema-validations/verifyEmailSchemaValidation";
+import signInSchemaValidation from "../utils/schema-validations/signInSchemaValidation";
 
 import createSession from "../middleware/auth/createSession";
 import checkAuthStatusHandler from "../middleware/auth/checkAuthStatus";
+import getSafeUser from "../utils/helpers/getSafeUser";
 
+//Define router
 const router = Router();
 
 //Register new user
@@ -18,7 +24,7 @@ router.post("/signup", registerUserValidationSchema, registerUserHandler);
 router.get(
   "/verify-email",
   verifyEmailValidationSchema,
-  verifyEmailHandler,
+  verifyUserEmailHandler,
   createSession(),
   (req: Request, res: Response) => {
     res.status(200).json({ message: "Email verified successfully." });
@@ -26,14 +32,30 @@ router.get(
 );
 
 //User authentication status
-router.get("/status", checkAuthStatusHandler, (req: Request, res: Response) => {
-  const user = (req as any).user;
+router.get(
+  "/status",
+  checkAuthStatusHandler,
+  (req: AuthRequest, res: Response) => {
+    const safeUser = getSafeUser(req.user!);
 
-  if (!user) {
-    return res.status(401).json({ authenticated: false, user: null });
+    res.status(200).json({ authenticated: true, user: safeUser });
   }
+);
 
-  res.status(200).json({ authenticated: true, user });
-});
+//Sign user in with their email and password
+router.post(
+  "/signin",
+  signInSchemaValidation,
+  signInUserHandler,
+  createSession(),
+  (req: AuthRequest, res: Response) => {
+    const safeUser = getSafeUser(req.user!);
+
+    res.status(200).json({
+      message: "Sign in successful",
+      user: safeUser,
+    });
+  }
+);
 
 export default router;

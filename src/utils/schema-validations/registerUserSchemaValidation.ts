@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import validateSchema from "./validateSchema";
 
-export const registerUserValidationSchema = validateSchema(
+const registerUserValidationSchema = validateSchema(
   z
     .object({
       body: z.object({
@@ -62,3 +62,5 @@ export const registerUserValidationSchema = validateSchema(
       }
     })
 );
+
+export default registerUserValidationSchema;

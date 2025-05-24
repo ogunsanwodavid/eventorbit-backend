@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import jwt from "jsonwebtoken";
 
@@ -7,12 +7,7 @@ import { User } from "../../mongoose/models/user";
 //JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
 
-//Verify email payload
-interface VerifyEmailPayload {
-  token: string;
-}
-
-const verifyEmail = async (
+const verifyUserEmail = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -37,13 +32,13 @@ const verifyEmail = async (
     user.isVerified = true;
     await user.save();
 
-    //Parse user's id and email as req for the next function
-    (req as any).user = { userId: user.id, email: user.email };
+    //Parse user's object as req for the next function
+    (req as any).user = user;
+
     next();
   } catch (err) {
-    //next(err);
     return res.status(400).json({ message: "Verification failed" });
   }
 };
 
-export default verifyEmail;
+export default verifyUserEmail;

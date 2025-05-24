@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import validateSchema from "./validateSchema";
 
-export const verifyEmailValidationSchema = validateSchema(
+const verifyEmailValidationSchema = validateSchema(
   z.object({
     query: z.object({
       token: z
@@ -11,3 +11,5 @@ export const verifyEmailValidationSchema = validateSchema(
     }),
   })
 );
+
+export default verifyEmailValidationSchema;
