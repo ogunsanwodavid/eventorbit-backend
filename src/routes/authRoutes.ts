@@ -1,7 +1,5 @@
 import { Request, Response, Router } from "express";
 
-import AuthRequest from "../types/auth/AuthRequest";
-
 import registerUserHandler from "../controllers/auth/registerUser";
 import verifyUserEmailHandler from "../controllers/auth/verifyUserEmail";
 import signInUserHandler from "../controllers/auth/signInUser";
@@ -12,7 +10,7 @@ import signInSchemaValidation from "../utils/schema-validations/signInSchemaVali
 
 import createSession from "../middleware/auth/createSession";
 import checkAuthStatusHandler from "../middleware/auth/checkAuthStatus";
-import getSafeUser from "../utils/helpers/getSafeUser";
+import deleteSession from "../middleware/auth/deleteSession";
 
 //Define router
 const router = Router();
@@ -32,15 +30,9 @@ router.get(
 );
 
 //User authentication status
-router.get(
-  "/status",
-  checkAuthStatusHandler,
-  (req: AuthRequest, res: Response) => {
-    const safeUser = getSafeUser(req.user!);
-
-    res.status(200).json({ authenticated: true, user: safeUser });
-  }
-);
+router.get("/status", checkAuthStatusHandler, (req: Request, res: Response) => {
+  res.status(200).json({ authenticated: true });
+});
 
 //Sign user in with their email and password
 router.post(
@@ -48,14 +40,14 @@ router.post(
   signInSchemaValidation,
   signInUserHandler,
   createSession(),
-  (req: AuthRequest, res: Response) => {
-    const safeUser = getSafeUser(req.user!);
-
+  (req: Request, res: Response) => {
     res.status(200).json({
       message: "Sign in successful",
-      user: safeUser,
     });
   }
 );
+
+//Sign out user
+router.get("/signout", deleteSession);
 
 export default router;

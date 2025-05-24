@@ -47,17 +47,8 @@ const signInUser = async (
     if (!isMatch)
       return res.status(400).json({ message: "Invalid email or password." });
 
-    //Generate JWT token
-    const token = jwt.sign({ userId: user._id, email: user.email }, jwtSecret, {
-      expiresIn: "7d",
-    });
-
-    //Parse user's object as req for the next function
-    (req as any).user = user;
-
     next();
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Something went wrong." });
   }
 };
