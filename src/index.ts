@@ -8,12 +8,16 @@ import session from "express-session";
 
 import MongoStore from "connect-mongo";
 
+import passport from "passport";
+
+import "./config/passport"; //Import passport config file
+
 //Configure environmental variables
 import dotenv from "dotenv";
 dotenv.config();
 
 //Import routes
-import authRoutes from "./routes/authRoutes";
+import authRoutes from "./routes/auth";
 
 const app = express();
 
@@ -26,11 +30,13 @@ const mongoURI = process.env.MONGO_URI!;
 //Express session secret
 const expressSessionSecret = process.env.SESSION_SECRET!;
 
-//Set up app, packages , middleware and routes
+//Set up express app
 app.use(express.json());
 
+//Set up cookie parser
 app.use(cookieParser());
 
+//Set up express session
 app.use(
   session({
     secret: expressSessionSecret!,
@@ -47,6 +53,10 @@ app.use(
     }),
   })
 );
+
+//Initialize Passport and session
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
 

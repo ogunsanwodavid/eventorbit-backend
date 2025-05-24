@@ -7,7 +7,7 @@ const checkAuthStatus = async (
 ): Promise<any> => {
   // Check if user is already stored in session
   if (!req.session.user) {
-    return res.status(401).json({ message: "Not unauthorized" });
+    return res.status(401).json({ message: "Not authorized" });
   }
 
   next();

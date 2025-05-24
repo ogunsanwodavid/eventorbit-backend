@@ -1,5 +1,9 @@
 import { Request, Response, Router } from "express";
 
+import passport from "passport";
+
+import { IUser } from "../mongoose/models/user";
+
 import registerUserHandler from "../controllers/auth/registerUser";
 import verifyUserEmailHandler from "../controllers/auth/verifyUserEmail";
 import signInUserHandler from "../controllers/auth/signInUser";
@@ -49,5 +53,28 @@ router.post(
 
 //Sign out user
 router.get("/signout", deleteSession);
+
+//Route to start OAuth with Google
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+//Google OAuth callback route
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login", // Redirect here if auth fails
+    successRedirect: "/", // Redirect here after successful login
+  }),
+  (req: Request, res: Response) => {
+    // Google user profile is attached to req.user by Passport
+    // Save to session
+    req.session.user = req.user as IUser;
+
+    // Redirect to dashboard or home
+    res.redirect("/");
+  }
+);
 
 export default router;
