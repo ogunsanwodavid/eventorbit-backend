@@ -21,10 +21,14 @@ const registerUser = async (
     const { userType, firstName, lastName, organizationName, email, password } =
       req.body;
 
-    // Check for existing user
+    //Check for existing user
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "Email already in use." });
+
+    //Make sure password is required
+    if (!password)
+      return res.status(400).json({ message: "Password is required" });
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);

@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 //Configure env variables
 dotenv.config();
 
+//Google sign in strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -21,18 +22,18 @@ passport.use(
         //User's email
         const email = profile.emails?.[0]?.value;
 
-        console.log(profile);
-
         //Find user from database
         let user = await User.findOne({ email });
 
-        //Create user if not in databse
+        //Create user if not in database
         if (!user) {
           user = await User.create({
             email,
             firstName: profile.name?.givenName || "",
             lastName: profile.name?.familyName || "",
             userType: "individual",
+            isVerified: true,
+            isGoogle: true,
           });
         }
 

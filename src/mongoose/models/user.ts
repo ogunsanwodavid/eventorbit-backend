@@ -8,8 +8,10 @@ export interface IUser extends Document {
   lastName?: string;
   organizationName?: string;
   email: string;
-  password: string;
+  password?: string;
   isVerified: boolean;
+  isGoogle?: boolean;
+  policies?: [termsAndConditions: string, privacyPolicy: string];
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -35,11 +37,21 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     password: {
       type: String,
-      required: false,
+      required: function () {
+        return !this.isGoogle; // Only require password if not a Google user
+      },
     },
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    isGoogle: {
+      type: Boolean,
+      default: false,
+    },
+    policies: {
+      termsAndConditions: { type: String },
+      privacyPolicy: { type: String },
     },
   },
   { timestamps: true }

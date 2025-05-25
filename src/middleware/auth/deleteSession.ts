@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
-const deleteSession = (req: Request, res: Response): void => {
+const deleteSession = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   // Remove user from session
   if (req.session.user) {
     delete req.session.user;
@@ -18,7 +22,7 @@ const deleteSession = (req: Request, res: Response): void => {
       path: "/",
     });
 
-    res.status(200).json({ message: "Session ended successfully" });
+    next();
   });
 };
 

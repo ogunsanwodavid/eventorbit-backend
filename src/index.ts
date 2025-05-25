@@ -18,6 +18,7 @@ dotenv.config();
 
 //Import routes
 import authRoutes from "./routes/auth";
+import accountRoutes from "./routes/account";
 
 const app = express();
 
@@ -58,7 +59,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Utilize routes
 app.use("/api/auth", authRoutes);
+app.use("/api/account", accountRoutes);
 
 //Connect to MongoDB and start server
 const start = async () => {

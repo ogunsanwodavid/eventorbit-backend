@@ -8,9 +8,9 @@ import registerUserHandler from "../controllers/auth/registerUser";
 import verifyUserEmailHandler from "../controllers/auth/verifyUserEmail";
 import signInUserHandler from "../controllers/auth/signInUser";
 
-import registerUserValidationSchema from "../utils/schema-validations/registerUserSchemaValidation";
-import verifyEmailValidationSchema from "../utils/schema-validations/verifyEmailSchemaValidation";
-import signInSchemaValidation from "../utils/schema-validations/signInSchemaValidation";
+import registerUserValidationSchema from "../utils/schema-validations/auth/registerUserSchemaValidation";
+import verifyEmailValidationSchema from "../utils/schema-validations/auth/verifyEmailSchemaValidation";
+import signInSchemaValidation from "../utils/schema-validations/auth/signInSchemaValidation";
 
 import createSession from "../middleware/auth/createSession";
 import checkAuthStatusHandler from "../middleware/auth/checkAuthStatus";
@@ -52,7 +52,9 @@ router.post(
 );
 
 //Sign out user
-router.get("/signout", deleteSession);
+router.get("/signout", deleteSession, (req: Request, res: Response) => {
+  res.status(200).json({ message: "Session ended successfully" });
+});
 
 //Route to start OAuth with Google
 router.get(

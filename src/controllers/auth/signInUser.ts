@@ -42,6 +42,10 @@ const signInUser = async (
       });
     }
 
+    //Return error if password not found
+    if (!user.password)
+      return res.status(404).json({ message: "Password is required" });
+
     //Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)

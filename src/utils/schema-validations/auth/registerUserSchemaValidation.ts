@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import validateSchema from "./validateSchema";
+import validateSchema from "../validateSchema";
 
 const registerUserValidationSchema = validateSchema(
   z

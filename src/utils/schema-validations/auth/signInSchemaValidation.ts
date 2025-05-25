@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import validateSchema from "./validateSchema";
+import validateSchema from "../validateSchema";
 
 const signInSchemaValidation = validateSchema(
   z.object({
@@ -8,9 +8,7 @@ const signInSchemaValidation = validateSchema(
       email: z
         .string({ required_error: "Email is required" })
         .email("Invalid email address"),
-      password: z
-        .string({ required_error: "Password is required" })
-        .min(6, "Password must be at least 6 characters"),
+      password: z.string({ required_error: "Password is required" }),
     }),
   })
 );
