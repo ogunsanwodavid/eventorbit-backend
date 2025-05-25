@@ -15,6 +15,8 @@ import signInSchemaValidation from "../utils/schema-validations/auth/signInSchem
 import createSession from "../middleware/auth/createSession";
 import checkAuthStatusHandler from "../middleware/auth/checkAuthStatus";
 import deleteSession from "../middleware/auth/deleteSession";
+import setUserLocationHandler from "../middleware/auth/setUserLocation";
+import setUserLocationFromGoogleStateHandler from "../middleware/auth/setUserLocationFromGoogleState";
 
 //Define router
 const router = Router();
@@ -43,6 +45,7 @@ router.post(
   "/signin",
   signInSchemaValidation,
   signInUserHandler,
+  setUserLocationHandler,
   createSession(),
   (req: Request, res: Response) => {
     res.status(200).json({
@@ -59,7 +62,22 @@ router.get("/signout", deleteSession, (req: Request, res: Response) => {
 //Route to start OAuth with Google
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  /*   passport.authenticate("google", { scope: ["profile", "email"] }) */
+  (req, res, next) => {
+    const { latitude, longitude } = req.query;
+    if (latitude && longitude) {
+      const state = encodeURIComponent(JSON.stringify({ latitude, longitude }));
+      return passport.authenticate("google", {
+        scope: ["profile", "email"],
+        state,
+      })(req, res, next);
+    }
+    passport.authenticate("google", { scope: ["profile", "email"] })(
+      req,
+      res,
+      next
+    );
+  }
 );
 
 //Google OAuth callback route
@@ -69,12 +87,10 @@ router.get(
     failureRedirect: "/login", // Redirect here if auth fails
     successRedirect: "/", // Redirect here after successful login
   }),
+  setUserLocationFromGoogleStateHandler,
+  createSession(),
   (req: Request, res: Response) => {
-    // Google user profile is attached to req.user by Passport
-    // Save to session
-    req.session.user = req.user as IUser;
-
-    // Redirect to dashboard or home
+    // Redirect to home
     res.redirect("/");
   }
 );

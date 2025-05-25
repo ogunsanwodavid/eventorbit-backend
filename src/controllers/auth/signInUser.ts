@@ -6,19 +6,27 @@ import jwt from "jsonwebtoken";
 
 import { User } from "../../mongoose/models/user";
 
-import { sendVerificationEmail } from "../../utils/helpers/sendVerificationEmail";
+import { sendVerificationEmail } from "../../utils/helpers/auth/sendVerificationEmail";
 
 // JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
 
+//Sign in user payload
+type SignInUserPayload = {
+  email: string;
+  password: string;
+  latitude?: number;
+  longitude?: number;
+};
+
 // Sign in user function
 const signInUser = async (
-  req: Request<{}, {}, { email: string; password: string }>,
+  req: Request<{}, {}, SignInUserPayload>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
   try {
-    //Destructure email and password
+    //Destructure email and password from request body
     const { email, password } = req.body;
 
     //Find user by email

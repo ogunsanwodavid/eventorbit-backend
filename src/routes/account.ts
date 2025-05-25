@@ -44,4 +44,7 @@ router.patch(
   }
 );
 
+//Update user's location
+//::Protected endpoint
+
 export default router;

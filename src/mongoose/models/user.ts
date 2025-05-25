@@ -11,7 +11,8 @@ export interface IUser extends Document {
   password?: string;
   isVerified: boolean;
   isGoogle?: boolean;
-  policies?: [termsAndConditions: string, privacyPolicy: string];
+  location?: string;
+  policies?: { termsAndConditions: string; privacyPolicy: string };
 }
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -48,6 +49,9 @@ const userSchema = new mongoose.Schema<IUser>(
     isGoogle: {
       type: Boolean,
       default: false,
+    },
+    location: {
+      type: String,
     },
     policies: {
       termsAndConditions: { type: String },

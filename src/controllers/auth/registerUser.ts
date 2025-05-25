@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 import { IUser, User } from "../../mongoose/models/user";
 
-import { sendVerificationEmail } from "../../utils/helpers/sendVerificationEmail";
+import { sendVerificationEmail } from "../../utils/helpers/auth/sendVerificationEmail";
 
 //JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
