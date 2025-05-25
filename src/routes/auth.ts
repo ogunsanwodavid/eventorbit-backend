@@ -53,7 +53,7 @@ router.post(
 
 //Sign out user
 router.get("/signout", deleteSession, (req: Request, res: Response) => {
-  res.status(200).json({ message: "Session ended successfully" });
+  res.status(200).json({ message: "Sign out successful" });
 });
 
 //Route to start OAuth with Google
