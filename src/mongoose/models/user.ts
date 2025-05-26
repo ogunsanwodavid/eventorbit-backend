@@ -11,6 +11,8 @@ export interface IUser extends Document {
   password?: string;
   isVerified: boolean;
   isGoogle?: boolean;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   location?: string;
   hasLocationBeenManuallyUpdatedByUser: boolean;
   policies?: { termsAndConditions: string; privacyPolicy: string };
@@ -51,6 +53,8 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
     location: {
       type: String,
     },

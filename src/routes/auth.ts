@@ -5,17 +5,22 @@ import passport from "passport";
 import registerUserHandler from "../controllers/auth/registerUser";
 import verifyUserEmailHandler from "../controllers/auth/verifyUserEmail";
 import signInUserHandler from "../controllers/auth/signInUser";
+import forgotPasswordHandler from "../controllers/auth/forgotPassword";
+import validateResetTokenHandler from "../controllers/auth/validateResetToken";
+import resetPasswordHandler from "../controllers/auth/resetPassword";
 
 import registerUserValidationSchema from "../utils/schema-validations/auth/registerUserSchemaValidation";
 import verifyEmailValidationSchema from "../utils/schema-validations/auth/verifyEmailSchemaValidation";
 import signInSchemaValidation from "../utils/schema-validations/auth/signInSchemaValidation";
+import forgotPasswordSchemaValidation from "../utils/schema-validations/auth/forgotPasswordSchemaValidation";
+import resetPasswordSchemaValidation from "../utils/schema-validations/auth/resetPasswordSchemaValidation";
 
 import createSession from "../middleware/auth/createSession";
-import checkAuthStatusHandler from "../middleware/auth/checkAuthStatus";
+import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 import deleteSession from "../middleware/auth/deleteSession";
 import setUserLocationHandler from "../middleware/auth/setUserLocation";
-import parseLocationGoogleStateHandler from "../middleware/auth/parseLocationGoogleState";
-import decodeLocationGoogleStateHandler from "../middleware/auth/decodeLocationGoogleState";
+import parseLocationGoogleState from "../middleware/auth/parseLocationGoogleState";
+import decodeLocationGoogleState from "../middleware/auth/decodeLocationGoogleState";
 
 //Define router
 const router = Router();
@@ -35,7 +40,7 @@ router.get(
 );
 
 //User authentication status
-router.get("/status", checkAuthStatusHandler, (req: Request, res: Response) => {
+router.get("/status", checkAuthStatus, (req: Request, res: Response) => {
   res.status(200).json({ authenticated: true });
 });
 
@@ -54,6 +59,25 @@ router.post(
   }
 );
 
+//User forgot password
+//::Send password reset email
+router.post(
+  "/forgot-password",
+  forgotPasswordSchemaValidation,
+  forgotPasswordHandler
+);
+
+//Validate reset token from reset email
+router.get("/validate-reset-token/:token", validateResetTokenHandler);
+
+//Reset password
+//::Reset token and user id in session is used to change password
+router.post(
+  "/reset-password",
+  resetPasswordSchemaValidation,
+  resetPasswordHandler
+);
+
 //Sign out user
 router.get("/signout", deleteSession, (req: Request, res: Response) => {
   res.status(200).json({ message: "Sign out successful" });
@@ -61,7 +85,7 @@ router.get("/signout", deleteSession, (req: Request, res: Response) => {
 
 //Google OAUth sign in
 //::Parse latitude and longitude as queries for callback
-router.get("/google", parseLocationGoogleStateHandler);
+router.get("/google", parseLocationGoogleState);
 
 //Google sign in callback
 //::Decode lat and long from Google OAuth state params
@@ -73,7 +97,7 @@ router.get(
     failureRedirect: "/login",
     session: true,
   }),
-  decodeLocationGoogleStateHandler,
+  decodeLocationGoogleState,
   setUserLocationHandler,
   createSession(),
   (req: Request, res: Response) => {

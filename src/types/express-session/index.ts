@@ -9,5 +9,8 @@ declare module "express-session" {
       latitude?: number;
       longitude?: number;
     };
+    resetToken?: string;
+    resetUserId?: string;
+    resetAttempts?: number;
   }
 }
