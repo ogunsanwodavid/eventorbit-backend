@@ -39,7 +39,7 @@ const sendPasswordResetEmail = async (to: string, token: string) => {
     subject: "Reset your password",
     html: `<h1>Did you forget your password?</h1>
     <h3>Hi ${firstName ?? organizationName}, </h3>
-    <p>We received a request to reset the password associated with this email address. You can do so by clicking on the link below. This link remains active for 24 hours. If multiple requests were requested, only the recent link is valid.</p>
+    <p>We received a request to reset the password associated with this email address. You can do so by clicking on the link below. This link remains active for 24 hours and invalid once used for reset. If multiple requests were requested, only the recent link is valid.</p>
     <a href="${url}">${url}</a>`,
   });
 };
