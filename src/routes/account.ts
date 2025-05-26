@@ -2,12 +2,16 @@ import { Request, Response, Router } from "express";
 
 import updateEmailHandler from "../controllers/account/updateEmail";
 import updatePasswordHandler from "../controllers/account/updatePassword";
+import updateLocationHandler from "../controllers/account/updateLocation";
+import updatePoliciesHandler from "../controllers/account/updatePolicies";
 
 import deleteSession from "../middleware/auth/deleteSession";
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 
 import updateEmailSchemaValidation from "../utils/schema-validations/account/updateEmailSchemaValidation";
 import updatePasswordSchemaValidation from "../utils/schema-validations/account/updatePasswordSchemaValidation";
+import updateLocationSchemaValidation from "../utils/schema-validations/account/updateLocationSchemaValidation";
+import updatePoliciesSchemaValidation from "../utils/schema-validations/account/updatePoliciesSchemaValidation";
 
 //Define router
 const router = Router();
@@ -46,5 +50,30 @@ router.patch(
 
 //Update user's location
 //::Protected endpoint
+router.patch(
+  "/update-location/:id",
+  checkAuthStatus,
+  updateLocationSchemaValidation,
+  updateLocationHandler,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "Location updated successfully",
+    });
+  }
+);
+
+//Update user's events' policies
+//::Protected endpoint
+router.patch(
+  "/update-policies/:id",
+  checkAuthStatus,
+  updatePoliciesSchemaValidation,
+  updatePoliciesHandler,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "Policies updated successfully",
+    });
+  }
+);
 
 export default router;

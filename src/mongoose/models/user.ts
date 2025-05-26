@@ -12,6 +12,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   isGoogle?: boolean;
   location?: string;
+  hasLocationBeenManuallyUpdatedByUser: boolean;
   policies?: { termsAndConditions: string; privacyPolicy: string };
 }
 
@@ -52,6 +53,10 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     location: {
       type: String,
+    },
+    hasLocationBeenManuallyUpdatedByUser: {
+      type: Boolean,
+      default: false,
     },
     policies: {
       termsAndConditions: { type: String },

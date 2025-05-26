@@ -24,6 +24,11 @@ const setUserLocation = async (
   //Get user from request
   const user = (req as any)["user"] as IUser;
 
+  //Dont set location if already updated by user manually
+  if (user.hasLocationBeenManuallyUpdatedByUser) {
+    return next();
+  }
+
   //If lat and long
   //::Fetch user location info and save to user object
   if (latitude && longitude) {
@@ -31,6 +36,8 @@ const setUserLocation = async (
       const locationRes: LocationResponseAPI = await axios.get(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
       );
+
+      console.log(locationRes);
 
       const state = locationRes.data.address.state || "";
       const country = locationRes.data.address.country || "";
