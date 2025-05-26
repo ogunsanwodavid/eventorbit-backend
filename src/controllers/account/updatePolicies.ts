@@ -1,10 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { User } from "../../mongoose/models/user";
-
-type UpdatePoliciesParams = {
-  id: string;
-};
+import { IUser, User } from "../../mongoose/models/user";
 
 type UpdatePoliciesPayload = {
   termsAndConditions: string;
@@ -12,12 +8,12 @@ type UpdatePoliciesPayload = {
 };
 
 const updatePolicies = async (
-  req: Request<UpdatePoliciesParams, any, UpdatePoliciesPayload>,
+  req: Request<{}, {}, UpdatePoliciesPayload>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
-  //Destructure user's id from the query
-  const { id: userId } = req.params;
+  //Get user object from request
+  const { _id: userId } = (req as any)["user"] as IUser;
 
   //Destructure user's events terms & conditions and privacy policy from body
   const { termsAndConditions, privacyPolicy } = req.body;

@@ -2,11 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import bcrypt from "bcrypt";
 
-import { User } from "../../mongoose/models/user";
-
-type UpdatePasswordParams = {
-  id: string;
-};
+import { IUser, User } from "../../mongoose/models/user";
 
 type UpdatePasswordPayload = {
   oldPassword: string;
@@ -14,12 +10,12 @@ type UpdatePasswordPayload = {
 };
 
 const updatePassword = async (
-  req: Request<UpdatePasswordParams, any, UpdatePasswordPayload>,
+  req: Request<{}, {}, UpdatePasswordPayload>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
-  //Destructure user's id from the query
-  const { id: userId } = req.params;
+  //Get user object from request
+  const { _id: userId } = (req as any)["user"] as IUser;
 
   //Destructure user's new eamil from body
   const { oldPassword, newPassword } = req.body;

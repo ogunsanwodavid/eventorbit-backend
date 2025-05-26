@@ -20,7 +20,7 @@ const router = Router();
 //::Protected endpoint
 //::Deletes session after completion
 router.patch(
-  "/update-email/:id",
+  "/update-email",
   checkAuthStatus,
   updateEmailSchemaValidation,
   updateEmailHandler,
@@ -36,7 +36,7 @@ router.patch(
 //::Protected endpoint
 //::Deletes session after completion
 router.patch(
-  "/update-password/:id",
+  "/update-password",
   checkAuthStatus,
   updatePasswordSchemaValidation,
   updatePasswordHandler,
@@ -51,7 +51,7 @@ router.patch(
 //Update user's location
 //::Protected endpoint
 router.patch(
-  "/update-location/:id",
+  "/update-location",
   checkAuthStatus,
   updateLocationSchemaValidation,
   updateLocationHandler,
@@ -65,7 +65,7 @@ router.patch(
 //Update user's events' policies
 //::Protected endpoint
 router.patch(
-  "/update-policies/:id",
+  "/update-policies",
   checkAuthStatus,
   updatePoliciesSchemaValidation,
   updatePoliciesHandler,

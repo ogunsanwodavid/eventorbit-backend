@@ -1,22 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 
-import { User } from "../../mongoose/models/user";
-
-type UpdateLocationParams = {
-  id: string;
-};
+import { IUser, User } from "../../mongoose/models/user";
 
 type UpdateLocationPayload = {
   location: string;
 };
 
 const updateLocation = async (
-  req: Request<UpdateLocationParams, any, UpdateLocationPayload>,
+  req: Request<{}, {}, UpdateLocationPayload>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
-  //Destructure user's id from the query
-  const { id: userId } = req.params;
+  //Get user object from request
+  const { _id: userId } = (req as any)["user"] as IUser;
 
   //Destructure user's new location from body
   const { location: newLocation } = req.body;

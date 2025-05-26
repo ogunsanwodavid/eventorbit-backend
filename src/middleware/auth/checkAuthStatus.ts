@@ -10,6 +10,9 @@ const checkAuthStatus = async (
     return res.status(401).json({ message: "Not authorized" });
   }
 
+  //Parse user's object as req for the next function
+  (req as any).user = req.session.user;
+
   next();
 };
 

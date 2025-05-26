@@ -4,16 +4,12 @@ import jwt from "jsonwebtoken";
 
 import bcrypt from "bcrypt";
 
-import { User } from "../../mongoose/models/user";
+import { IUser, User } from "../../mongoose/models/user";
 
 import { sendVerificationEmail } from "../../utils/helpers/auth/sendVerificationEmail";
 
 //JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
-
-type UpdateEmailParams = {
-  id: string;
-};
 
 type UpdateEmailPayload = {
   email: string;
@@ -21,12 +17,12 @@ type UpdateEmailPayload = {
 };
 
 const updateEmail = async (
-  req: Request<UpdateEmailParams, any, UpdateEmailPayload>,
+  req: Request<{}, {}, UpdateEmailPayload>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
-  //Destructure user's id from the query
-  const { id: userId } = req.params;
+  //Get user object from request
+  const { _id: userId } = (req as any)["user"] as IUser;
 
   //Destructure user's new eamil from body
   const { email: newEmail, password } = req.body;
