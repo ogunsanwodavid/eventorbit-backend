@@ -43,6 +43,13 @@ const forgotPassword = async (
         message: "You signed up with a Google account.",
       });
 
+    //Dont send reset email if user's account is disabled
+    if (user.isDisabled) {
+      return res
+        .status(403)
+        .json({ message: "Your account has been disabled." });
+    }
+
     //Generate verification token
     const token = jwt.sign({ userId: user._id }, jwtSecret, {
       expiresIn: "1d",

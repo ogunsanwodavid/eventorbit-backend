@@ -15,6 +15,12 @@ const createSession = (userKey: "user" | "payload" = "user") => {
       return;
     }
 
+    //Dont create session if user's account is disabled
+    if (user.isDisabled) {
+      res.status(403).json({ message: "Your account has been disabled." });
+      return;
+    }
+
     //Create express session
     req.session.user = user;
 

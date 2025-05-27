@@ -4,6 +4,7 @@ import updateEmailHandler from "../controllers/account/updateEmail";
 import updatePasswordHandler from "../controllers/account/updatePassword";
 import updateLocationHandler from "../controllers/account/updateLocation";
 import updatePoliciesHandler from "../controllers/account/updatePolicies";
+import disableAccountHandler from "../controllers/account/disableAccount";
 
 import deleteSession from "../middleware/auth/deleteSession";
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
@@ -12,6 +13,7 @@ import updateEmailSchemaValidation from "../utils/schema-validations/account/upd
 import updatePasswordSchemaValidation from "../utils/schema-validations/account/updatePasswordSchemaValidation";
 import updateLocationSchemaValidation from "../utils/schema-validations/account/updateLocationSchemaValidation";
 import updatePoliciesSchemaValidation from "../utils/schema-validations/account/updatePoliciesSchemaValidation";
+import disableAccountSchemaValidation from "../utils/schema-validations/account/disableAccountSchemaValidation";
 
 //Define router
 const router = Router();
@@ -72,6 +74,22 @@ router.patch(
   (req: Request, res: Response) => {
     res.status(200).json({
       message: "Policies updated successfully",
+    });
+  }
+);
+
+//Disable user's account
+//::Protected endpoint
+//::Deletes session after completion
+router.patch(
+  "/disable-account",
+  checkAuthStatus,
+  disableAccountSchemaValidation,
+  disableAccountHandler,
+  deleteSession,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "Account disabled successfully",
     });
   }
 );

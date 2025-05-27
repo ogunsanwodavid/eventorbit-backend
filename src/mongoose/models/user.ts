@@ -10,6 +10,7 @@ export interface IUser extends Document {
   email: string;
   password?: string;
   isVerified: boolean;
+  isDisabled: boolean;
   isGoogle?: boolean;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
@@ -46,6 +47,10 @@ const userSchema = new mongoose.Schema<IUser>(
       },
     },
     isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    isDisabled: {
       type: Boolean,
       default: false,
     },

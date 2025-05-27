@@ -101,7 +101,7 @@ router.get(
   setUserLocationHandler,
   createSession(),
   (req: Request, res: Response) => {
-    // Redirect to home
+    //Redirect to home
     res.redirect("/");
   }
 );
