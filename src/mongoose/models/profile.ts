@@ -1,6 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 
 import { UserType } from "./user";
+import { NextFunction } from "express";
 
 interface IProfile extends Document {
   userId: Schema.Types.ObjectId;
@@ -11,12 +12,22 @@ interface IProfile extends Document {
     organizationName?: string;
     userType: UserType;
     description?: string;
-    profileSlug?: string;
+    profileSlug: string;
     isPrivate: boolean;
     isABusinessSeller: boolean;
     businessAddress?: string;
     businessEmail?: string;
-    businessPhoneNumber?: number;
+    businessPhoneNumber?: string;
+  };
+  socialUrls?: {
+    website?: string;
+    facebook?: string;
+    x?: string;
+    instagram?: string;
+  };
+  images?: {
+    profilePicture: string;
+    coverPhoto: string;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -60,7 +71,17 @@ const profileSchema = new Schema<IProfile>(
       isABusinessSeller: { type: Boolean, default: false },
       businessAddress: { type: String, trim: true },
       businessEmail: { type: String, trim: true },
-      businessPhoneNumber: { type: Number },
+      businessPhoneNumber: { type: String, trim: true },
+    },
+    socialUrls: {
+      website: { type: String, trim: true },
+      facebook: { type: String, trim: true },
+      x: { type: String, trim: true },
+      instagram: { type: String, trim: true },
+    },
+    images: {
+      profilePicture: { type: String, trim: true },
+      coverPhoto: { type: String, trim: true },
     },
   },
   {
@@ -68,7 +89,7 @@ const profileSchema = new Schema<IProfile>(
   }
 );
 
-// Custom validation for business seller
+//Custom validation for business seller
 profileSchema.pre("validate", function (next) {
   const info = this.info;
   if (info.isABusinessSeller) {
@@ -110,6 +131,43 @@ profileSchema.post("save", async function (doc: IProfile, next) {
   } catch (error) {
     console.error("Error syncing Profile to User:", error);
     next(new Error("Error syncing Profile to User"));
+  }
+});
+
+//Custom pre-updateOne logic
+//::Clear business email, address, and phone number if not a business seller
+//::Clear organizationName if individual
+//::Clear firstName and lastName if organization
+profileSchema.pre("updateOne", async function (next) {
+  try {
+    const update = this.getUpdate() as { $set?: { info?: any } };
+
+    if (update.$set?.info) {
+      const { isABusinessSeller, userType } = update.$set.info;
+
+      // Clear business fields if not a business seller
+      if (isABusinessSeller === false) {
+        update.$set.info.businessEmail = undefined;
+        update.$set.info.businessAddress = undefined;
+        update.$set.info.businessPhoneNumber = undefined;
+      }
+
+      // Clear organizationName if individual
+      if (userType === "individual") {
+        update.$set.info.organizationName = undefined;
+      }
+
+      // Clear first and last names if organization
+      if (userType === "organization") {
+        update.$set.info.firstName = undefined;
+        update.$set.info.lastName = undefined;
+      }
+
+      // Ensure other fields are preserved
+      this.setUpdate(update);
+    }
+  } catch (error) {
+    console.error("Error in Profile pre-updateOne hook:", error);
   }
 });
 
