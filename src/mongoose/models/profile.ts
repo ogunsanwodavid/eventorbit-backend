@@ -1,7 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 
 import { UserType } from "./user";
-import { NextFunction } from "express";
 
 interface IProfile extends Document {
   userId: Schema.Types.ObjectId;
@@ -26,8 +25,8 @@ interface IProfile extends Document {
     instagram?: string;
   };
   images?: {
-    profilePicture: string;
-    coverPhoto: string;
+    profilePicture?: string;
+    coverPhoto?: string;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -108,7 +107,7 @@ profileSchema.pre("validate", function (next) {
   next();
 });
 
-//Sync Profile changes to User
+//Sync Profile changes on save to User
 profileSchema.post("save", async function (doc: IProfile, next) {
   try {
     //::If user type is organization , remove first and last name
@@ -123,6 +122,7 @@ profileSchema.post("save", async function (doc: IProfile, next) {
           ? doc.info.organizationName
           : undefined,
       userType: doc.info.userType,
+      profilePicture: doc.images?.profilePicture,
     };
 
     //::update changes to user object

@@ -12,6 +12,8 @@ import passport from "passport";
 
 import "./config/passport"; //Import passport config file
 
+import { v2 as cloudinary } from "cloudinary";
+
 //Configure environmental variables
 import dotenv from "dotenv";
 dotenv.config();
@@ -31,6 +33,11 @@ const mongoURI = process.env.MONGO_URI!;
 
 //Express session secret
 const expressSessionSecret = process.env.SESSION_SECRET!;
+
+//Cloudinary credentials
+const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME!;
+const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY!;
+const cloudinarySecretKey = process.env.CLOUDINARY_API_SECRET!;
 
 //Set up express app
 app.use(express.json());
@@ -55,6 +62,13 @@ app.use(
     }),
   })
 );
+
+//Cloudinary config
+cloudinary.config({
+  cloud_name: cloudinaryCloudName,
+  api_key: cloudinaryApiKey,
+  api_secret: cloudinarySecretKey,
+});
 
 //Initialize Passport and session
 app.use(passport.initialize());

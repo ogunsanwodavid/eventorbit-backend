@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 
@@ -7,9 +7,26 @@ import updateProfileSocialUrlsSchemaValidation from "../utils/schema-validations
 
 import updateProfileInfoHandler from "../controllers/profile/updateProfileInfo";
 import updateProfileSocialUrlsHandler from "../controllers/profile/updateProfileSocialUrls";
+import uploadProfilePictureHandler, {
+  uploadMiddleware,
+} from "../controllers/profile/uploadProfilePicture";
 
 //Define router
 const router = Router();
+
+//Upload profile picture
+//::Protected endpoint
+router.patch(
+  "/upload-profile-pic",
+  checkAuthStatus,
+  uploadMiddleware,
+  uploadProfilePictureHandler,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "Profile picture uploaded successfully",
+    });
+  }
+);
 
 //Update profile info
 //::Protected endpoint

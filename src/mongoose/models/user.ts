@@ -16,6 +16,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   isDisabled: boolean;
   isGoogle?: boolean;
+  profilePicture?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   location?: string;
@@ -62,6 +63,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    profilePicture: { type: String },
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
     location: {
@@ -139,6 +141,9 @@ userSchema.post("save", async function (doc: IUser, next) {
           profileSlug,
           description: "",
         },
+        images: {
+          profilePicture: doc.profilePicture,
+        },
       });
     }
     next();
@@ -149,6 +154,7 @@ userSchema.post("save", async function (doc: IUser, next) {
 });
 
 //Sync User to Profile
+//::update changes to firstName, lastName, orgName, userType and profile pic to Profile
 userSchema.post("save", async function (doc: IUser, next) {
   try {
     const update: any = {
@@ -159,6 +165,7 @@ userSchema.post("save", async function (doc: IUser, next) {
       "info.organizationName":
         doc.userType === "organization" ? doc.organizationName : undefined,
       "info.userType": doc.userType,
+      "images.profilePicture": doc.profilePicture,
     };
     await Profile.updateOne({ _id: doc._id }, { $set: update });
     next();

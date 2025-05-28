@@ -31,6 +31,7 @@ passport.use(
             email,
             firstName: profile.name?.givenName || "",
             lastName: profile.name?.familyName || "",
+            profilePicture: profile.photos?.[0]?.value || undefined,
             userType: "individual",
             isVerified: true,
             isGoogle: true,
