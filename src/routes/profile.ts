@@ -8,22 +8,41 @@ import updateProfileSocialUrlsSchemaValidation from "../utils/schema-validations
 import updateProfileInfoHandler from "../controllers/profile/updateProfileInfo";
 import updateProfileSocialUrlsHandler from "../controllers/profile/updateProfileSocialUrls";
 import uploadProfilePictureHandler, {
-  uploadMiddleware,
+  multerUploadProfilePictureMiddleware,
 } from "../controllers/profile/uploadProfilePicture";
+import uploadCoverPhotoHandler, {
+  multerUploadCoverPhotoMiddleware,
+} from "../controllers/profile/uploadCoverPhoto";
 
 //Define router
 const router = Router();
 
 //Upload profile picture
 //::Protected endpoint
+//::Pick file with multer middleware
 router.patch(
   "/upload-profile-pic",
   checkAuthStatus,
-  uploadMiddleware,
+  multerUploadProfilePictureMiddleware,
   uploadProfilePictureHandler,
   (req: Request, res: Response) => {
     res.status(200).json({
       message: "Profile picture uploaded successfully",
+    });
+  }
+);
+
+//Upload cover photo
+//::Protected endpoint
+//::Pick file with multer middleware
+router.patch(
+  "/upload-cover-photo",
+  checkAuthStatus,
+  multerUploadCoverPhotoMiddleware,
+  uploadCoverPhotoHandler,
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      message: "Cover photo uploaded successfully",
     });
   }
 );

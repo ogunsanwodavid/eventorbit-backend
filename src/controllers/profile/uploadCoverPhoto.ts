@@ -13,16 +13,16 @@ import { Profile } from "../../mongoose/models/profile";
 //Configure Multer middleware
 //::Accept only jpeg, png and webp images
 //::Restrict file size to 5MB
-export const multerUploadProfilePictureMiddleware = multer({
+export const multerUploadCoverPhotoMiddleware = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const validTypes = ["image/jpeg", "image/png", "image/webp"];
     cb(null, validTypes.includes(file.mimetype));
   },
-}).single("profilePicture");
+}).single("coverPhoto");
 
-const uploadProfilePicture = async (
+const uploadCoverPhoto = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -57,7 +57,7 @@ const uploadProfilePicture = async (
       cloudinary.uploader
         .upload_stream(
           {
-            folder: "profile-pictures",
+            folder: "cover-photos",
             public_id: publicId,
             overwrite: true, // Replace if exists
           },
@@ -69,41 +69,23 @@ const uploadProfilePicture = async (
         .end(req.file!.buffer);
     });
 
-    //Update user's profile picture URL
-    //Update images
+    //Update user's cover photo URL
+    //Update image
     await Profile.updateOne(
       { userId },
       {
         $set: {
-          "images.profilePicture": result.secure_url,
+          "images.coverPhoto": result.secure_url,
         },
       }
     );
-
-    //Manual sync of User fields
-    const userUpdate: {
-      $set: Partial<IUser>;
-      $unset?: Record<string, string>;
-    } = {
-      $set: { profilePicture: result.secure_url },
-    };
-
-    //Set profilePicture on user object
-    //::If cloudinary gives correct url
-    if (result.secure_url) {
-      userUpdate.$set.profilePicture = result.secure_url;
-    }
-
-    await User.updateOne({ _id: userId }, userUpdate, { maxTimeMS: 5000 });
 
     next();
   } catch (err) {
     console.error(err);
 
-    return res
-      .status(500)
-      .json({ message: "Failed to upload profile picture" });
+    return res.status(500).json({ message: "Failed to upload cover photo" });
   }
 };
 
-export default uploadProfilePicture;
+export default uploadCoverPhoto;
