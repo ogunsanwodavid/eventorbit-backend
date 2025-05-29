@@ -21,9 +21,9 @@ import deleteSession from "../middleware/auth/deleteSession";
 import setUserLocationHandler from "../middleware/auth/setUserLocation";
 import parseLocationGoogleState from "../middleware/auth/parseLocationGoogleState";
 import decodeLocationGoogleState from "../middleware/auth/decodeLocationGoogleState";
-
 import cleanUserFields from "../middleware/auth/cleanUserFields";
 import autoCreateUserProfile from "../middleware/auth/autoCreateUserProfile";
+import autoCreateDefaultEmailPreferences from "../middleware/auth/autoCreateDefaultEmailPreferences";
 
 //Define router
 const router = Router();
@@ -32,12 +32,14 @@ const router = Router();
 //::Clean user object of unwanted values
 //::Create user in database
 //::Create a new user profile
+//::Create the default email preferences settings for user
 router.post(
   "/signup",
   registerUserValidationSchema,
   cleanUserFields,
   registerUserHandler,
   autoCreateUserProfile,
+  autoCreateDefaultEmailPreferences,
   (req: Request, res: Response) => {
     res.status(201).json({
       message: "Registration successful. Verification email sent",
@@ -108,6 +110,7 @@ router.get("/google", parseLocationGoogleState);
 //::Decode lat and long from Google OAuth state params
 //::Save location to user object
 //::Auto create user profile with user info
+//::Create the default email preferences for user
 //::Create new session
 router.get(
   "/google/callback",
@@ -118,6 +121,7 @@ router.get(
   decodeLocationGoogleState,
   setUserLocationHandler,
   autoCreateUserProfile,
+  autoCreateDefaultEmailPreferences,
   createSession(),
   (req: Request, res: Response) => {
     //Redirect to home

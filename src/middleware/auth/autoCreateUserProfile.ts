@@ -39,7 +39,8 @@ const autoCreateUserProfile = async (
 
     next();
   } catch (error) {
-    next(error);
+    console.error(error);
+    next(new Error("Failed to auto create profile"));
   }
 };
 
