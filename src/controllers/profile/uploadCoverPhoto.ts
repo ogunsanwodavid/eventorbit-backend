@@ -2,25 +2,11 @@ import { NextFunction, Request, Response } from "express";
 
 import { v2 as cloudinary } from "cloudinary";
 
-import multer from "multer";
-
 import { fileTypeFromBuffer } from "file-type";
 
 import { IUser, User } from "../../mongoose/models/user";
 
 import { Profile } from "../../mongoose/models/profile";
-
-//Configure Multer middleware
-//::Accept only jpeg, png and webp images
-//::Restrict file size to 5MB
-export const multerUploadCoverPhotoMiddleware = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const validTypes = ["image/jpeg", "image/png", "image/webp"];
-    cb(null, validTypes.includes(file.mimetype));
-  },
-}).single("coverPhoto");
 
 const uploadCoverPhoto = async (
   req: Request,

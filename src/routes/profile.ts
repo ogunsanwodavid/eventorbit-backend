@@ -1,18 +1,16 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
+import multerUploadProfilePicture from "../middleware/profile/multerUploadProfilePicture";
+import multerUploadCoverPhoto from "../middleware/profile/multerUploadCoverPhoto";
 
 import updateProfileInfoSchemaValidation from "../utils/schema-validations/profile/updateProfileInfoSchemaValidation";
 import updateProfileSocialUrlsSchemaValidation from "../utils/schema-validations/profile/updateProfileSocialUrlsSchemaValidation";
 
 import updateProfileInfoHandler from "../controllers/profile/updateProfileInfo";
 import updateProfileSocialUrlsHandler from "../controllers/profile/updateProfileSocialUrls";
-import uploadProfilePictureHandler, {
-  multerUploadProfilePictureMiddleware,
-} from "../controllers/profile/uploadProfilePicture";
-import uploadCoverPhotoHandler, {
-  multerUploadCoverPhotoMiddleware,
-} from "../controllers/profile/uploadCoverPhoto";
+import uploadProfilePictureHandler from "../controllers/profile/uploadProfilePicture";
+import uploadCoverPhotoHandler from "../controllers/profile/uploadCoverPhoto";
 
 //Define router
 const router = Router();
@@ -23,7 +21,7 @@ const router = Router();
 router.patch(
   "/upload-profile-pic",
   checkAuthStatus,
-  multerUploadProfilePictureMiddleware,
+  multerUploadProfilePicture,
   uploadProfilePictureHandler,
   (req: Request, res: Response) => {
     res.status(200).json({
@@ -38,7 +36,7 @@ router.patch(
 router.patch(
   "/upload-cover-photo",
   checkAuthStatus,
-  multerUploadCoverPhotoMiddleware,
+  multerUploadCoverPhoto,
   uploadCoverPhotoHandler,
   (req: Request, res: Response) => {
     res.status(200).json({

@@ -26,7 +26,18 @@ import decodeLocationGoogleState from "../middleware/auth/decodeLocationGoogleSt
 const router = Router();
 
 //Register new user
-router.post("/signup", registerUserValidationSchema, registerUserHandler);
+//::Clean user object of unwanted values
+//::Create a new user profile
+router.post(
+  "/signup",
+  registerUserValidationSchema,
+  registerUserHandler,
+  (req: Request, res: Response) => {
+    res.status(201).json({
+      message: "Registration successful. Verification email sent",
+    });
+  }
+);
 
 //Verify new user's email
 router.get(

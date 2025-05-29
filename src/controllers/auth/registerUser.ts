@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import bcrypt from "bcrypt";
 
@@ -14,7 +14,8 @@ const jwtSecret = process.env.JWT_SECRET!;
 //Register user function
 const registerUser = async (
   req: Request<{}, {}, IUser>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<any> => {
   try {
     //Destructure the values in the request body
@@ -51,10 +52,10 @@ const registerUser = async (
     // Send verification email
     await sendVerificationEmail(email, token);
 
-    res.status(201).json({
-      message:
-        "Registration successful. Please check your email to verify your account.",
-    });
+    //Parse user's object as req for the next function
+    (req as any).user = newUser;
+
+    next();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something went wrong." });
