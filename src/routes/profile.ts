@@ -7,6 +7,7 @@ import multerUploadCoverPhoto from "../middleware/profile/multerUploadCoverPhoto
 import updateProfileInfoSchemaValidation from "../utils/schema-validations/profile/updateProfileInfoSchemaValidation";
 import updateProfileSocialUrlsSchemaValidation from "../utils/schema-validations/profile/updateProfileSocialUrlsSchemaValidation";
 
+import getProfileHandler from "../controllers/profile/getProfile";
 import updateProfileInfoHandler from "../controllers/profile/updateProfileInfo";
 import updateProfileSocialUrlsHandler from "../controllers/profile/updateProfileSocialUrls";
 import uploadProfilePictureHandler from "../controllers/profile/uploadProfilePicture";
@@ -14,6 +15,10 @@ import uploadCoverPhotoHandler from "../controllers/profile/uploadCoverPhoto";
 
 //Define router
 const router = Router();
+
+//Fetch user's profile
+//::Protected endpoint
+router.get("/get", checkAuthStatus, getProfileHandler);
 
 //Upload profile picture
 //::Protected endpoint

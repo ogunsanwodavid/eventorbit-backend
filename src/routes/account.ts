@@ -1,11 +1,5 @@
 import { Request, Response, Router } from "express";
 
-import updateEmailHandler from "../controllers/account/updateEmail";
-import updatePasswordHandler from "../controllers/account/updatePassword";
-import updateLocationHandler from "../controllers/account/updateLocation";
-import updatePoliciesHandler from "../controllers/account/updatePolicies";
-import disableAccountHandler from "../controllers/account/disableAccount";
-
 import deleteSession from "../middleware/auth/deleteSession";
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 
@@ -15,8 +9,19 @@ import updateLocationSchemaValidation from "../utils/schema-validations/account/
 import updatePoliciesSchemaValidation from "../utils/schema-validations/account/updatePoliciesSchemaValidation";
 import disableAccountSchemaValidation from "../utils/schema-validations/account/disableAccountSchemaValidation";
 
+import getAccountHandler from "../controllers/account/getAccount";
+import updateEmailHandler from "../controllers/account/updateEmail";
+import updatePasswordHandler from "../controllers/account/updatePassword";
+import updateLocationHandler from "../controllers/account/updateLocation";
+import updatePoliciesHandler from "../controllers/account/updatePolicies";
+import disableAccountHandler from "../controllers/account/disableAccount";
+
 //Define router
 const router = Router();
+
+//Fetch user's account
+//::Protected endpoint
+router.get("/get", checkAuthStatus, getAccountHandler);
 
 //Update user's email
 //::Protected endpoint
@@ -82,7 +87,7 @@ router.patch(
 //::Protected endpoint
 //::Deletes session after completion
 router.patch(
-  "/disable-account",
+  "/disable",
   checkAuthStatus,
   disableAccountSchemaValidation,
   disableAccountHandler,

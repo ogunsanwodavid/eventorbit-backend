@@ -98,7 +98,7 @@ userSchema.pre("validate", function (next) {
 //Custom on save logic
 //::Clear firstName and lastName if organization
 //::Clear organizationName if individual
-userSchema.pre("save", async function (next) {
+/* userSchema.pre("save", async function (next) {
   if (this.isModified("userType")) {
     if (this.userType === "organization") {
       this.firstName = undefined;
@@ -108,10 +108,10 @@ userSchema.pre("save", async function (next) {
     }
   }
   next();
-});
+}); */
 
 //Auto-create Profile on User creation
-userSchema.post("save", async function (doc: IUser, next) {
+/* userSchema.post("save", async function (doc: IUser, next) {
   try {
     const existingProfile = await Profile.findOne({ userId: doc._id });
 
@@ -151,11 +151,11 @@ userSchema.post("save", async function (doc: IUser, next) {
     console.error("Error creating Profile:", error);
     next(new Error("Error creating Profile"));
   }
-});
+}); */
 
 //Sync User to Profile
 //::update changes to firstName, lastName, orgName, userType and profile pic to Profile
-userSchema.post("save", async function (doc: IUser, next) {
+/* userSchema.post("save", async function (doc: IUser, next) {
   try {
     const update: any = {
       isDisabled: doc.isDisabled,
@@ -173,6 +173,6 @@ userSchema.post("save", async function (doc: IUser, next) {
     console.error("Error syncing User to Profile:", error);
     next(new Error("Error syncing User to Profile"));
   }
-});
+}); */
 
 export const User = mongoose.model<IUser>("User", userSchema);
