@@ -1,9 +1,5 @@
 import mongoose, { Document } from "mongoose";
 
-import { Profile } from "./profile";
-
-import generateProfileSlug from "../../utils/helpers/auth/generateProfileSlug";
-
 export type UserType = "individual" | "organization";
 
 export interface IUser extends Document {

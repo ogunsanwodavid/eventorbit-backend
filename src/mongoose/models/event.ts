@@ -1,0 +1,211 @@
+import { Document, Schema, model } from "mongoose";
+
+// ================== CUSTOM TYPES AND INTERFACES ==================
+export type EventType = "regular" | "timed-entry";
+
+export type EventStatus = "live" | "drafted" | "expired";
+
+export type EventVisibility = "public" | "unlisted";
+
+export interface ITime {
+  hours: number;
+  minutes: number;
+  timezone: string;
+}
+
+export type WeekDay = "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT";
+
+export type TimeSlot = {
+  startTime: ITime;
+  endTime: ITime;
+};
+
+export interface Schedule {
+  startDate: Date;
+  endDate?: Date;
+  timeSlots: TimeSlot[];
+  repeatDays?: WeekDay[];
+}
+
+export interface TicketType {
+  type: "Paid" | "Free" | "Donation";
+  name: string;
+  quantity?: string;
+  price?: number;
+  minDonation?: number;
+  fee?: number;
+}
+
+// ================== EVENT MAIN INTERFACE ==================
+export interface IEvent extends Document {
+  hostId: Schema.Types.ObjectId;
+  status: EventStatus;
+  type: EventType;
+  basics: {
+    name: string;
+    description: string;
+    category: string;
+    visibility: EventVisibility;
+    startTime?: ITime;
+    endTime?: ITime;
+    location: {
+      address: string;
+      venueName: string;
+    };
+  };
+  schedules?: Schedule[];
+  tickets: {
+    types: TicketType[];
+    urgency: {
+      indicate: true;
+      percentageSold: number;
+    };
+    currencies: {
+      buy: string;
+      receive: string;
+    };
+    refundPolicy: string;
+  };
+  additionalDetails: {
+    contact: string;
+    orderMessage: string;
+    socialMediaPhoto: string;
+    eventCoverPhoto: string;
+    additionalPhotos?: string[];
+  };
+}
+
+// ================== SUB-SCHEMAS ==================
+const TimeSchema = new Schema<ITime>({
+  hours: { type: Number, required: true, min: 0, max: 23 },
+  minutes: { type: Number, required: true, min: 0, max: 59 },
+  timezone: { type: String, required: true },
+});
+
+const LocationSchema = new Schema({
+  address: { type: String, required: true },
+  venueName: { type: String, required: true },
+});
+
+const TicketUrgencySchema = new Schema({
+  indicate: { type: Boolean, required: true },
+  percentageSold: { type: Number, min: 0, max: 100 },
+});
+
+const TimeSlotSchema = new Schema<TimeSlot>({
+  startTime: { type: TimeSchema, required: true },
+  endTime: { type: TimeSchema, required: true },
+});
+
+const ScheduleSchema = new Schema<Schedule>({
+  startDate: { type: Date, required: true },
+  endDate: { type: Date },
+  timeSlots: { type: [TimeSlotSchema], required: true },
+  repeatDays: {
+    type: [String],
+    enum: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+  },
+});
+
+const TicketTypeSchema = new Schema<TicketType>({
+  type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
+  name: { type: String, required: true },
+  quantity: { type: String },
+  price: { type: Number, min: 0 },
+  minDonation: { type: Number, min: 0 },
+  fee: { type: Number, min: 0 },
+});
+
+// ================== MAIN SCHEMA ==================
+const EventSchema = new Schema(
+  {
+    hostId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["live", "drafted", "expired"],
+      default: "drafted",
+    },
+    type: {
+      type: String,
+      enum: ["regular", "timed-entry"],
+      required: true,
+    },
+    basics: {
+      name: { type: String, required: true },
+      description: { type: String, required: true },
+      category: { type: String, required: true },
+      visibility: {
+        type: String,
+        enum: ["public", "unlisted"],
+        required: true,
+      },
+      startTime: { type: TimeSchema },
+      endTime: { type: TimeSchema },
+      location: { type: LocationSchema, required: true },
+    },
+    schedules: { type: [ScheduleSchema] },
+    tickets: {
+      types: { type: [TicketTypeSchema], required: true },
+      urgency: { type: TicketUrgencySchema },
+      currencies: {
+        buy: { type: String, required: true, uppercase: true },
+        receive: { type: String, required: true, uppercase: true },
+      },
+      refundPolicy: { type: String, required: true },
+    },
+    additionalDetails: {
+      contact: { type: String, required: true },
+      orderMessage: { type: String, required: true },
+      socialMediaPhoto: { type: String, required: true },
+      eventCoverPhoto: { type: String, required: true },
+      additionalPhotos: { type: [String] },
+    },
+  },
+  { timestamps: true }
+);
+
+// ====== ADD CUSTOM VALIDATION ======
+EventSchema.pre("validate", function (next) {
+  const event = this as any;
+
+  try {
+    //Rule 1: Regular events require times in basics
+    if (event.type === "regular") {
+      const missingTimes = [];
+      if (!event.basics.startTime) missingTimes.push("startTime");
+      if (!event.basics.endTime) missingTimes.push("endTime");
+
+      if (missingTimes.length > 0) {
+        throw new Error(
+          `Regular events require ${missingTimes.join(" and ")} in basics`
+        );
+      }
+    }
+
+    //Rule 2: Timed-entry requires schedules
+    if (event.type === "timed-entry") {
+      if (!event.schedules || event.schedules.length === 0) {
+        throw new Error("Timed-entry events require at least one schedule");
+      }
+
+      //Bonus validation: Ensure schedules have valid time slots
+      const invalidSchedule = event.schedules.find(
+        (s: Schedule) => !s.timeSlots || s.timeSlots.length === 0
+      );
+
+      if (invalidSchedule) {
+        throw new Error("All schedules must contain at least one time slot");
+      }
+    }
+
+    next();
+  } catch (error) {
+    next(error as Error);
+  }
+});
+
+export const EventModel = model<IEvent>("Event", EventSchema);
