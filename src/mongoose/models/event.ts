@@ -10,7 +10,7 @@ export type EventVisibility = "public" | "unlisted";
 export interface ITime {
   hours: number;
   minutes: number;
-  timezone: string;
+  timeZone: string;
 }
 
 export type WeekDay = "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT";
@@ -30,7 +30,7 @@ export interface Schedule {
 export interface TicketType {
   type: "Paid" | "Free" | "Donation";
   name: string;
-  quantity?: string;
+  quantity?: number;
   price?: number;
   minDonation?: number;
   fee?: number;
@@ -49,8 +49,11 @@ export interface IEvent extends Document {
     startTime?: ITime;
     endTime?: ITime;
     location: {
-      address: string;
-      venueName: string;
+      isVirtual: boolean;
+      address?: string;
+      venueName?: string;
+      organizerAddress?: string;
+      connectionDetails?: string;
     };
   };
   schedules?: Schedule[];
@@ -79,17 +82,20 @@ export interface IEvent extends Document {
 const TimeSchema = new Schema<ITime>({
   hours: { type: Number, required: true, min: 0, max: 23 },
   minutes: { type: Number, required: true, min: 0, max: 59 },
-  timezone: { type: String, required: true },
+  timeZone: { type: String, required: true },
 });
 
 const LocationSchema = new Schema({
-  address: { type: String, required: true },
-  venueName: { type: String, required: true },
+  isVirtual: { type: Boolean, required: true },
+  address: { type: String },
+  venueName: { type: String },
+  organizerAddress: { type: String },
+  connectionDetails: { type: String },
 });
 
 const TicketUrgencySchema = new Schema({
   indicate: { type: Boolean, required: true },
-  percentageSold: { type: Number, min: 0, max: 100 },
+  percentageSold: { type: Number, min: 60, max: 100 },
 });
 
 const TimeSlotSchema = new Schema<TimeSlot>({
@@ -110,7 +116,7 @@ const ScheduleSchema = new Schema<Schedule>({
 const TicketTypeSchema = new Schema<TicketType>({
   type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
   name: { type: String, required: true },
-  quantity: { type: String },
+  quantity: { type: Number, min: 1 },
   price: { type: Number, min: 0 },
   minDonation: { type: Number, min: 0 },
   fee: { type: Number, min: 0 },
@@ -199,6 +205,23 @@ EventSchema.pre("validate", function (next) {
 
       if (invalidSchedule) {
         throw new Error("All schedules must contain at least one time slot");
+      }
+    }
+
+    //Rule 3: Non-virtual events require address and venue
+    //:: and virtual events require organizer's address and connection details
+    if (!event.basics.location.isVirtual) {
+      if (!event.basics.location.address || !event.basics.location.venueName) {
+        throw new Error("Non-virtual events requires address and venue");
+      }
+    } else {
+      if (
+        !event.basics.location.organizerAddress ||
+        !event.basics.location.connectionDetails
+      ) {
+        throw new Error(
+          "Virtual event require organizer's address and connection details"
+        );
       }
     }
 

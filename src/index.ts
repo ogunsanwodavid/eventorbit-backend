@@ -23,6 +23,7 @@ import authRoutes from "./routes/auth";
 import accountRoutes from "./routes/account";
 import profileRoutes from "./routes/profile";
 import emailPreferencesRoutes from "./routes/emailPreferences";
+import eventsRoutes from "./routes/events";
 
 const app = express();
 
@@ -80,6 +81,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/account", accountRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/email-preferences", emailPreferencesRoutes);
+app.use("/api/events", eventsRoutes);
 
 //Connect to MongoDB and start server
 const start = async () => {
