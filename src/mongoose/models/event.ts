@@ -1,5 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 
+import * as moment from "moment-timezone";
+
 // ================== CUSTOM TYPES AND INTERFACES ==================
 export type EventType = "regular" | "timed-entry";
 
@@ -60,7 +62,7 @@ export interface IEvent extends Document {
   tickets: {
     types: TicketType[];
     urgency: {
-      indicate: true;
+      indicate: boolean;
       percentageSold: number;
     };
     currencies: {
@@ -82,7 +84,14 @@ export interface IEvent extends Document {
 const TimeSchema = new Schema<ITime>({
   hours: { type: Number, required: true, min: 0, max: 23 },
   minutes: { type: Number, required: true, min: 0, max: 59 },
-  timeZone: { type: String, required: true },
+  timeZone: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (tz: string) => moment.tz.zone(tz) !== null,
+      message: "Invalid timezone",
+    },
+  },
 });
 
 const LocationSchema = new Schema({
@@ -95,18 +104,53 @@ const LocationSchema = new Schema({
 
 const TicketUrgencySchema = new Schema({
   indicate: { type: Boolean, required: true },
-  percentageSold: { type: Number, min: 60, max: 100 },
+  percentageSold: {
+    type: Number,
+    min: 60,
+    max: 100,
+    required: function () {
+      return (this as any).indicate === true;
+    },
+  },
 });
 
 const TimeSlotSchema = new Schema<TimeSlot>({
   startTime: { type: TimeSchema, required: true },
-  endTime: { type: TimeSchema, required: true },
+  endTime: {
+    type: TimeSchema,
+    required: true,
+    validate: {
+      validator: function (this: TimeSlot, endTime: ITime) {
+        const start = this.startTime;
+        if (start.hours > endTime.hours) return false;
+        if (start.hours === endTime.hours && start.minutes >= endTime.minutes)
+          return false;
+        return true;
+      },
+      message: "End time must be after start time",
+    },
+  },
 });
 
 const ScheduleSchema = new Schema<Schedule>({
   startDate: { type: Date, required: true },
-  endDate: { type: Date },
-  timeSlots: { type: [TimeSlotSchema], required: true },
+  endDate: {
+    type: Date,
+    validate: {
+      validator: function (this: Schedule, endDate: Date) {
+        return !endDate || endDate > this.startDate;
+      },
+      message: "End date must be after start date",
+    },
+  },
+  timeSlots: {
+    type: [TimeSlotSchema],
+    required: true,
+    validate: {
+      validator: (slots: TimeSlot[]) => slots.length > 0,
+      message: "At least one time slot is required",
+    },
+  },
   repeatDays: {
     type: [String],
     enum: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
@@ -116,9 +160,27 @@ const ScheduleSchema = new Schema<Schedule>({
 const TicketTypeSchema = new Schema<TicketType>({
   type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
   name: { type: String, required: true },
-  quantity: { type: Number, min: 1 },
-  price: { type: Number, min: 0 },
-  minDonation: { type: Number, min: 0 },
+  quantity: {
+    type: Number,
+    min: 1,
+    required: function () {
+      return this.type !== "Donation";
+    },
+  },
+  price: {
+    type: Number,
+    min: 0,
+    required: function () {
+      return this.type === "Paid";
+    },
+  },
+  minDonation: {
+    type: Number,
+    min: 0,
+    required: function () {
+      return this.type === "Donation";
+    },
+  },
   fee: { type: Number, min: 0 },
 });
 
@@ -129,16 +191,19 @@ const EventSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
     status: {
       type: String,
       enum: ["live", "drafted", "expired"],
       default: "drafted",
+      index: true,
     },
     type: {
       type: String,
       enum: ["regular", "timed-entry"],
       required: true,
+      index: true,
     },
     basics: {
       name: { type: String, required: true },
@@ -155,7 +220,14 @@ const EventSchema = new Schema(
     },
     schedules: { type: [ScheduleSchema] },
     tickets: {
-      types: { type: [TicketTypeSchema], required: true },
+      types: {
+        type: [TicketTypeSchema],
+        required: true,
+        validate: {
+          validator: (types: TicketType[]) => types.length > 0,
+          message: "At least one ticket type is required",
+        },
+      },
       urgency: { type: TicketUrgencySchema },
       currencies: {
         buy: { type: String, required: true, uppercase: true },
@@ -166,8 +238,8 @@ const EventSchema = new Schema(
     additionalDetails: {
       contact: { type: String, required: true },
       orderMessage: { type: String, required: true },
-      socialMediaPhoto: { type: String, required: true },
-      eventCoverPhoto: { type: String, required: true },
+      socialMediaPhoto: { type: String },
+      eventCoverPhoto: { type: String },
       additionalPhotos: { type: [String] },
     },
   },
@@ -190,6 +262,18 @@ EventSchema.pre("validate", function (next) {
           `Regular events require ${missingTimes.join(" and ")} in basics`
         );
       }
+
+      // Validate end time is after start time for regular events
+      if (event.basics.startTime && event.basics.endTime) {
+        const start = event.basics.startTime;
+        const end = event.basics.endTime;
+        if (
+          start.hours > end.hours ||
+          (start.hours === end.hours && start.minutes >= end.minutes)
+        ) {
+          throw new Error("Event end time must be after start time");
+        }
+      }
     }
 
     //Rule 2: Timed-entry requires schedules
@@ -198,7 +282,7 @@ EventSchema.pre("validate", function (next) {
         throw new Error("Timed-entry events require at least one schedule");
       }
 
-      //Bonus validation: Ensure schedules have valid time slots
+      // Validate all schedules have valid time slots
       const invalidSchedule = event.schedules.find(
         (s: Schedule) => !s.timeSlots || s.timeSlots.length === 0
       );
@@ -208,11 +292,10 @@ EventSchema.pre("validate", function (next) {
       }
     }
 
-    //Rule 3: Non-virtual events require address and venue
-    //:: and virtual events require organizer's address and connection details
+    //Rule 3: Location validation
     if (!event.basics.location.isVirtual) {
       if (!event.basics.location.address || !event.basics.location.venueName) {
-        throw new Error("Non-virtual events requires address and venue");
+        throw new Error("Physical events require address and venue name");
       }
     } else {
       if (
@@ -220,8 +303,20 @@ EventSchema.pre("validate", function (next) {
         !event.basics.location.connectionDetails
       ) {
         throw new Error(
-          "Virtual event require organizer's address and connection details"
+          "Virtual events require organizer address and connection details"
         );
+      }
+    }
+
+    //Rule 4: Ticket validation
+    if (event.tickets?.types) {
+      for (const ticket of event.tickets.types) {
+        if (ticket.type === "Paid" && ticket.price === undefined) {
+          throw new Error("Paid tickets require a price");
+        }
+        if (ticket.type === "Donation" && ticket.minDonation === undefined) {
+          throw new Error("Donation tickets require a minimum donation amount");
+        }
       }
     }
 
@@ -230,5 +325,9 @@ EventSchema.pre("validate", function (next) {
     next(error as Error);
   }
 });
+
+// Add indexes
+EventSchema.index({ status: 1, type: 1 });
+EventSchema.index({ "basics.name": "text", "basics.description": "text" });
 
 export const EventModel = model<IEvent>("Event", EventSchema);

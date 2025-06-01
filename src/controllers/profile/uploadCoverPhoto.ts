@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 
-import { v2 as cloudinary } from "cloudinary";
+import { IUser } from "../../mongoose/models/user";
+
+import { Profile } from "../../mongoose/models/profile";
 
 import { fileTypeFromBuffer } from "file-type";
 
-import { IUser, User } from "../../mongoose/models/user";
-
-import { Profile } from "../../mongoose/models/profile";
+import { uploadStream } from "../../config/cloudinary";
 
 const uploadCoverPhoto = async (
   req: Request,
@@ -30,38 +30,26 @@ const uploadCoverPhoto = async (
   try {
     //Check if profile exists
     const profile = await Profile.findOne({ userId });
-
-    //Return error if profile not found
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
     }
 
-    //Upload to Cloudinary with filename structure of (user-[ID]-profile)
+    //Generate public ID and folder path
     const publicId = `user-${userId}-profile`;
+    const folder = "cover-photos";
 
-    const result = await new Promise<any>((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          {
-            folder: "cover-photos",
-            public_id: publicId,
-            overwrite: true, // Replace if exists
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result!);
-          }
-        )
-        .end(req.file!.buffer);
+    //Upload to Cloudinary using your existing utility
+    const secureUrl = await uploadStream(req.file.buffer, folder, {
+      public_id: publicId,
+      overwrite: true,
     });
 
-    //Update user's cover photo URL
-    //Update image
+    //Update profile's cover photo URL
     await Profile.updateOne(
       { userId },
       {
         $set: {
-          "images.coverPhoto": result.secure_url,
+          "images.coverPhoto": secureUrl,
         },
       }
     );
@@ -69,7 +57,6 @@ const uploadCoverPhoto = async (
     next();
   } catch (err) {
     console.error(err);
-
     return res.status(500).json({ message: "Failed to upload cover photo" });
   }
 };

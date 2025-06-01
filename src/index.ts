@@ -42,7 +42,8 @@ const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY!;
 const cloudinarySecretKey = process.env.CLOUDINARY_API_SECRET!;
 
 //Set up express app
-app.use(express.json());
+//::Increase payload limit to 50mb
+app.use(express.json({ limit: "50mb" }));
 
 //Set up cookie parser
 app.use(cookieParser());
