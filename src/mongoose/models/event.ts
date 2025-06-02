@@ -50,8 +50,7 @@ export interface IEvent extends Document {
     description: string;
     category: string;
     visibility: EventVisibility;
-    startTime?: ITime;
-    endTime?: ITime;
+
     location: {
       isVirtual: boolean;
       address?: string;
@@ -60,6 +59,8 @@ export interface IEvent extends Document {
       connectionDetails?: string;
     };
   };
+  startTime?: ITime;
+  endTime?: ITime;
   schedules?: Schedule[];
   tickets: {
     types: TicketType[];
@@ -221,10 +222,12 @@ const EventSchema = new Schema(
         enum: ["public", "unlisted"],
         required: true,
       },
-      startTime: { type: TimeSchema },
-      endTime: { type: TimeSchema },
+      /* startTime: { type: TimeSchema },
+      endTime: { type: TimeSchema }, */
       location: { type: LocationSchema, required: true },
     },
+    startTime: { type: TimeSchema },
+    endTime: { type: TimeSchema },
     schedules: { type: [ScheduleSchema] },
     tickets: {
       types: {
@@ -258,22 +261,20 @@ EventSchema.pre("validate", function (next) {
   const event = this as any;
 
   try {
-    //Rule 1: Regular events require times in basics
+    //Rule 1: Regular events require times
     if (event.type === "regular") {
       const missingTimes = [];
-      if (!event.basics.startTime) missingTimes.push("startTime");
-      if (!event.basics.endTime) missingTimes.push("endTime");
+      if (!event.startTime) missingTimes.push("startTime");
+      if (!event.endTime) missingTimes.push("endTime");
 
       if (missingTimes.length > 0) {
-        throw new Error(
-          `Regular events require ${missingTimes.join(" and ")} in basics`
-        );
+        throw new Error(`Regular events require ${missingTimes.join(" and ")}`);
       }
 
       // Validate end time is after start time for regular events
-      if (event.basics.startTime && event.basics.endTime) {
-        const start = event.basics.startTime;
-        const end = event.basics.endTime;
+      if (event.startTime && event.endTime) {
+        const start = event.startTime;
+        const end = event.endTime;
         if (
           start.hours > end.hours ||
           (start.hours === end.hours && start.minutes >= end.minutes)

@@ -4,13 +4,17 @@ import validateSchema from "../validateSchema";
 
 import { base64ImageSchema } from "../base64";
 
-const TimeSchema = z.object({
+import LocationSchema from "./LocationSchema";
+import TimeSchema from "./TimeSchema";
+import TicketTypeSchema from "./TicketTypeSchema";
+
+/* const TimeSchema = z.object({
   hours: z.coerce.number().min(0).max(23),
   minutes: z.coerce.number().min(0).max(59),
   timeZone: z.string(),
 });
 
-const LocationSchema = z
+export const LocationSchema = z
   .object({
     isVirtual: z.coerce.boolean(),
     address: z.string().optional(),
@@ -72,7 +76,7 @@ const TicketTypeSchema = z.discriminatedUnion("type", [
     minDonation: z.coerce.number().min(0),
     fee: z.coerce.number().min(0).optional(),
   }),
-]);
+]); */
 
 const createEventSchema = z.object({
   body: z
@@ -84,10 +88,10 @@ const createEventSchema = z.object({
         description: z.string().min(10),
         category: z.string(),
         visibility: z.enum(["public", "unlisted"]),
-        startTime: TimeSchema.optional(),
-        endTime: TimeSchema.optional(),
         location: LocationSchema,
       }),
+      startTime: TimeSchema.optional(),
+      endTime: TimeSchema.optional(),
       schedules: z.array(z.any()).optional(),
       tickets: z.object({
         types: z.array(TicketTypeSchema).min(1),
@@ -112,28 +116,26 @@ const createEventSchema = z.object({
       }),
     })
     .superRefine((data, ctx) => {
-      const basicInfo = data.basics;
-
       if (data.type === "regular") {
-        if (!basicInfo.startTime) {
+        if (!data.startTime) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Start time is required for regular events",
             path: ["startTime"],
           });
         }
-        if (!basicInfo.endTime) {
+        if (!data.endTime) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "End time is required for regular events",
             path: ["endTime"],
           });
         }
-        if (basicInfo.startTime && basicInfo.endTime) {
+        if (data.startTime && data.endTime) {
           if (
-            basicInfo.startTime.hours > basicInfo.endTime.hours ||
-            (basicInfo.startTime.hours === basicInfo.endTime.hours &&
-              basicInfo.startTime.minutes >= basicInfo.endTime.minutes)
+            data.startTime.hours > data.endTime.hours ||
+            (data.startTime.hours === data.endTime.hours &&
+              data.startTime.minutes >= data.endTime.minutes)
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,

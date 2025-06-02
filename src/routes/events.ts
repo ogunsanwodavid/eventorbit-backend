@@ -5,10 +5,12 @@ import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 import createEventSchemaValidation from "../utils/schema-validations/events/createEventSchemaValidation";
 import getEventByAliasSchemaValidation from "../utils/schema-validations/events/getEventByAliasSchemaValidation";
 import getMyEventsSchemaValidation from "../utils/schema-validations/events/getMyEventsSchemaValidation";
+import updateEventBasicsSchemaValidation from "../utils/schema-validations/events/updateEventBasicsSchemaValidation";
 
 import createEventHandler from "../controllers/events/createEvent";
 import getEventByAliasHandler from "../controllers/events/getEventByAlias";
 import getMyEventsHandler from "../controllers/events/getMyEvents";
+import updateEventBasicsHandler from "../controllers/events/updateEventBasics";
 
 //Define router
 const router = Router();
@@ -43,6 +45,15 @@ router.get(
   checkAuthStatus,
   getMyEventsSchemaValidation,
   getMyEventsHandler
+);
+
+//Update event basics using its id
+//::Protected endpoint
+router.patch(
+  "/update-basics/:eventId",
+  checkAuthStatus,
+  updateEventBasicsSchemaValidation,
+  updateEventBasicsHandler
 );
 
 export default router;
