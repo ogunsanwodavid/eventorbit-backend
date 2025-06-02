@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import { IUser } from "../../mongoose/models/user";
 
@@ -13,6 +13,7 @@ const getMyEvents = async (req: Request, res: Response): Promise<any> => {
     const userId = user._id as String;
 
     //Get req query parameters
+    //::Pagination info
     const { page, limit, status } = req.query as any;
 
     //Base query
