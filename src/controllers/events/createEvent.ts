@@ -8,6 +8,8 @@ import { uploadBase64 } from "../../config/cloudinary";
 
 import { CreateEventInput } from "../../utils/schema-validations/events/createEventSchemaValidation";
 
+import { generateEventAlias } from "../../utils/helpers/events/generateEventAlias";
+
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //Get user from request
@@ -16,10 +18,14 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     //Event data from request body
     const eventData = req.body as CreateEventInput["body"];
 
+    //Generate event alias
+    const eventAlias = generateEventAlias(eventData.basics.name);
+
     //Phase 1: Create event with empty image fields
     const newEvent = await EventModel.create({
       hostId: user._id,
       ...eventData,
+      alias: eventAlias,
       additionalDetails: {
         ...eventData.additionalDetails,
         socialMediaPhoto: "",

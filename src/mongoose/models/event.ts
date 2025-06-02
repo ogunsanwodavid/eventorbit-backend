@@ -32,6 +32,7 @@ export interface Schedule {
 export interface TicketType {
   type: "Paid" | "Free" | "Donation";
   name: string;
+  sold: number;
   quantity?: number;
   price?: number;
   minDonation?: number;
@@ -43,6 +44,7 @@ export interface IEvent extends Document {
   hostId: Schema.Types.ObjectId;
   status: EventStatus;
   type: EventType;
+  alias: string;
   basics: {
     name: string;
     description: string;
@@ -167,6 +169,10 @@ const TicketTypeSchema = new Schema<TicketType>({
       return this.type !== "Donation";
     },
   },
+  sold: {
+    type: Number,
+    default: 0,
+  },
   price: {
     type: Number,
     min: 0,
@@ -205,6 +211,7 @@ const EventSchema = new Schema(
       required: true,
       index: true,
     },
+    alias: { type: String, required: true, index: true, unique: true },
     basics: {
       name: { type: String, required: true },
       description: { type: String, required: true },
