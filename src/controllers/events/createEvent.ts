@@ -10,6 +10,10 @@ import { CreateEventInput } from "../../utils/schema-validations/events/createEv
 
 import { generateEventAlias } from "../../utils/helpers/events/generateEventAlias";
 
+import DEFAULT_EVENT_PHOTOS, {
+  EventCategory,
+} from "../../constants/DEFAULT_EVENT_PHOTOS";
+
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //Get user from request
@@ -34,9 +38,12 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    const { _id: eventId, hostId } = newEvent;
+    const { _id: eventId, hostId, basics } = newEvent;
+    const category = basics.category.toLowerCase() as EventCategory;
 
-    //Phase 2: Upload additionalDetails with exact naming convention
+    //Phase 2: Upload additionalDetails with standard naming convention
+    //::Upload images from the base64 string if they exist
+    //::OR default stock photos for social media and cover
     const uploadTasks = [];
 
     if (eventData.additionalDetails.socialMediaPhoto) {
@@ -54,6 +61,11 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
           newEvent.additionalDetails.socialMediaPhoto = url;
         })
       );
+    } else {
+      //Use "others" if category doesnt exist
+      newEvent.additionalDetails.socialMediaPhoto =
+        DEFAULT_EVENT_PHOTOS[category]?.social ||
+        DEFAULT_EVENT_PHOTOS["others"]?.social;
     }
 
     if (eventData.additionalDetails.eventCoverPhoto) {
@@ -71,6 +83,11 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
           newEvent.additionalDetails.eventCoverPhoto = url;
         })
       );
+    } else {
+      //Use "others" if category doesnt exist
+      newEvent.additionalDetails.eventCoverPhoto =
+        DEFAULT_EVENT_PHOTOS[category]?.cover ||
+        DEFAULT_EVENT_PHOTOS["others"]?.cover;
     }
 
     if (

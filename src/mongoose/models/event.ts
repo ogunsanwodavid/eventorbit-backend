@@ -76,8 +76,8 @@ export interface IEvent extends Document {
   additionalDetails: {
     contact: string;
     orderMessage: string;
-    socialMediaPhoto: string;
-    eventCoverPhoto: string;
+    socialMediaPhoto?: string;
+    eventCoverPhoto?: string;
     additionalPhotos?: string[];
   };
 }
@@ -160,11 +160,11 @@ const ScheduleSchema = new Schema<Schedule>({
 });
 
 const TicketTypeSchema = new Schema<TicketType>({
-  _id: {
+  /* _id: {
     type: Schema.Types.ObjectId,
-    required: true,
+    //required: true,
     index: true,
-  },
+  }, */
   type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
   name: { type: String, required: true },
   quantity: {
@@ -335,7 +335,7 @@ EventSchema.pre("validate", function (next) {
 });
 
 //Add indexes
-//EventSchema.index({ status: 1, type: 1 });
+EventSchema.index({ status: 1, type: 1 });
 EventSchema.index({ "basics.name": "text", "basics.description": "text" });
 
 export const EventModel = model<IEvent>("Event", EventSchema);

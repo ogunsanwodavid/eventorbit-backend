@@ -9,76 +9,6 @@ import TicketTypeSchema from "./TicketTypeSchema";
 import TimeSlotSchema from "./TimeSlotSchema";
 import ScheduleSchema from "./ScheduleSchema";
 
-/* const TimeSchema = z.object({
-  hours: z.coerce.number().min(0).max(23),
-  minutes: z.coerce.number().min(0).max(59),
-  timeZone: z.string(),
-});
-
-export const LocationSchema = z
-  .object({
-    isVirtual: z.coerce.boolean(),
-    address: z.string().optional(),
-    venueName: z.string().optional(),
-    organizerAddress: z.string().optional(),
-    connectionDetails: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (!data.isVirtual) {
-      if (!data.address) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Address is required for physical events",
-          path: ["address"],
-        });
-      }
-      if (!data.venueName) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Venue name is required for physical events",
-          path: ["venueName"],
-        });
-      }
-    } else {
-      if (!data.organizerAddress) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Organizer address is required for virtual events",
-          path: ["organizerAddress"],
-        });
-      }
-      if (!data.connectionDetails) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Connection details are required for virtual events",
-          path: ["connectionDetails"],
-        });
-      }
-    }
-  });
-
-const TicketTypeSchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("Paid"),
-    name: z.string(),
-    quantity: z.coerce.number().min(1),
-    price: z.coerce.number().min(0),
-    fee: z.coerce.number().min(0).optional(),
-  }),
-  z.object({
-    type: z.literal("Free"),
-    name: z.string(),
-    quantity: z.coerce.number().min(1),
-    fee: z.coerce.number().min(0).optional(),
-  }),
-  z.object({
-    type: z.literal("Donation"),
-    name: z.string(),
-    minDonation: z.coerce.number().min(0),
-    fee: z.coerce.number().min(0).optional(),
-  }),
-]); */
-
 const createEventSchema = z.object({
   body: z
     .object({
@@ -91,7 +21,7 @@ const createEventSchema = z.object({
         visibility: z.enum(["public", "unlisted"]),
         location: LocationSchema,
       }),
-      duration: TimeSlotSchema,
+      duration: TimeSlotSchema.optional(),
       schedules: z.array(ScheduleSchema).min(1),
       tickets: z.object({
         types: z.array(TicketTypeSchema).min(1, {
@@ -112,14 +42,14 @@ const createEventSchema = z.object({
       additionalDetails: z.object({
         contact: z.string(),
         orderMessage: z.string(),
-        socialMediaPhoto: base64ImageSchema,
-        eventCoverPhoto: base64ImageSchema,
+        socialMediaPhoto: base64ImageSchema.optional(),
+        eventCoverPhoto: base64ImageSchema.optional(),
         additionalPhotos: z.array(base64ImageSchema).max(3).optional(),
       }),
     })
     .superRefine((data, ctx) => {
       if (data.type === "regular") {
-        const duration = data.duration;
+        const duration = data.duration!;
 
         if (!duration.startTime) {
           ctx.addIssue({
@@ -128,6 +58,7 @@ const createEventSchema = z.object({
             path: ["startTime"],
           });
         }
+
         if (!duration.endTime) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
