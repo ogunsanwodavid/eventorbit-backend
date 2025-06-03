@@ -10,6 +10,7 @@ import updateEventDurationSchemaValidation from "../utils/schema-validations/eve
 import updateEventSchedulesSchemaValidation from "../utils/schema-validations/events/updateEventSchedulesSchemaValidation";
 import updateEventTicketsSchemaValidation from "../utils/schema-validations/events/updateEventTicketsSchemaValidation";
 import updateEventAdditionalDetailsSchemaValidation from "../utils/schema-validations/events/updateEventAdditionalDetailsSchemaValidation";
+import deleteEventSchemaValidation from "../utils/schema-validations/events/deleteEventSchemaValidation";
 
 import createEventHandler from "../controllers/events/createEvent";
 import getEventByAliasHandler from "../controllers/events/getEventByAlias";
@@ -19,6 +20,7 @@ import updateEventDurationHandler from "../controllers/events/updateEventDuratio
 import updateEventSchedulesHandler from "../controllers/events/updateEventSchedules";
 import updateEventTicketsHandler from "../controllers/events/updateEventTickets";
 import updateEventAdditionalDetailsHandler from "../controllers/events/updateEventAdditionalDetails";
+import deleteEventHandler from "../controllers/events/deleteEvent";
 
 //Define router
 const router = Router();
@@ -100,6 +102,15 @@ router.patch(
   checkAuthStatus,
   updateEventAdditionalDetailsSchemaValidation,
   updateEventAdditionalDetailsHandler
+);
+
+//Delete event by id
+//::Protected endpoint
+router.get(
+  "/delete/:eventId",
+  checkAuthStatus,
+  deleteEventSchemaValidation,
+  deleteEventHandler
 );
 
 export default router;
