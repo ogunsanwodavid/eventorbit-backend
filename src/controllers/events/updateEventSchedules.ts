@@ -6,24 +6,21 @@ import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
-import { UpdateEventBasicsInput } from "../../utils/schema-validations/events/updateEventBasicsSchemaValidation";
+import { UpdateEventSchedulesInput } from "../../utils/schema-validations/events/updateEventSchedulesSchemaValidation";
 
-import { generateEventAlias } from "../../utils/helpers/events/generateEventAlias";
-
-const updateEventBasics = async (
+const updateEventSchedules = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): Promise<any> => {
   try {
     //Get user from request
     const user = (req as any)["user"] as IUser;
 
     //Get event's id from request params
-    const { eventId } = req.params as UpdateEventBasicsInput["params"];
+    const { eventId } = req.params as UpdateEventSchedulesInput["params"];
 
     //Event data from request body
-    const updateData = req.body as UpdateEventBasicsInput["body"];
+    const updateData = req.body as UpdateEventSchedulesInput["body"];
 
     //Validate event ID format
     if (!isValidObjectId(eventId)) {
@@ -41,36 +38,33 @@ const updateEventBasics = async (
 
     if (!event) {
       return res.status(404).json({
-        status: "fail",
         message: "Event not found or you don't have permission",
       });
     }
 
-    //Check if name is being updated
-    const isNameChanged =
-      updateData.name && updateData.name !== event.basics.name;
+    //Return error if event isn't timed-entry
+    if (event.type !== "timed-entry") {
+      return res.status(403).json({
+        message: "Only timed-entry events can update schedules",
+      });
+    }
 
     //Apply updates
-    event.basics = updateData;
-
-    //Regenerate new alias if name changed
-    if (isNameChanged) {
-      event.alias = generateEventAlias(updateData.name);
-    }
+    event.schedules = updateData;
 
     //Save updated event
     await event.save();
 
     res.status(200).json({
-      message: "Event basics updated successfully",
+      message: "Event schedules updated successfully",
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Failed to update event basics",
+      message: "Failed to update event schedules",
     });
   }
 };
 
-export default updateEventBasics;
+export default updateEventSchedules;

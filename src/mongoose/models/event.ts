@@ -30,6 +30,7 @@ export interface Schedule {
 }
 
 export interface TicketType {
+  _id: Schema.Types.ObjectId;
   type: "Paid" | "Free" | "Donation";
   name: string;
   sold: number;
@@ -50,7 +51,6 @@ export interface IEvent extends Document {
     description: string;
     category: string;
     visibility: EventVisibility;
-
     location: {
       isVirtual: boolean;
       address?: string;
@@ -59,14 +59,13 @@ export interface IEvent extends Document {
       connectionDetails?: string;
     };
   };
-  startTime?: ITime;
-  endTime?: ITime;
+  duration?: TimeSlot;
   schedules?: Schedule[];
   tickets: {
     types: TicketType[];
     urgency: {
       indicate: boolean;
-      percentageSold: number;
+      percentageSold?: number;
     };
     currencies: {
       buy: string;
@@ -161,14 +160,16 @@ const ScheduleSchema = new Schema<Schedule>({
 });
 
 const TicketTypeSchema = new Schema<TicketType>({
+  _id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    index: true,
+  },
   type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
   name: { type: String, required: true },
   quantity: {
     type: Number,
     min: 1,
-    required: function () {
-      return this.type !== "Donation";
-    },
   },
   sold: {
     type: Number,
@@ -222,12 +223,9 @@ const EventSchema = new Schema(
         enum: ["public", "unlisted"],
         required: true,
       },
-      /* startTime: { type: TimeSchema },
-      endTime: { type: TimeSchema }, */
       location: { type: LocationSchema, required: true },
     },
-    startTime: { type: TimeSchema },
-    endTime: { type: TimeSchema },
+    duration: TimeSlotSchema,
     schedules: { type: [ScheduleSchema] },
     tickets: {
       types: {
@@ -264,17 +262,19 @@ EventSchema.pre("validate", function (next) {
     //Rule 1: Regular events require times
     if (event.type === "regular") {
       const missingTimes = [];
-      if (!event.startTime) missingTimes.push("startTime");
-      if (!event.endTime) missingTimes.push("endTime");
+      if (!event.duration.startTime) missingTimes.push("startTime");
+      if (!event.duration.endTime) missingTimes.push("endTime");
 
       if (missingTimes.length > 0) {
-        throw new Error(`Regular events require ${missingTimes.join(" and ")}`);
+        throw new Error(
+          `Regular events require ${missingTimes.join(" and ")} in duration`
+        );
       }
 
-      // Validate end time is after start time for regular events
-      if (event.startTime && event.endTime) {
-        const start = event.startTime;
-        const end = event.endTime;
+      //Validate end time is after start time for regular events
+      if (event.duration.startTime && event.duration.endTime) {
+        const start = event.duration.startTime;
+        const end = event.duration.endTime;
         if (
           start.hours > end.hours ||
           (start.hours === end.hours && start.minutes >= end.minutes)
@@ -334,8 +334,8 @@ EventSchema.pre("validate", function (next) {
   }
 });
 
-// Add indexes
-EventSchema.index({ status: 1, type: 1 });
+//Add indexes
+//EventSchema.index({ status: 1, type: 1 });
 EventSchema.index({ "basics.name": "text", "basics.description": "text" });
 
 export const EventModel = model<IEvent>("Event", EventSchema);

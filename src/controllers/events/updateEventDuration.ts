@@ -6,11 +6,9 @@ import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
-import { UpdateEventBasicsInput } from "../../utils/schema-validations/events/updateEventBasicsSchemaValidation";
+import { UpdateEventDurationInput } from "../../utils/schema-validations/events/updateEventDurationSchemaValidation";
 
-import { generateEventAlias } from "../../utils/helpers/events/generateEventAlias";
-
-const updateEventBasics = async (
+const updateEventDuration = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -20,10 +18,10 @@ const updateEventBasics = async (
     const user = (req as any)["user"] as IUser;
 
     //Get event's id from request params
-    const { eventId } = req.params as UpdateEventBasicsInput["params"];
+    const { eventId } = req.params as UpdateEventDurationInput["params"];
 
     //Event data from request body
-    const updateData = req.body as UpdateEventBasicsInput["body"];
+    const updateData = req.body as UpdateEventDurationInput["body"];
 
     //Validate event ID format
     if (!isValidObjectId(eventId)) {
@@ -41,36 +39,33 @@ const updateEventBasics = async (
 
     if (!event) {
       return res.status(404).json({
-        status: "fail",
         message: "Event not found or you don't have permission",
       });
     }
 
-    //Check if name is being updated
-    const isNameChanged =
-      updateData.name && updateData.name !== event.basics.name;
+    //Return error if event isn't regular
+    if (event.type !== "regular") {
+      return res.status(403).json({
+        message: "Only regular events can update duration",
+      });
+    }
 
     //Apply updates
-    event.basics = updateData;
-
-    //Regenerate new alias if name changed
-    if (isNameChanged) {
-      event.alias = generateEventAlias(updateData.name);
-    }
+    event.duration = updateData;
 
     //Save updated event
     await event.save();
 
     res.status(200).json({
-      message: "Event basics updated successfully",
+      message: "Event duration updated successfully",
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Failed to update event basics",
+      message: "Failed to update event duration",
     });
   }
 };
 
-export default updateEventBasics;
+export default updateEventDuration;

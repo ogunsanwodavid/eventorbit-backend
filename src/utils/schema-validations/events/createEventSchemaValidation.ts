@@ -5,8 +5,9 @@ import validateSchema from "../validateSchema";
 import { base64ImageSchema } from "../base64";
 
 import LocationSchema from "./LocationSchema";
-import TimeSchema from "./TimeSchema";
 import TicketTypeSchema from "./TicketTypeSchema";
+import TimeSlotSchema from "./TimeSlotSchema";
+import ScheduleSchema from "./ScheduleSchema";
 
 /* const TimeSchema = z.object({
   hours: z.coerce.number().min(0).max(23),
@@ -90,11 +91,12 @@ const createEventSchema = z.object({
         visibility: z.enum(["public", "unlisted"]),
         location: LocationSchema,
       }),
-      startTime: TimeSchema.optional(),
-      endTime: TimeSchema.optional(),
-      schedules: z.array(z.any()).optional(),
+      duration: TimeSlotSchema,
+      schedules: z.array(ScheduleSchema).min(1),
       tickets: z.object({
-        types: z.array(TicketTypeSchema).min(1),
+        types: z.array(TicketTypeSchema).min(1, {
+          message: "At least one ticket is required",
+        }),
         urgency: z
           .object({
             indicate: z.coerce.boolean(),
@@ -117,32 +119,21 @@ const createEventSchema = z.object({
     })
     .superRefine((data, ctx) => {
       if (data.type === "regular") {
-        if (!data.startTime) {
+        const duration = data.duration;
+
+        if (!duration.startTime) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Start time is required for regular events",
             path: ["startTime"],
           });
         }
-        if (!data.endTime) {
+        if (!duration.endTime) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "End time is required for regular events",
             path: ["endTime"],
           });
-        }
-        if (data.startTime && data.endTime) {
-          if (
-            data.startTime.hours > data.endTime.hours ||
-            (data.startTime.hours === data.endTime.hours &&
-              data.startTime.minutes >= data.endTime.minutes)
-          ) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: "End time must be after start time",
-              path: ["endTime"],
-            });
-          }
         }
       }
     }),
