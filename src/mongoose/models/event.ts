@@ -22,6 +22,11 @@ export type TimeSlot = {
   endTime: ITime;
 };
 
+export interface Duration {
+  startDate: Date;
+  endDate: Date;
+}
+
 export interface Schedule {
   startDate: Date;
   endDate?: Date;
@@ -59,7 +64,7 @@ export interface IEvent extends Document {
       connectionDetails?: string;
     };
   };
-  duration?: TimeSlot;
+  duration?: Duration;
   schedules?: Schedule[];
   tickets: {
     types: TicketType[];
@@ -114,6 +119,11 @@ const TicketUrgencySchema = new Schema({
       return (this as any).indicate === true;
     },
   },
+});
+
+const DurationSchema = new Schema<Duration>({
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
 });
 
 const TimeSlotSchema = new Schema<TimeSlot>({
@@ -225,7 +235,8 @@ const EventSchema = new Schema(
       },
       location: { type: LocationSchema, required: true },
     },
-    duration: TimeSlotSchema,
+    //duration: TimeSlotSchema,
+    duration: DurationSchema,
     schedules: { type: [ScheduleSchema] },
     tickets: {
       types: {
@@ -259,11 +270,11 @@ EventSchema.pre("validate", function (next) {
   const event = this as any;
 
   try {
-    //Rule 1: Regular events require times
+    //Rule 1: Regular events require start and end dates
     if (event.type === "regular") {
       const missingTimes = [];
-      if (!event.duration.startTime) missingTimes.push("startTime");
-      if (!event.duration.endTime) missingTimes.push("endTime");
+      if (!event.duration.startDate) missingTimes.push("startDate");
+      if (!event.duration.endDate) missingTimes.push("endDate");
 
       if (missingTimes.length > 0) {
         throw new Error(
@@ -272,13 +283,10 @@ EventSchema.pre("validate", function (next) {
       }
 
       //Validate end time is after start time for regular events
-      if (event.duration.startTime && event.duration.endTime) {
-        const start = event.duration.startTime;
-        const end = event.duration.endTime;
-        if (
-          start.hours > end.hours ||
-          (start.hours === end.hours && start.minutes >= end.minutes)
-        ) {
+      if (event.duration.startDate && event.duration.endDate) {
+        const start = event.duration.startDate;
+        const end = event.duration.Date;
+        if (start > end) {
           throw new Error("Event end time must be after start time");
         }
       }

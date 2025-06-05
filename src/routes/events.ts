@@ -11,6 +11,13 @@ import updateEventSchedulesSchemaValidation from "../utils/schema-validations/ev
 import updateEventTicketsSchemaValidation from "../utils/schema-validations/events/updateEventTicketsSchemaValidation";
 import updateEventAdditionalDetailsSchemaValidation from "../utils/schema-validations/events/updateEventAdditionalDetailsSchemaValidation";
 import deleteEventSchemaValidation from "../utils/schema-validations/events/deleteEventSchemaValidation";
+import searchEventsSchemaValidation from "../utils/schema-validations/events/searchEventsSchemaValidation";
+
+import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
+import locationSearchMiddleware from "../middleware/events/locationSearchMiddleware";
+import timeFrameFilterMiddleware from "../middleware/events/timeFrameFilterMiddleware";
+import priceFilterMiddleware from "../middleware/events/priceFilterMiddleware";
+import categoryFilterMiddleware from "../middleware/events/categoryFilterMiddleware";
 
 import createEventHandler from "../controllers/events/createEvent";
 import getEventByAliasHandler from "../controllers/events/getEventByAlias";
@@ -21,9 +28,30 @@ import updateEventSchedulesHandler from "../controllers/events/updateEventSchedu
 import updateEventTicketsHandler from "../controllers/events/updateEventTickets";
 import updateEventAdditionalDetailsHandler from "../controllers/events/updateEventAdditionalDetails";
 import deleteEventHandler from "../controllers/events/deleteEvent";
+import searchEventsHandler from "../controllers/events/searchEvents";
 
 //Define router
 const router = Router();
+
+//Search for events
+//::Filter by =>
+/**
+ * text search string
+ * location
+ * event category
+ * time frame of event
+ * price of tickets
+ */
+router.get(
+  "/search",
+  searchEventsSchemaValidation,
+  textSearchMiddleware,
+  locationSearchMiddleware,
+  categoryFilterMiddleware,
+  timeFrameFilterMiddleware,
+  priceFilterMiddleware,
+  searchEventsHandler
+);
 
 //Create a new event
 //::Protected endpoint
@@ -40,10 +68,9 @@ router.post(
 );
 
 //Get an event by its alias
-//::Protected endpoint
 router.get(
   "/get-by-alias/:alias",
-  checkAuthStatus,
+  //checkAuthStatus,
   getEventByAliasSchemaValidation,
   getEventByAliasHandler
 );

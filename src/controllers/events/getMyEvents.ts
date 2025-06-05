@@ -26,8 +26,7 @@ const getMyEvents = async (req: Request, res: Response): Promise<any> => {
     //::Check search matches in name, alias and description
     if (search) {
       query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { alias: { $regex: search, $options: "i" } },
+        { "basics.name": { $regex: search, $options: "i" } },
         { "basics.description": { $regex: search, $options: "i" } },
       ];
     }

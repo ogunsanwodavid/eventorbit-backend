@@ -2,13 +2,13 @@ import { z } from "zod";
 
 import validateSchema from "../validateSchema";
 
-import TimeSlotSchema from "./TimeSlotSchema";
+import DurationSchema from "./DurationSchema";
 
 const updateEventDurationSchema = z.object({
   params: z.object({
     eventId: z.string(),
   }),
-  body: TimeSlotSchema,
+  body: DurationSchema,
 });
 
 const updateEventDurationSchemaValidation = validateSchema(

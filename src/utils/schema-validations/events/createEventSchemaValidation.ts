@@ -6,8 +6,8 @@ import { base64ImageSchema } from "../base64";
 
 import LocationSchema from "./LocationSchema";
 import TicketTypeSchema from "./TicketTypeSchema";
-import TimeSlotSchema from "./TimeSlotSchema";
 import ScheduleSchema from "./ScheduleSchema";
+import DurationSchema from "./DurationSchema";
 
 const createEventSchema = z.object({
   body: z
@@ -21,8 +21,8 @@ const createEventSchema = z.object({
         visibility: z.enum(["public", "unlisted"]),
         location: LocationSchema,
       }),
-      duration: TimeSlotSchema.optional(),
-      schedules: z.array(ScheduleSchema).min(1),
+      duration: DurationSchema.optional(),
+      schedules: z.array(ScheduleSchema).min(1).optional(),
       tickets: z.object({
         types: z.array(TicketTypeSchema).min(1, {
           message: "At least one ticket is required",
@@ -51,19 +51,19 @@ const createEventSchema = z.object({
       if (data.type === "regular") {
         const duration = data.duration!;
 
-        if (!duration.startTime) {
+        if (!duration.startDate) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Start time is required for regular events",
-            path: ["startTime"],
+            message: "Start date is required for regular events",
+            path: ["startDate"],
           });
         }
 
-        if (!duration.endTime) {
+        if (!duration.endDate) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "End time is required for regular events",
-            path: ["endTime"],
+            message: "End date is required for regular events",
+            path: ["endDate"],
           });
         }
       }
