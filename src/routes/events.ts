@@ -12,6 +12,7 @@ import updateEventTicketsSchemaValidation from "../utils/schema-validations/even
 import updateEventAdditionalDetailsSchemaValidation from "../utils/schema-validations/events/updateEventAdditionalDetailsSchemaValidation";
 import deleteEventSchemaValidation from "../utils/schema-validations/events/deleteEventSchemaValidation";
 import searchEventsSchemaValidation from "../utils/schema-validations/events/searchEventsSchemaValidation";
+import updateEventStatusSchemaValidation from "../utils/schema-validations/events/updateEventStatusSchemaValidation";
 
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
 import locationSearchMiddleware from "../middleware/events/locationSearchMiddleware";
@@ -29,6 +30,7 @@ import updateEventTicketsHandler from "../controllers/events/updateEventTickets"
 import updateEventAdditionalDetailsHandler from "../controllers/events/updateEventAdditionalDetails";
 import deleteEventHandler from "../controllers/events/deleteEvent";
 import searchEventsHandler from "../controllers/events/searchEvents";
+import updateEventStatusHandler from "../controllers/events/updateEventStatus";
 
 //Define router
 const router = Router();
@@ -82,6 +84,14 @@ router.get(
   checkAuthStatus,
   getMyEventsSchemaValidation,
   getMyEventsHandler
+);
+
+//Update event status
+router.patch(
+  "/update-status/:eventId",
+  checkAuthStatus,
+  updateEventStatusSchemaValidation,
+  updateEventStatusHandler
 );
 
 //Update event basics
