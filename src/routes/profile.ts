@@ -6,8 +6,10 @@ import multerUploadCoverPhoto from "../middleware/profile/multerUploadCoverPhoto
 
 import updateProfileInfoSchemaValidation from "../utils/schema-validations/profile/updateProfileInfoSchemaValidation";
 import updateProfileSocialUrlsSchemaValidation from "../utils/schema-validations/profile/updateProfileSocialUrlsSchemaValidation";
+import getProfileBySlugSchemaValidation from "../utils/schema-validations/profile/getProfileBySlugSchemaValidation";
 
 import getProfileHandler from "../controllers/profile/getProfile";
+import getProfileBySlugHandler from "../controllers/profile/getProfileBySlug";
 import updateProfileInfoHandler from "../controllers/profile/updateProfileInfo";
 import updateProfileSocialUrlsHandler from "../controllers/profile/updateProfileSocialUrls";
 import uploadProfilePictureHandler from "../controllers/profile/uploadProfilePicture";
@@ -19,6 +21,13 @@ const router = Router();
 //Fetch user's profile
 //::Protected endpoint
 router.get("/get", checkAuthStatus, getProfileHandler);
+
+//Fetch a profile by it's slug
+router.get(
+  "/get-by-slug/:slug",
+  getProfileBySlugSchemaValidation,
+  getProfileBySlugHandler
+);
 
 //Upload profile picture
 //::Protected endpoint
