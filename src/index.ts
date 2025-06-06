@@ -14,9 +14,7 @@ import "./config/passport"; //Import passport config file
 
 import { v2 as cloudinary } from "cloudinary";
 
-//Configure environmental variables
 import dotenv from "dotenv";
-dotenv.config();
 
 //Import routes
 import authRoutes from "./routes/auth";
@@ -25,6 +23,13 @@ import profileRoutes from "./routes/profile";
 import emailPreferencesRoutes from "./routes/emailPreferences";
 import eventsRoutes from "./routes/events";
 
+//Import cron jobs
+import setupEventExpirationJob from "./jobs/events/eventExpiration.job";
+
+//Configure environmental variables
+dotenv.config();
+
+//App
 const app = express();
 
 //Port which app runs or 5000
@@ -84,8 +89,11 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/email-preferences", emailPreferencesRoutes);
 app.use("/api/events", eventsRoutes);
 
+/* //Cron jobs to run when app starts
+setupEventExpirationJob(); */
+
 //Connect to MongoDB and start server
-const start = async () => {
+/* const start = async () => {
   if (!mongoURI) {
     throw new Error("MONGO_URI not defined in .env");
   }
@@ -95,6 +103,23 @@ const start = async () => {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
   });
+}; */
+const start = async () => {
+  if (!mongoURI) throw new Error("MONGO_URI not defined in .env");
+
+  try {
+    await connectDB(mongoURI);
+
+    // Initialize cron job after DB connection
+    setupEventExpirationJob();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
 };
 
 start();
