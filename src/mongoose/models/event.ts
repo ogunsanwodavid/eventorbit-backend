@@ -2,7 +2,7 @@ import { Document, Schema, model } from "mongoose";
 
 import * as moment from "moment-timezone";
 
-// ================== CUSTOM TYPES AND INTERFACES ==================
+//================== CUSTOM TYPES AND INTERFACES ==================
 export type EventType = "regular" | "timed-entry";
 
 export type EventStatus = "live" | "drafted" | "expired";
@@ -45,7 +45,7 @@ export interface TicketType {
   fee?: number;
 }
 
-// ================== EVENT MAIN INTERFACE ==================
+//================== EVENT MAIN INTERFACE ==================
 export interface IEvent extends Document {
   hostId: Schema.Types.ObjectId;
   status: EventStatus;
@@ -87,7 +87,7 @@ export interface IEvent extends Document {
   };
 }
 
-// ================== SUB-SCHEMAS ==================
+//================== SUB-SCHEMAS ==================
 const TimeSchema = new Schema<ITime>({
   hours: { type: Number, required: true, min: 0, max: 23 },
   minutes: { type: Number, required: true, min: 0, max: 59 },
@@ -170,11 +170,6 @@ const ScheduleSchema = new Schema<Schedule>({
 });
 
 const TicketTypeSchema = new Schema<TicketType>({
-  /* _id: {
-    type: Schema.Types.ObjectId,
-    //required: true,
-    index: true,
-  }, */
   type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
   name: { type: String, required: true },
   quantity: {
@@ -202,7 +197,7 @@ const TicketTypeSchema = new Schema<TicketType>({
   fee: { type: Number, min: 0 },
 });
 
-// ================== MAIN SCHEMA ==================
+//================== MAIN SCHEMA ==================
 const EventSchema = new Schema(
   {
     hostId: {
@@ -265,7 +260,7 @@ const EventSchema = new Schema(
   { timestamps: true }
 );
 
-// ====== ADD CUSTOM VALIDATION ======
+//====== ADD CUSTOM VALIDATION ======
 EventSchema.pre("validate", function (next) {
   const event = this as any;
 
@@ -298,7 +293,7 @@ EventSchema.pre("validate", function (next) {
         throw new Error("Timed-entry events require at least one schedule");
       }
 
-      // Validate all schedules have valid time slots
+      //Validate all schedules have valid time slots
       const invalidSchedule = event.schedules.find(
         (s: Schedule) => !s.timeSlots || s.timeSlots.length === 0
       );

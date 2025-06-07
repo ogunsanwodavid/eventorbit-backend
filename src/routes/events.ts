@@ -14,6 +14,7 @@ import deleteEventSchemaValidation from "../utils/schema-validations/events/dele
 import searchEventsSchemaValidation from "../utils/schema-validations/events/searchEventsSchemaValidation";
 import updateEventStatusSchemaValidation from "../utils/schema-validations/events/updateEventStatusSchemaValidation";
 
+import autoCreateDefaultCheckoutQuestions from "../middleware/events/autoCreateDefaultCheckoutQuestions";
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
 import locationSearchMiddleware from "../middleware/events/locationSearchMiddleware";
 import timeFrameFilterMiddleware from "../middleware/events/timeFrameFilterMiddleware";
@@ -57,11 +58,13 @@ router.get(
 
 //Create a new event
 //::Protected endpoint
+//::Create default checkout questions
 router.post(
   "/create",
   checkAuthStatus,
   createEventSchemaValidation,
   createEventHandler,
+  autoCreateDefaultCheckoutQuestions,
   (req: Request, res: Response) => {
     res.status(201).json({
       message: "Event created successfully",

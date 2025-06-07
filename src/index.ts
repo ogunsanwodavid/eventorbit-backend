@@ -22,6 +22,8 @@ import accountRoutes from "./routes/account";
 import profileRoutes from "./routes/profile";
 import emailPreferencesRoutes from "./routes/emailPreferences";
 import eventsRoutes from "./routes/events";
+import checkoutQuestionsRoutes from "./routes/checkoutQuestions";
+import discountCodesRoutes from "./routes/discountCodes";
 
 //Import cron jobs
 import setupEventExpirationJob from "./jobs/events/eventExpiration.job";
@@ -82,35 +84,24 @@ cloudinary.config({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Utilize routes
+//Register and utilize routes
 app.use("/api/auth", authRoutes);
 app.use("/api/account", accountRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/email-preferences", emailPreferencesRoutes);
 app.use("/api/events", eventsRoutes);
+app.use("/api/checkout-questions", checkoutQuestionsRoutes);
+app.use("/api/discount-codes", discountCodesRoutes);
 
-/* //Cron jobs to run when app starts
-setupEventExpirationJob(); */
-
-//Connect to MongoDB and start server
-/* const start = async () => {
-  if (!mongoURI) {
-    throw new Error("MONGO_URI not defined in .env");
-  }
-
-  await connectDB(mongoURI!);
-
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-  });
-}; */
+//Start server function
 const start = async () => {
   if (!mongoURI) throw new Error("MONGO_URI not defined in .env");
 
   try {
+    //Connect to MongoDB
     await connectDB(mongoURI);
 
-    // Initialize cron job after DB connection
+    //Initialize cron job after DB connection
     setupEventExpirationJob();
 
     app.listen(PORT, () => {

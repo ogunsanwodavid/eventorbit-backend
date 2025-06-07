@@ -12,7 +12,7 @@ import { generateEventAlias } from "../../utils/helpers/events/generateEventAlia
 
 import DEFAULT_EVENT_PHOTOS, {
   EventCategory,
-} from "../../constants/DEFAULT_EVENT_PHOTOS";
+} from "../../constants/events/DEFAULT_EVENT_PHOTOS";
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -110,7 +110,11 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
 
     //Wait for all uploads then save
     await Promise.all(uploadTasks);
+
     await newEvent.save();
+
+    //Parse event's object as req for the next function
+    (req as any).event = newEvent;
 
     next();
   } catch (error) {

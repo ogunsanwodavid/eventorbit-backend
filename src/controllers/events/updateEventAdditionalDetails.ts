@@ -12,7 +12,7 @@ import { uploadBase64 } from "../../config/cloudinary";
 
 import DEFAULT_EVENT_PHOTOS, {
   EventCategory,
-} from "../../constants/DEFAULT_EVENT_PHOTOS";
+} from "../../constants/events/DEFAULT_EVENT_PHOTOS";
 
 const updateEventAdditionalDetails = async (
   req: Request,
