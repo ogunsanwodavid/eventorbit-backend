@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
 
 //================== CUSTOM TYPES AND INTERFACES ==================
 export type QuestionPer = "ticket" | "order";
@@ -14,6 +14,7 @@ export type QuestionType =
 export type QuestionAppliesTo = "all" | String[];
 
 export interface Question {
+  _id: Types.ObjectId;
   per: QuestionPer;
   type: QuestionType;
   required: boolean;
@@ -49,6 +50,10 @@ const QuestionAppliesToSchema = {
 };
 
 const QuestionSchema = new Schema<Question>({
+  _id: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(), // Auto-generate
+  },
   per: { type: String, enum: ["ticket", "order"], required: true },
   type: {
     type: String,
@@ -98,12 +103,6 @@ QuestionSchema.path("options").validate(function (value) {
     (Array.isArray(value) && value.length > 0)
   );
 }, "Checkbox/dropdown questions require at least one option");
-
-//Add indexes
-CheckoutQuestionsSchema.index({
-  "questions.labelTitle": "text",
-  "questions.text": "text",
-});
 
 export const CheckoutQuestionsModel = model<ICheckoutQuestions>(
   "CheckoutQuestions",

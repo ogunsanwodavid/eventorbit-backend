@@ -1,12 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 
 import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
-import { CheckoutQuestionsModel } from "../../mongoose/models/checkoutQuestions";
+import {
+  CheckoutQuestionsModel,
+  ICheckoutQuestions,
+} from "../../mongoose/models/checkoutQuestions";
 
 import { UpdateCheckoutQuestionsInput } from "../../utils/schema-validations/checkout-questions/updateCheckoutQuestionsSchemaValidation";
 
@@ -47,34 +50,117 @@ const updateCheckoutQuestions = async (
       });
     }
 
+    //Instantiate current checkout questions
+    let currentQuestions: ICheckoutQuestions | null;
+
     //Find current questions document using eventId
-    const currentQuestions = await CheckoutQuestionsModel.findOne({ eventId });
+    currentQuestions = await CheckoutQuestionsModel.findOne({ eventId });
 
     //If not found, create new document with default questions
     if (!currentQuestions) {
-      await CheckoutQuestionsModel.create({
+      //Add _id to default questions if creating new
+      const questionsWithIds = DEFAULT_CHECKOUT_QUESTIONS.map((q) => ({
+        ...q,
+        _id: new Types.ObjectId(),
+      }));
+
+      currentQuestions = await CheckoutQuestionsModel.create({
         eventId,
-        questions: DEFAULT_CHECKOUT_QUESTIONS,
+        questions: questionsWithIds,
       });
     }
 
-    //Apply updates with immutability protection
-    const updatedQuestionsWithProtection = updatedQuestions.map(
-      (current, index) => {
-        const update = updatedQuestions[index];
+    //Extract IDs of questions to keep
+    const questionIdsToKeep = updatedQuestions
+      .filter((q) => q._id && isValidObjectId(q._id))
+      .map((q) => new Types.ObjectId(q._id));
 
-        return current?.isImmutable
-          ? { ...current, isVisible: update?.isVisible || true } // Only allow isVisible changes
-          : { ...update, isImmutable: current?.isImmutable }; // Preserve original immutability
-      }
-    );
+    //IDs of all immutable questions
+    const immutableQuestionIds = currentQuestions.questions
+      .filter((q) => q.isImmutable)
+      .map((q) => q._id);
 
-    //Atomic update
-    await CheckoutQuestionsModel.findOneAndUpdate(
-      { eventId },
-      { $set: { questions: updatedQuestionsWithProtection } },
-      { new: true, runValidators: true }
-    );
+    //Prepare bulk operations
+    const bulkOps = [
+      //Remove questions not in the update list
+      {
+        updateOne: {
+          filter: { eventId },
+          update: {
+            $pull: {
+              questions: {
+                _id: {
+                  $nin: [
+                    ...questionIdsToKeep,
+                    ...immutableQuestionIds, // Always keep immutables
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+      //Update or add questions
+      ...updatedQuestions.map((question) => {
+        //New question (no ID or invalid ID)
+        if (!question._id || !isValidObjectId(question._id)) {
+          return {
+            updateOne: {
+              filter: { eventId },
+              update: {
+                $push: {
+                  questions: {
+                    ...question,
+                    _id: new Types.ObjectId(),
+                    isImmutable: false, //New questions are mutable
+                  },
+                },
+              },
+            },
+          };
+        }
+
+        //Existing question
+        const questionId = new Types.ObjectId(question._id);
+        const existingQuestion = currentQuestions.questions.find((q) =>
+          q._id.equals(questionId)
+        );
+
+        //Immutable question - only allow isVisible changes
+        if (existingQuestion?.isImmutable) {
+          return {
+            updateOne: {
+              filter: { eventId, "questions._id": questionId },
+              update: {
+                $set: {
+                  "questions.$.isVisible":
+                    question.isVisible ?? existingQuestion.isVisible,
+                },
+              },
+            },
+          };
+        }
+
+        //Mutable question - full update
+        return {
+          updateOne: {
+            filter: { eventId, "questions._id": questionId },
+            update: {
+              $set: {
+                "questions.$": {
+                  ...question,
+                  _id: questionId, //Preserve original ID
+                  isImmutable: existingQuestion?.isImmutable || false,
+                },
+              },
+            },
+          },
+        };
+      }),
+    ];
+
+    //Execute all operations
+    await CheckoutQuestionsModel.bulkWrite(bulkOps);
 
     res.status(200).json({
       message: "Update checkout questions successfully",

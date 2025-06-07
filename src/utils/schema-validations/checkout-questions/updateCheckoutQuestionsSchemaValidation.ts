@@ -8,6 +8,10 @@ export const QuestionAppliesToSchema = z
 
 export const QuestionSchema = z
   .object({
+    _id: z
+      .string()
+      .regex(/^[0-9a-fA-F]{24}$/, "Invalid MongoDB ObjectId")
+      .optional(),
     per: z.enum(["ticket", "order"]),
     type: z.enum([
       "shortText",

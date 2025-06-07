@@ -7,12 +7,12 @@ import googleSignInStrategy from "../strategies/googleSignInStrategy";
 //Utilize auth strategies
 passport.use(googleSignInStrategy);
 
-// Serialize user to store in session
+//Serialize user to store in session
 passport.serializeUser((user: any, done) => {
   done(null, user._id);
 });
 
-// Deserialize user from session
+//Deserialize user from session
 passport.deserializeUser(async (id: string, done) => {
   try {
     const user = await User.findById(id);

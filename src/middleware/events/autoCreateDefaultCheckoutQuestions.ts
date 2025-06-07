@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
+import { Types } from "mongoose";
+
 import { IEvent } from "../../mongoose/models/event";
 
 import { CheckoutQuestionsModel } from "../../mongoose/models/checkoutQuestions";
@@ -15,10 +17,16 @@ const autoCreateDefaultCheckoutQuestions = async (
     //Get event object from request
     const { _id: eventId } = (req as any)["event"] as IEvent;
 
+    //Add _id to default questions if creating new
+    const questionsWithIds = DEFAULT_CHECKOUT_QUESTIONS.map((q) => ({
+      ...q,
+      _id: new Types.ObjectId(),
+    }));
+
     //Create with default questions
     await CheckoutQuestionsModel.create({
       eventId,
-      questions: DEFAULT_CHECKOUT_QUESTIONS,
+      questions: questionsWithIds,
     });
 
     next();
