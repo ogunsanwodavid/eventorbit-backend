@@ -41,6 +41,7 @@ export interface Schedule {
   endDate?: Date;
   timeSlots: TimeSlot[];
   repeatDays?: WeekDay[];
+  sold: number;
 }
 
 export interface TicketType {
@@ -230,6 +231,7 @@ const ScheduleSchema = new Schema<Schedule>({
       message: "At least one repeat day is required when there's an end date",
     },
   },
+  sold: { type: Number, default: 0 },
 });
 
 const TicketTypeSchema = new Schema<TicketType>({

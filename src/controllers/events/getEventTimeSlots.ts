@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId , Types} from "mongoose";
 
 import { EventModel, WeekDay } from "../../mongoose/models/event";
 
@@ -8,7 +8,8 @@ import { IUser } from "../../mongoose/models/user";
 
 import { GetEventTimeSlotsInput } from "../../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
 
-interface TimeSlotResult {
+export interface TimeSlotResult {
+  scheduleId: Types.ObjectId;
   startDate: Date;
   endDate: Date;
 }
@@ -75,6 +76,7 @@ const getEventTimeSlots = async (req: Request, res: Response): Promise<any> => {
           slotEnd.setHours(slotEnd.getHours() + durationHours);
 
           allTimeslots.push({
+            scheduleId: schedule._id,
             startDate: slotStart,
             endDate: slotEnd,
           });
@@ -99,6 +101,7 @@ const getEventTimeSlots = async (req: Request, res: Response): Promise<any> => {
               allTimeslots.push({
                 startDate: slotStart,
                 endDate: slotEnd,
+                scheduleId: schedule._id
               });
             }
 

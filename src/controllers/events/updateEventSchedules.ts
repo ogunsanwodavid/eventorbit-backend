@@ -49,16 +49,27 @@ const updateEventSchedules = async (
       });
     }
 
-    /* //Apply updates
-    event.schedules = updateData;
-
-    //Save updated event
-    await event.save(); */
-
     //Extract IDs of schedules to keep
     const scheduleIdsToKeep = updateData
       .filter((schedule) => schedule._id && isValidObjectId(schedule._id))
       .map((schedule) => new Types.ObjectId(schedule._id));
+
+    //Check if schedules that have sold tickets are not included in ids to keep
+    if (event.schedules) {
+      const schedulesWithSoldTickets = event.schedules.filter(
+        (schedule) =>
+          schedule.sold &&
+          schedule.sold > 0 &&
+          !scheduleIdsToKeep.some((id) => id.equals(schedule._id))
+      );
+
+      //If any exists, throw an error
+      if (schedulesWithSoldTickets.length > 0) {
+        return res.status(400).json({
+          message: "Cannot remove schedules with sold tickets",
+        });
+      }
+    }
 
     //Prepare bulk operations
     const bulkOps = [
@@ -87,6 +98,7 @@ const updateEventSchedules = async (
                   schedules: {
                     ...scheduleUpdate,
                     _id: new Types.ObjectId(),
+                    sold: 0, // Explicit default
                   },
                 },
               },
@@ -107,7 +119,7 @@ const updateEventSchedules = async (
         ];
 
         possibleFields.forEach((key) => {
-          if (scheduleUpdate[key] !== undefined) {
+          if (key !== "sold" && scheduleUpdate[key] !== undefined) {
             updateFields[`schedules.$.${key}`] = scheduleUpdate[key];
           }
         });
