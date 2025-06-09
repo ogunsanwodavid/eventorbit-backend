@@ -10,6 +10,6 @@ const deleteEventSchema = z.object({
 
 const deleteEventSchemaValidation = validateSchema(deleteEventSchema);
 
-export type deleteEventInput = z.infer<typeof deleteEventSchema>;
+export type DeleteEventInput = z.infer<typeof deleteEventSchema>;
 
 export default deleteEventSchemaValidation;

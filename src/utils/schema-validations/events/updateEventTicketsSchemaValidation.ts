@@ -8,7 +8,7 @@ const TicketUpdateSchema = z
     _id: z.string().optional(),
   })
   .extend({
-    type: z.enum(["Paid", "Free", "Donation"]).optional(),
+    type: z.enum(["paid", "free", "donation"]).optional(),
     name: z.string().min(1).optional(),
     quantity: z.coerce.number().min(1).optional(),
     price: z.coerce.number().min(0).optional(),

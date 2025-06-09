@@ -114,7 +114,8 @@ const updateEventTickets = async (
         );
       }
 
-      return { ...ticket, ...update };
+      //Preserve number of sold tickets
+      return { ...ticket, ...update, sold: ticket.sold };
     });
 
     //Add new tickets

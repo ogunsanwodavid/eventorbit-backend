@@ -6,6 +6,8 @@ import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
+import { DeleteEventInput } from "../../utils/schema-validations/events/deleteEventSchemaValidation";
+
 const deleteEvent = async (
   req: Request,
   res: Response,
@@ -16,7 +18,7 @@ const deleteEvent = async (
     const user = (req as any)["user"] as IUser;
 
     //Get event's id from request params
-    const { eventId } = req.params;
+    const { eventId } = req.params as DeleteEventInput["params"];
 
     //Validate event ID format
     if (!isValidObjectId(eventId)) {

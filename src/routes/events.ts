@@ -13,6 +13,7 @@ import updateEventAdditionalDetailsSchemaValidation from "../utils/schema-valida
 import deleteEventSchemaValidation from "../utils/schema-validations/events/deleteEventSchemaValidation";
 import searchEventsSchemaValidation from "../utils/schema-validations/events/searchEventsSchemaValidation";
 import updateEventStatusSchemaValidation from "../utils/schema-validations/events/updateEventStatusSchemaValidation";
+import getEventTimeSlotsSchemaValidation from "../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
 
 import autoCreateDefaultCheckoutQuestions from "../middleware/events/autoCreateDefaultCheckoutQuestions";
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
@@ -32,6 +33,7 @@ import updateEventAdditionalDetailsHandler from "../controllers/events/updateEve
 import deleteEventHandler from "../controllers/events/deleteEvent";
 import searchEventsHandler from "../controllers/events/searchEvents";
 import updateEventStatusHandler from "../controllers/events/updateEventStatus";
+import getEventTimeSlotsHandler from "../controllers/events/getEventTimeSlots";
 
 //Define router
 const router = Router();
@@ -87,6 +89,15 @@ router.get(
   checkAuthStatus,
   getMyEventsSchemaValidation,
   getMyEventsHandler
+);
+
+//Get all timeslots for a timed-entry event
+//::Protected endpoint
+router.get(
+  "/get-timeslots/:eventId",
+  checkAuthStatus,
+  getEventTimeSlotsSchemaValidation,
+  getEventTimeSlotsHandler
 );
 
 //Update event status

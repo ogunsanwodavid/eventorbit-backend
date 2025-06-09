@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, Schema, model, Types } from "mongoose";
 
 import * as moment from "moment-timezone";
 
@@ -15,11 +15,19 @@ export interface ITime {
   timeZone: string;
 }
 
-export type WeekDay = "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT";
+export type WeekDay = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
+
+/* export type TimeSlot = {
+  startTime: ITime;
+  endTime: ITime;
+}; */
 
 export type TimeSlot = {
   startTime: ITime;
-  endTime: ITime;
+  duration: {
+    value: number;
+    unit: "hours" | "mins";
+  };
 };
 
 export interface Duration {
@@ -28,6 +36,7 @@ export interface Duration {
 }
 
 export interface Schedule {
+  _id: Types.ObjectId; //Stable identifier
   startDate: Date;
   endDate?: Date;
   timeSlots: TimeSlot[];
@@ -36,7 +45,7 @@ export interface Schedule {
 
 export interface TicketType {
   _id: Schema.Types.ObjectId;
-  type: "Paid" | "Free" | "Donation";
+  type: "paid" | "free" | "donation";
   name: string;
   sold: number;
   quantity?: number;
@@ -130,7 +139,7 @@ const DurationSchema = new Schema<Duration>({
   endDate: { type: Date },
 });
 
-const TimeSlotSchema = new Schema<TimeSlot>({
+/* const TimeSlotSchema = new Schema<TimeSlot>({
   startTime: { type: TimeSchema, required: true },
   endTime: {
     type: TimeSchema,
@@ -146,9 +155,17 @@ const TimeSlotSchema = new Schema<TimeSlot>({
       message: "End time must be after start time",
     },
   },
+}); */
+
+const TimeSlotSchema = new Schema<TimeSlot>({
+  startTime: { type: TimeSchema, required: true },
+  duration: {
+    value: { type: Number },
+    unit: { type: String, enum: ["hours", "mins"] },
+  },
 });
 
-const ScheduleSchema = new Schema<Schedule>({
+/* const ScheduleSchema = new Schema<Schedule>({
   startDate: { type: Date, required: true },
   endDate: {
     type: Date,
@@ -171,10 +188,52 @@ const ScheduleSchema = new Schema<Schedule>({
     type: [String],
     enum: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
   },
+}); */
+
+const ScheduleSchema = new Schema<Schedule>({
+  _id: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(), // Auto-generate
+  },
+  startDate: { type: Date, required: true },
+  endDate: {
+    type: Date,
+    validate: {
+      validator: function (this: Schedule, endDate: Date) {
+        // If there are repeatDays, endDate must exist
+        if (this.repeatDays?.length && !endDate) return false;
+        // If endDate exists, it must be after startDate
+        return !endDate || endDate > this.startDate;
+      },
+      message: "End date validation error",
+    },
+  },
+  timeSlots: {
+    type: [TimeSlotSchema],
+    required: true,
+    validate: {
+      validator: (slots: TimeSlot[]) => slots.length > 0,
+      message: "At least one time slot is required",
+    },
+  },
+  repeatDays: {
+    type: [String],
+    enum: ["sun", "mon", "tue", "wed", "thu", "fri", "sat"],
+    validate: {
+      validator: function (this: Schedule, repeatDays: string[]) {
+        //If there's an endDate, at least one repeat day is required
+        if (this.endDate && (!repeatDays || repeatDays.length === 0)) {
+          return false;
+        }
+        return true;
+      },
+      message: "At least one repeat day is required when there's an end date",
+    },
+  },
 });
 
 const TicketTypeSchema = new Schema<TicketType>({
-  type: { type: String, enum: ["Paid", "Free", "Donation"], required: true },
+  type: { type: String, enum: ["paid", "free", "donation"], required: true },
   name: { type: String, required: true },
   quantity: {
     type: Number,
@@ -188,14 +247,14 @@ const TicketTypeSchema = new Schema<TicketType>({
     type: Number,
     min: 0,
     required: function () {
-      return this.type === "Paid";
+      return this.type === "paid";
     },
   },
   minDonation: {
     type: Number,
     min: 0,
     required: function () {
-      return this.type === "Donation";
+      return this.type === "donation";
     },
   },
   fee: { type: Number, min: 0 },
@@ -360,7 +419,7 @@ EventSchema.pre("validate", function (next) {
 });
 
 //Add indexes
-EventSchema.index({ status: 1, type: 1 });
-EventSchema.index({ "basics.name": "text", "basics.description": "text" });
+/* EventSchema.index({ status: 1, type: 1 });
+EventSchema.index({ "basics.name": "text", "basics.description": "text" }); */
 
 export const EventModel = model<IEvent>("Event", EventSchema);

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 
 import { IUser } from "../../mongoose/models/user";
 
-import { EventModel } from "../../mongoose/models/event";
+import { EventModel, Schedule } from "../../mongoose/models/event";
 
 import { UpdateEventSchedulesInput } from "../../utils/schema-validations/events/updateEventSchedulesSchemaValidation";
 
@@ -49,11 +49,80 @@ const updateEventSchedules = async (
       });
     }
 
-    //Apply updates
+    /* //Apply updates
     event.schedules = updateData;
 
     //Save updated event
-    await event.save();
+    await event.save(); */
+
+    //Extract IDs of schedules to keep
+    const scheduleIdsToKeep = updateData
+      .filter((schedule) => schedule._id && isValidObjectId(schedule._id))
+      .map((schedule) => new Types.ObjectId(schedule._id));
+
+    //Prepare bulk operations
+    const bulkOps = [
+      //Remove schedules not in the updated list
+      {
+        updateOne: {
+          filter: { _id: eventId },
+          update: {
+            $pull: {
+              schedules: {
+                _id: { $nin: scheduleIdsToKeep },
+              },
+            },
+          },
+        },
+      },
+      //Handle updates and additions
+      ...updateData.map((scheduleUpdate) => {
+        //For new schedules
+        if (!scheduleUpdate._id || !isValidObjectId(scheduleUpdate._id)) {
+          return {
+            updateOne: {
+              filter: { _id: eventId },
+              update: {
+                $push: {
+                  schedules: {
+                    ...scheduleUpdate,
+                    _id: new Types.ObjectId(),
+                  },
+                },
+              },
+            },
+          };
+        }
+
+        //For existing schedules
+        const scheduleId = new Types.ObjectId(scheduleUpdate._id);
+        const updateFields: Record<string, any> = {};
+
+        //Explicitly check and set each possible field
+        const possibleFields: (keyof Schedule)[] = [
+          "startDate",
+          "endDate",
+          "timeSlots",
+          "repeatDays",
+        ];
+
+        possibleFields.forEach((key) => {
+          if (scheduleUpdate[key] !== undefined) {
+            updateFields[`schedules.$.${key}`] = scheduleUpdate[key];
+          }
+        });
+
+        return {
+          updateOne: {
+            filter: { _id: eventId, "schedules._id": scheduleId },
+            update: { $set: updateFields },
+          },
+        };
+      }),
+    ];
+
+    //Execute atomic updates
+    await EventModel.bulkWrite(bulkOps);
 
     res.status(200).json({
       message: "Event schedules updated successfully",
