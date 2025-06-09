@@ -77,6 +77,10 @@ export interface IEvent extends Document {
       receive: string;
     };
     refundPolicy: string;
+    hasSoldTickets?: {
+      type: Boolean;
+      default: false;
+    };
   };
   additionalDetails: {
     contact: string;
@@ -122,8 +126,8 @@ const TicketUrgencySchema = new Schema({
 });
 
 const DurationSchema = new Schema<Duration>({
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
+  startDate: { type: Date },
+  endDate: { type: Date },
 });
 
 const TimeSlotSchema = new Schema<TimeSlot>({
@@ -230,8 +234,7 @@ const EventSchema = new Schema(
       },
       location: { type: LocationSchema, required: true },
     },
-    //duration: TimeSlotSchema,
-    duration: DurationSchema,
+    duration: { type: DurationSchema, required: false },
     schedules: { type: [ScheduleSchema] },
     tickets: {
       types: {
@@ -248,6 +251,7 @@ const EventSchema = new Schema(
         receive: { type: String, required: true, uppercase: true },
       },
       refundPolicy: { type: String, required: true },
+      hasSoldTickets: { type: Boolean },
     },
     additionalDetails: {
       contact: { type: String, required: true },
@@ -257,8 +261,26 @@ const EventSchema = new Schema(
       additionalPhotos: { type: [String] },
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+//====== VIRTUAL PROPERTY =======
+EventSchema.virtual("hasSoldTickets").get(function () {
+  return this.tickets!.types.some((ticket) => ticket.sold > 0);
+});
+
+//====== PRE-SAVE HOOKS ==========
+EventSchema.pre("save", async function (next) {
+  try {
+    //Update hasSoldTickets based on whether any ticket has sold > 0
+    this.tickets!.hasSoldTickets = this.tickets!.types.some(
+      (ticket) => ticket.sold > 0
+    );
+    next();
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 //====== ADD CUSTOM VALIDATION ======
 EventSchema.pre("validate", function (next) {

@@ -38,6 +38,14 @@ const deleteEvent = async (
       });
     }
 
+    //Check if event has sold tickets before
+    //::If true, prevent deletion
+    if (event.tickets?.hasSoldTickets) {
+      return res.status(403).json({
+        message: "You can't delete an event that has sold tickets",
+      });
+    }
+
     //Delete event
     await event.deleteOne();
 

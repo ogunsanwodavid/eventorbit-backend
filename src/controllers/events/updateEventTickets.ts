@@ -93,7 +93,7 @@ const updateEventTickets = async (
       if (!update) return ticket;
 
       //Check protected fields
-      const protectedFields = ["type", "name", "price"] as const;
+      const protectedFields = ["type", "name"] as const;
       const changedProtected = protectedFields.filter(
         (field) =>
           update[field] !== undefined && update[field] !== ticket[field]
