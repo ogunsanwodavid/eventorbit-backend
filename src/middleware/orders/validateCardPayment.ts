@@ -16,71 +16,65 @@ const validateCardPayment = async (
     //Get payment credentials from request body
     const { paymentCredentials } = req.body as ProcessOrderInput["body"];
 
-    //Get info from credentials
     const { cardNumber, expiry, cvc } = paymentCredentials;
-
-    //Payment result
-    let paymentResult: PaymentResult;
 
     //Validate presence of required fields
     if (!cardNumber || !expiry || !cvc) {
-      paymentResult = {
+      return res.status(400).json({
         success: false,
         message: "Missing required payment fields: cardNumber, expiry, or cvc",
-      };
+      });
     }
 
     //Validate cardNumber (13–19 digits)
     if (!/^\d{13,19}$/.test(cardNumber)) {
-      paymentResult = {
+      return res.status(400).json({
         success: false,
         message: "Card number must be 13–19 digits",
-      };
+      });
     }
 
-    //Validate expiry (MM/YY format and future date)
+    //Validate expiry format (MM/YY)
     if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
-      paymentResult = {
+      return res.status(400).json({
         success: false,
         message: "Expiry must be in MM/YY format",
-      };
+      });
     }
 
-    //Split expiry date to month and year
-    const [month, year] = expiry.split("/").map((key) => Number(key));
+    //Split and validate expiry date
+    const [month, year] = expiry.split("/").map(Number);
+    const expiryDate = new Date(2000 + year, month - 1); //JS months are 0-indexed
+    const now = new Date();
 
-    //Get expiry as JS Date
-    const expiryDate = new Date(Number(`20${year}`), month - 1); // e.g., "12/26" -> Dec 2026
-    const now = new Date("2025-06-10T02:33:00+01:00"); // June 10, 2025, 02:33 AM WAT
-
-    //Check card validity
     if (expiryDate <= now) {
-      paymentResult = {
+      return res.status(400).json({
         success: false,
         message: "Card has expired",
-      };
+      });
     }
 
-    // Validate cvc (3–4 digits)
+    //Validate CVC (3–4 digits)
     if (!/^\d{3,4}$/.test(cvc)) {
-      paymentResult = {
+      return res.status(400).json({
         success: false,
         message: "CVC must be 3 or 4 digits",
-      };
+      });
     }
 
-    //If no error, make payment result successful
-    paymentResult = {
+    //If all validations pass
+    (req as any).paymentResult = {
       success: true,
-      message: "Payment processed!!",
+      message: "Payment validated successfully",
     };
-
-    //Attach payment result to request
-    (req as any).paymentResult = paymentResult as PaymentResult;
 
     next();
   } catch (error) {
-    next(error);
+    console.error("Payment validation error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error during payment validation",
+    });
   }
 };
 

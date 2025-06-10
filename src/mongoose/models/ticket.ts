@@ -20,12 +20,23 @@ export interface ITicket extends Document {
   status: TicketStatus;
   name: String;
   code: String;
-  QRCode: string;
+  qrCode: string;
   startDate: Date;
   endDate: Date;
   value: number;
   attendee: Attendee;
   checkoutResponses?: CheckoutResponse[];
+  eventInfo: {
+    name: string;
+    location: {
+      isVirtual: boolean;
+      address?: string;
+      venueName?: string;
+      connectionDetails?: string;
+    };
+    organizerName: string;
+    coverPhoto: string;
+  };
 }
 
 //================== SUB-SCHEMAS ==================
@@ -63,6 +74,12 @@ const CheckoutResponseSchema = new Schema<CheckoutResponse>({
   },
 });
 
+const EventLocationSchema = new Schema({
+  address: { type: String },
+  venueName: { type: String },
+  connectionDetails: { type: String },
+});
+
 //================== MAIN SCHEMA ==================
 const TicketSchema = new Schema({
   orderId: {
@@ -91,7 +108,7 @@ const TicketSchema = new Schema({
     type: String,
     required: true,
   },
-  QRCode: {
+  qrCode: {
     type: String,
     required: true,
     unique: true,
@@ -110,6 +127,15 @@ const TicketSchema = new Schema({
   },
   attendee: AttendeeSchema,
   checkoutResponses: [CheckoutResponseSchema],
+  event: {
+    name: { type: String, required: true },
+    location: EventLocationSchema,
+    organizerName: { type: String, required: true },
+    coverPhoto: {
+      type: String,
+      required: true,
+    },
+  },
 });
 
 export const TicketModel = model<ITicket>("Ticket", TicketSchema);

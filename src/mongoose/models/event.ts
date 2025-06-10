@@ -90,8 +90,8 @@ export interface IEvent extends Document {
   additionalDetails: {
     contact: string;
     orderMessage: string;
-    socialMediaPhoto?: string;
-    eventCoverPhoto?: string;
+    socialMediaPhoto: string;
+    eventCoverPhoto: string;
     additionalPhotos?: string[];
   };
 }
@@ -312,8 +312,8 @@ const EventSchema = new Schema(
     additionalDetails: {
       contact: { type: String, required: true },
       orderMessage: { type: String, required: true },
-      socialMediaPhoto: { type: String },
-      eventCoverPhoto: { type: String },
+      socialMediaPhoto: { type: String, required: true },
+      eventCoverPhoto: { type: String, required: true },
       additionalPhotos: { type: [String] },
     },
   },

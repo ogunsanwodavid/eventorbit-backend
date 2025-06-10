@@ -24,6 +24,7 @@ import emailPreferencesRoutes from "./routes/emailPreferences";
 import eventsRoutes from "./routes/events";
 import checkoutQuestionsRoutes from "./routes/checkoutQuestions";
 import discountCodesRoutes from "./routes/discountCodes";
+import ordersRoutes from "./routes/orders";
 
 //Import cron jobs
 import setupEventExpirationJob from "./jobs/events/eventExpiration.job";
@@ -92,6 +93,7 @@ app.use("/api/email-preferences", emailPreferencesRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/checkout-questions", checkoutQuestionsRoutes);
 app.use("/api/discount-codes", discountCodesRoutes);
+app.use("/api/orders", ordersRoutes);
 
 //Start server function
 const start = async () => {
