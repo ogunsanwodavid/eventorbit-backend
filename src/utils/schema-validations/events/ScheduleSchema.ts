@@ -1,15 +1,7 @@
 import { z } from "zod";
 
 import TimeSlotSchema from "./TimeSlotSchema";
-
-const DateStringSchema = z.string().refine(
-  (val) => {
-    return !isNaN(Date.parse(val));
-  },
-  {
-    message: "Invalid date string format",
-  }
-);
+import DateStringSchema from "../DateStringSchema";
 
 const ScheduleSchema = z
   .object({

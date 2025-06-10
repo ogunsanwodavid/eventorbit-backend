@@ -1,0 +1,115 @@
+import { Document, Schema, model } from "mongoose";
+
+//================== CUSTOM TYPES AND INTERFACES ==================
+export type TicketStatus = "reserved" | "attended" | "cancelled";
+
+export interface Attendee {
+  name: String;
+  email: String;
+}
+
+export interface CheckoutResponse {
+  question: string;
+  response: string | string[];
+}
+
+//================== ORDER MAIN INTERFACE ==================
+export interface ITicket extends Document {
+  orderId: Schema.Types.ObjectId;
+  buyerId: Schema.Types.ObjectId;
+  status: TicketStatus;
+  name: String;
+  code: String;
+  QRCode: string;
+  startDate: Date;
+  endDate: Date;
+  value: number;
+  attendee: Attendee;
+  checkoutResponses?: CheckoutResponse[];
+}
+
+//================== SUB-SCHEMAS ==================
+const AttendeeSchema = new Schema<Attendee>({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+});
+
+const CheckoutResponseSchema = new Schema<CheckoutResponse>({
+  question: {
+    type: String,
+    required: [true, "Question is required"],
+  },
+  response: {
+    type: Schema.Types.Mixed,
+    required: [true, "Response is required"],
+    validate: {
+      validator: function (value: any) {
+        //Validate it's either a non-empty string or non-empty string array
+        if (typeof value === "string") {
+          return value.trim().length > 0;
+        }
+        if (Array.isArray(value)) {
+          return (
+            value.length > 0 &&
+            value.every(
+              (item) => typeof item === "string" && item.trim().length > 0
+            )
+          );
+        }
+        return false;
+      },
+      message: "Response must be a non-empty string or array of strings",
+    },
+  },
+});
+
+//================== MAIN SCHEMA ==================
+const TicketSchema = new Schema({
+  orderId: {
+    type: Schema.Types.ObjectId,
+    ref: "Order",
+    required: true,
+    index: true,
+  },
+  buyerId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true,
+  },
+  status: {
+    type: String,
+    enum: ["reserved", "attended", "cancelled"],
+    default: "reserved",
+    index: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  code: {
+    type: String,
+    required: true,
+  },
+  QRCode: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  startDate: {
+    type: Date,
+    required: true,
+  },
+  endDate: {
+    type: Date,
+    required: true,
+  },
+  value: {
+    type: Number,
+    required: true,
+  },
+  attendee: AttendeeSchema,
+  checkoutResponses: [CheckoutResponseSchema],
+});
+
+export const TicketModel = model<ITicket>("Ticket", TicketSchema);

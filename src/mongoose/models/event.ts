@@ -17,11 +17,6 @@ export interface ITime {
 
 export type WeekDay = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
 
-/* export type TimeSlot = {
-  startTime: ITime;
-  endTime: ITime;
-}; */
-
 export type TimeSlot = {
   startTime: ITime;
   duration: {
