@@ -8,7 +8,8 @@ import createNewOrder from "../middleware/orders/createNewOrder";
 import validateCardPayment from "../middleware/orders/validateCardPayment";
 import updateOrderStatus from "../middleware/orders/updateOrderStatus";
 import resolveSoldStatus from "../middleware/orders/resolveSoldStatus";
-import generateTickets from "../middleware/orders/generateTickets";
+import createTickets from "../middleware/orders/createTickets";
+import formatTickets from "../middleware/orders/formatTickets";
 
 //Define router
 const router = Router();
@@ -20,7 +21,7 @@ const router = Router();
 //::Create a new order with "pending" status
 //::Validate card payment credentials
 //::Update order status after payment
-//::Generate tickets and mail to user
+//::Create tickets in database
 //::Resolve sold status in tickets and schedules
 router.post(
   "/process/:eventId",
@@ -30,8 +31,9 @@ router.post(
   createNewOrder,
   validateCardPayment,
   updateOrderStatus,
-  generateTickets,
+  createTickets,
   resolveSoldStatus,
+  formatTickets,
   (_, res: Response) => {
     res.status(201).json({
       message: "Order processed successfully",

@@ -4,18 +4,19 @@ import { IUser, User } from "../../mongoose/models/user";
 
 import { IEvent } from "../../mongoose/models/event";
 
+import { Profile } from "../../mongoose/models/profile";
+
 import { IOrder } from "../../mongoose/models/order";
 
-import { TicketModel } from "../../mongoose/models/ticket";
+import { ITicket, TicketModel } from "../../mongoose/models/ticket";
 
 import { ProcessOrderInput } from "../../utils/schema-validations/orders/processOrderSchemaValidation";
 
 import generateUniqueTicketCode from "../../utils/helpers/orders/generateUniqueTicketCode";
 import generateQRCodeForTicket from "../../utils/helpers/orders/generateQRCodeForTicket";
 import calculateTicketValue from "../../utils/helpers/orders/calculateTicketValue";
-import { Profile } from "../../mongoose/models/profile";
 
-const generateTickets = async (
+const createTickets = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -44,7 +45,10 @@ const generateTickets = async (
       });
     }
 
-    //Generate tickets sequentially with quantity support
+    //Array of generated tickets
+    const createdTickets = [] as ITicket[];
+
+    //Create tickets sequentially with quantity support
     for (const ticketData of tickets) {
       //Validate quantity
       if (!ticketData.quantityPurchased || ticketData.quantityPurchased < 1) {
@@ -92,11 +96,16 @@ const generateTickets = async (
                 : hostProfile.info.organizationName,
             coverPhoto: event.additionalDetails.eventCoverPhoto,
           },
-        });
+        }) as ITicket;
 
         await ticket.save();
+
+        createdTickets.push(ticket);
       }
     }
+
+    //Attach created tickets to request
+    (req as any).createdTickets = createdTickets;
 
     next();
   } catch (error) {
@@ -105,4 +114,4 @@ const generateTickets = async (
   }
 };
 
-export default generateTickets;
+export default createTickets;

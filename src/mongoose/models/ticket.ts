@@ -4,8 +4,8 @@ import { Document, Schema, model } from "mongoose";
 export type TicketStatus = "reserved" | "attended" | "cancelled";
 
 export interface Attendee {
-  name: String;
-  email: String;
+  name: string;
+  email: string;
 }
 
 export interface CheckoutResponse {
@@ -18,18 +18,17 @@ export interface ITicket extends Document {
   orderId: Schema.Types.ObjectId;
   buyerId: Schema.Types.ObjectId;
   status: TicketStatus;
-  name: String;
-  code: String;
+  name: string;
+  code: string;
   qrCode: string;
   startDate: Date;
   endDate: Date;
   value: number;
   attendee: Attendee;
   checkoutResponses?: CheckoutResponse[];
-  eventInfo: {
+  event: {
     name: string;
     location: {
-      isVirtual: boolean;
       address?: string;
       venueName?: string;
       connectionDetails?: string;
