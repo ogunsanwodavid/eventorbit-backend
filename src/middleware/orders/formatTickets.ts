@@ -56,8 +56,6 @@ const formatTickets = async (
       };
     });
 
-    console.log(formattedTickets);
-
     //Attach formatted tickets to request
     (req as any).formattedTickets = formattedTickets;
 

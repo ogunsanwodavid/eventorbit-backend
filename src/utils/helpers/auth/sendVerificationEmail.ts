@@ -36,9 +36,9 @@ export const sendVerificationEmail = async (to: string, token: string) => {
   await transporter.sendMail({
     from: `"EventOrbit" <${process.env.GOOGLE_GMAIL_API_MAIL_USER}>`,
     to,
-    subject: "Events await! Please confirm your accountl",
+    subject: "Events await! Please confirm your account.",
     html: `<p>Hey ${
       firstName || organizationName
-    }</p><p>We've finished setting up your EventOrbit account. Just <a href="${url}" style="display:inline;color:#007bff;text-decoration: none;">confirm your email</a> to get started!</p>`,
+    },</p><p>We've finished setting up your EventOrbit account. Just <a href="${url}" style="display:inline;color:#007bff;text-decoration: none;">confirm your email</a> to get started!</p>`,
   });
 };

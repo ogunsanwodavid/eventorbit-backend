@@ -10,6 +10,8 @@ import updateOrderStatus from "../middleware/orders/updateOrderStatus";
 import resolveSoldStatus from "../middleware/orders/resolveSoldStatus";
 import createTickets from "../middleware/orders/createTickets";
 import formatTickets from "../middleware/orders/formatTickets";
+import generateTicketPdfs from "../middleware/orders/generateTicketPdfs";
+import mailTickets from "../middleware/orders/mailTickets";
 
 //Define router
 const router = Router();
@@ -24,6 +26,8 @@ const router = Router();
 //::Create tickets in database
 //::Resolve sold status in tickets and schedules
 //::Format tickets to be parse-able into PDFs
+//::Generate tickets as pdfs and merge into one
+//::Mail tickets to buyer
 router.post(
   "/process/:eventId",
   checkAuthStatus,
@@ -35,6 +39,8 @@ router.post(
   createTickets,
   resolveSoldStatus,
   formatTickets,
+  generateTicketPdfs,
+  mailTickets,
   (_, res: Response) => {
     res.status(201).json({
       message: "Order processed successfully",
