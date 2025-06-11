@@ -51,7 +51,7 @@ const sendOrderConfirmationEmail = async (
     subject: `Here ${hasMultipleTickets ? "are" : "is"} your ${
       hasMultipleTickets ? "tickets" : "ticket"
     } to ${event.basics.name}`,
-    html: `<h2 style="font-weight:bold;font-size:20px">Hey ${
+    html: `<h2 style="font-weight:bold;font-size:18px">Hey ${
       firstName || organizationName
     }, you've reserved your spot to ${event.basics.name}</h2>
     <p style="margin-top:25px">This is your order confirmation for <a href="${eventUrl}" style="display:inline;color:#007bff;text-decoration: none;">${
