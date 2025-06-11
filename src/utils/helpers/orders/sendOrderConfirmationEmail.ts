@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-import { IUser, User } from "../../../mongoose/models/user";
+import { IUser } from "../../../mongoose/models/user";
 
 import { IEvent } from "../../../mongoose/models/event";
 

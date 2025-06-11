@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 
@@ -13,11 +13,14 @@ import formatTickets from "../middleware/orders/formatTickets";
 import generateTicketPdfs from "../middleware/orders/generateTicketPdfs";
 import mailTickets from "../middleware/orders/mailTickets";
 
+import processOrderSchemaValidation from "../utils/schema-validations/orders/processOrderSchemaValidation";
+
 //Define router
 const router = Router();
 
 //Process order
 //::Protected endpoint, only authorized users can pay for & get tickets
+//::Validate request with zod schema
 //::Check if event exists
 //::Calculate price information for this order
 //::Create a new order with "pending" status
@@ -31,6 +34,7 @@ const router = Router();
 router.post(
   "/process/:eventId",
   checkAuthStatus,
+  processOrderSchemaValidation,
   validateEvent,
   calculateTotalPrice,
   createNewOrder,

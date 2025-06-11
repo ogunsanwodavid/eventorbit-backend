@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 
 import deleteSession from "../middleware/auth/deleteSession";
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
@@ -32,7 +32,7 @@ router.patch(
   updateEmailSchemaValidation,
   updateEmailHandler,
   deleteSession,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Email updated and verification sent",
     });
@@ -48,7 +48,7 @@ router.patch(
   updatePasswordSchemaValidation,
   updatePasswordHandler,
   deleteSession,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Password updated successfully",
     });
@@ -62,7 +62,7 @@ router.patch(
   checkAuthStatus,
   updateLocationSchemaValidation,
   updateLocationHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Location updated successfully",
     });
@@ -76,7 +76,7 @@ router.patch(
   checkAuthStatus,
   updatePoliciesSchemaValidation,
   updatePoliciesHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Policies updated successfully",
     });
@@ -92,7 +92,7 @@ router.patch(
   disableAccountSchemaValidation,
   disableAccountHandler,
   deleteSession,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Account disabled successfully",
     });

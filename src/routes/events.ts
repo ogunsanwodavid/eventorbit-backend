@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 
@@ -67,7 +67,7 @@ router.post(
   createEventSchemaValidation,
   createEventHandler,
   autoCreateDefaultCheckoutQuestions,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(201).json({
       message: "Event created successfully",
     });

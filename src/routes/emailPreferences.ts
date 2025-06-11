@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 
@@ -21,7 +21,7 @@ router.patch(
   checkAuthStatus,
   updateEmailPreferencesSchemaValidation,
   updateEmailPreferencesHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Email preferences updated successfully",
     });

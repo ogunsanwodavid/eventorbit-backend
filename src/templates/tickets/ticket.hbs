@@ -12,20 +12,22 @@
       url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
       * { font-family: Nunito, Arial, sans-serif; margin: 0; padding: 0;
       box-sizing: border-box; } body { background-color: #fff; max-width: 260mm;
-      padding: 10mm; margin: auto; border: 1px solid red; } .ticket-header {
-      width: 100%; display: flex; align-items: center; justify-content:
-      space-between; } .ticket-header h1 { color: #000; font-weight: 600;
-      font-size: 23px; } .ticket-header .organizer-info { display: flex-column;
-      align-items: end; gap: 15px; } .ticket-header .organizer-info h3 { color:
-      #555; font-weight: 600; font-size: 14px; } .ticket-header .organizer-info
-      p { color: #000; font-weight: 500; font-size: 18px; } .ticket-container {
-      width: 100%; height: 95mm; background-color: #fffbfb; border: 1.5px solid
-      #bbb; margin-top: 5mm; display: flex; justify-content: space-between;
-      border-radius: 10px; overflow: hidden; } .cover-photo { width: 32mm;
-      height: 100%; position: relative; flex-shrink: 0; } .cover-photo-inner {
-      width: 95mm; height: 32mm; transform: rotate(270deg); position: absolute;
-      top: 95mm; transform-origin: top left; } .cover-photo img { width: 100%;
-      height: 100%; object-fit: cover; } .qr-code { width: 48mm; height: 100%;
+      height: 500px; margin: auto; } .ticket-page { width: 100%; height: 100%;
+      padding: 10mm; margin: auto; } .ticket-header { width: 100%; display:
+      flex; align-items: center; justify-content: space-between; }
+      .ticket-header h1 { color: #000; font-weight: 600; font-size: 23px; }
+      .ticket-header .organizer-info { display: flex; flex-direction: column;
+      align-items: end; } .ticket-header .organizer-info h3 { color: #555;
+      font-weight: 600; font-size: 14px; width: max-content; } .ticket-header
+      .organizer-info p { color: #000; font-weight: 500; font-size: 18px; width:
+      max-content; } .ticket-container { width: 100%; height: 95mm;
+      background-color: #fffbfb; border: 1.5px solid #bbb; margin-top: 5mm;
+      display: flex; justify-content: space-between; border-radius: 10px;
+      overflow: hidden; } .cover-photo { width: 32mm; height: 100%; position:
+      relative; flex-shrink: 0; } .cover-photo-inner { width: 95mm; height:
+      32mm; transform: rotate(270deg); position: absolute; top: 95mm;
+      transform-origin: top left; } .cover-photo img { width: 100%; height:
+      100%; object-fit: cover; } .qr-code { width: 48mm; height: 100%;
       border-left: 1.5px solid #bbb; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 16px; flex-shrink: 0; }
       .qr-code img { height: 33mm; width: 33mm; } .qr-code p { color: #000;
@@ -44,58 +46,60 @@
   </head>
 
   <body>
-    <header class="ticket-header">
-      <h1>Your ticket</h1>
+    <div class="ticket-page">
+      <header class="ticket-header">
+        <h1>Your ticket</h1>
 
-      <div class="organizer-info">
-        <h3>Organized by</h3>
-        <p>{{organizerName}}</p>
-      </div>
-    </header>
-
-    <div class="ticket-container">
-      <div class="cover-photo">
-        <div class="cover-photo-inner">
-          <img src={{eventCoverPhoto}} alt="event cover photo" />
+        <div class="organizer-info">
+          <h3>Organized by</h3>
+          <p>{{organizerName}}</p>
         </div>
-      </div>
+      </header>
 
-      <div class="ticket-info">
-        <h2>{{eventName}}</h2>
-
-        <div class="event-details">
-          <p class="date">
-            <i class="fas fa-calendar-alt"></i>
-            <span>{{startDate}} - {{endDate}}</span>
-          </p>
-          <p class="location">
-            <i class="fas fa-location-dot"></i>
-            <span>{{location}}</span>
-          </p>
-        </div>
-
-        <div class="buyer-details">
-          <div class="detail">
-            <h5>Name</h5>
-            <p>{{attendeeName}}</p>
-          </div>
-
-          <div class="detail">
-            <h5>Ticket Type</h5>
-            <p>{{ticketName}}</p>
-          </div>
-
-          <div class="detail">
-            <h5>Purchased by</h5>
-            <p>{{attendeeEmail}}</p>
+      <div class="ticket-container">
+        <div class="cover-photo">
+          <div class="cover-photo-inner">
+            <img src={{eventCoverPhoto}} alt="event cover photo" />
           </div>
         </div>
-      </div>
 
-      <div class="qr-code">
-        <img src={{qrCode}} alt="qr code image" />
+        <div class="ticket-info">
+          <h2>{{eventName}}</h2>
 
-        <p>{{ticketCode}}</p>
+          <div class="event-details">
+            <p class="date">
+              <i class="fas fa-calendar-alt"></i>
+              <span>{{startDate}} - {{endDate}}</span>
+            </p>
+            <p class="location">
+              <i class="fas fa-location-dot"></i>
+              <span>{{location}}</span>
+            </p>
+          </div>
+
+          <div class="buyer-details">
+            <div class="detail">
+              <h5>Name</h5>
+              <p>{{attendeeName}}</p>
+            </div>
+
+            <div class="detail">
+              <h5>Ticket Type</h5>
+              <p>{{ticketName}}</p>
+            </div>
+
+            <div class="detail">
+              <h5>Purchased by</h5>
+              <p>{{attendeeEmail}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="qr-code">
+          <img src={{qrCode}} alt="qr code image" />
+
+          <p>{{ticketCode}}</p>
+        </div>
       </div>
     </div>
   </body>

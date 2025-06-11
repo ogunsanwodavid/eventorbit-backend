@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { IUser, User } from "../../mongoose/models/user";
+import { IUser } from "../../mongoose/models/user";
 
 import { IEvent } from "../../mongoose/models/event";
 

@@ -20,15 +20,6 @@ async function generateTicketPdfs(
     //Generate merged PDF
     const pdfBuffer = await pdfService.generateTicketPdf(formattedTickets);
 
-    /*     //Attach PDF to response
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="tickets_${Date.now()}.pdf"`
-    );
-
-    return res.send(pdfBuffer); */
-
     //Attach pdfBuffer to request
     (req as any).pdfBuffer = pdfBuffer;
 

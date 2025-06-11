@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 
 import passport from "passport";
 
@@ -40,7 +40,7 @@ router.post(
   registerUserHandler,
   autoCreateUserProfile,
   autoCreateDefaultEmailPreferences,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(201).json({
       message: "Registration successful. Verification email sent",
     });
@@ -53,13 +53,13 @@ router.get(
   verifyEmailValidationSchema,
   verifyUserEmailHandler,
   createSession(),
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({ message: "Email verified successfully." });
   }
 );
 
 //User authentication status
-router.get("/status", checkAuthStatus, (req: Request, res: Response) => {
+router.get("/status", checkAuthStatus, (_, res: Response) => {
   res.status(200).json({ authenticated: true });
 });
 
@@ -71,7 +71,7 @@ router.post(
   signInUserHandler,
   setUserLocationHandler,
   createSession(),
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Sign in successful",
     });
@@ -98,7 +98,7 @@ router.post(
 );
 
 //Sign out user
-router.get("/signout", deleteSession, (req: Request, res: Response) => {
+router.get("/signout", deleteSession, (_, res: Response) => {
   res.status(200).json({ message: "Sign out successful" });
 });
 
@@ -123,7 +123,7 @@ router.get(
   autoCreateUserProfile,
   autoCreateDefaultEmailPreferences,
   createSession(),
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     //Redirect to home
     res.redirect("/");
   }

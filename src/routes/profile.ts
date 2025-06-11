@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Response, Router } from "express";
 
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 import multerUploadProfilePicture from "../middleware/profile/multerUploadProfilePicture";
@@ -37,7 +37,7 @@ router.patch(
   checkAuthStatus,
   multerUploadProfilePicture,
   uploadProfilePictureHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Profile picture uploaded successfully",
     });
@@ -52,7 +52,7 @@ router.patch(
   checkAuthStatus,
   multerUploadCoverPhoto,
   uploadCoverPhotoHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Cover photo uploaded successfully",
     });
@@ -66,7 +66,7 @@ router.patch(
   checkAuthStatus,
   updateProfileInfoSchemaValidation,
   updateProfileInfoHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Profile info updated successfully",
     });
@@ -80,7 +80,7 @@ router.patch(
   checkAuthStatus,
   updateProfileSocialUrlsSchemaValidation,
   updateProfileSocialUrlsHandler,
-  (req: Request, res: Response) => {
+  (_, res: Response) => {
     res.status(200).json({
       message: "Profile social URLs updated successfully",
     });
