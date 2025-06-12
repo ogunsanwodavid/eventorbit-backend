@@ -1,12 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 
+import { FindEventsInput } from "../../utils/schema-validations/events/findEventsSchemaValidation";
+
 const locationSearchMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  //Get query parameters
+  const queryParams = (req as any).query as FindEventsInput["query"];
+
   //Get location from request query
-  const { location } = req.query;
+  const { location } = queryParams;
 
   //If location filter exists
   //::Check address , venue and connection details for match

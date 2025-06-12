@@ -11,7 +11,7 @@ import updateEventSchedulesSchemaValidation from "../utils/schema-validations/ev
 import updateEventTicketsSchemaValidation from "../utils/schema-validations/events/updateEventTicketsSchemaValidation";
 import updateEventAdditionalDetailsSchemaValidation from "../utils/schema-validations/events/updateEventAdditionalDetailsSchemaValidation";
 import deleteEventSchemaValidation from "../utils/schema-validations/events/deleteEventSchemaValidation";
-import searchEventsSchemaValidation from "../utils/schema-validations/events/searchEventsSchemaValidation";
+import findEventsSchemaValidation from "../utils/schema-validations/events/findEventsSchemaValidation";
 import updateEventStatusSchemaValidation from "../utils/schema-validations/events/updateEventStatusSchemaValidation";
 import getEventTimeSlotsSchemaValidation from "../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
 
@@ -31,14 +31,14 @@ import updateEventSchedulesHandler from "../controllers/events/updateEventSchedu
 import updateEventTicketsHandler from "../controllers/events/updateEventTickets";
 import updateEventAdditionalDetailsHandler from "../controllers/events/updateEventAdditionalDetails";
 import deleteEventHandler from "../controllers/events/deleteEvent";
-import searchEventsHandler from "../controllers/events/searchEvents";
+import findEventsHandler from "../controllers/events/findEvents";
 import updateEventStatusHandler from "../controllers/events/updateEventStatus";
 import getEventTimeSlotsHandler from "../controllers/events/getEventTimeSlots";
 
 //Define router
 const router = Router();
 
-//Search for events
+//Find events
 //::Filter by =>
 /**
  * text search string
@@ -48,14 +48,14 @@ const router = Router();
  * price of tickets
  */
 router.get(
-  "/search",
-  searchEventsSchemaValidation,
+  "/find",
+  findEventsSchemaValidation,
   textSearchMiddleware,
   locationSearchMiddleware,
   categoryFilterMiddleware,
   timeFrameFilterMiddleware,
   priceFilterMiddleware,
-  searchEventsHandler
+  findEventsHandler
 );
 
 //Create a new event

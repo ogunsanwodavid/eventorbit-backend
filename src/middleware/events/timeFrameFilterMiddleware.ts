@@ -2,14 +2,18 @@ import { Request, Response, NextFunction } from "express";
 
 import moment from "moment-timezone";
 
+import { FindEventsInput } from "../../utils/schema-validations/events/findEventsSchemaValidation";
+
 const timeFrameFilterMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  //Get query parameters
+  const queryParams = (req as any).query as FindEventsInput["query"];
+
   //Get timeFrame query string from request query
-  //::Return if not string or undefined
-  const { timeFrame } = req.query;
+  const { timeFrame } = queryParams;
 
   if (!timeFrame || typeof timeFrame !== "string") {
     return next();

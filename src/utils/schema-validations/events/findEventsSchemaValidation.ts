@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import validateSchema from "../validateSchema";
 
-export const searchEventsSchema = z.object({
+export const findEventsSchema = z.object({
   query: z.object({
     searchTerm: z.string().optional(),
     category: z.string().optional(),
@@ -16,8 +16,8 @@ export const searchEventsSchema = z.object({
   }),
 });
 
-const searchEventsSchemaValidation = validateSchema(searchEventsSchema);
+const findEventsSchemaValidation = validateSchema(findEventsSchema);
 
-export type SearchEventsInput = z.infer<typeof searchEventsSchema>;
+export type FindEventsInput = z.infer<typeof findEventsSchema>;
 
-export default searchEventsSchemaValidation;
+export default findEventsSchemaValidation;

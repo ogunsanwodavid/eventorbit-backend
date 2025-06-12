@@ -4,6 +4,8 @@ import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
+import { GetMyEventsInput } from "../../utils/schema-validations/events/getMyEventsSchemaValidation";
+
 const getMyEvents = async (req: Request, res: Response): Promise<any> => {
   try {
     //Get user from request
@@ -13,8 +15,16 @@ const getMyEvents = async (req: Request, res: Response): Promise<any> => {
     const userId = user._id as String;
 
     //Get req query parameters
-    //::Pagination info
-    const { page, limit, status, search, sort } = req.query as any;
+    const queryParams = (req as any).query as GetMyEventsInput["query"];
+
+    //Pagination info
+    const page = queryParams.page || 1;
+    const limit = queryParams.limit || 10;
+
+    //Filters
+    const status = queryParams?.status;
+    const search = queryParams?.search;
+    const sort = queryParams?.sort || "newest";
 
     //Base query
     const query = { hostId: userId } as any;

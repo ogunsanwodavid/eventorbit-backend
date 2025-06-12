@@ -2,13 +2,18 @@ import { Request, Response, NextFunction } from "express";
 
 import { Profile } from "../../mongoose/models/profile";
 
+import { FindEventsInput } from "../../utils/schema-validations/events/findEventsSchemaValidation";
+
 const textSearchMiddleware = async (
   req: Request<any>,
   res: Response,
   next: NextFunction
 ) => {
+  //Get query parameters
+  const queryParams = (req as any).query as FindEventsInput["query"];
+
   //Get text search term from request query
-  const { searchTerm } = req.query;
+  const { searchTerm } = queryParams;
 
   if (!searchTerm || typeof searchTerm !== "string") {
     return next();
