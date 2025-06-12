@@ -8,7 +8,7 @@ import { EventModel } from "../../mongoose/models/event";
 
 import { TicketModel } from "../../mongoose/models/ticket";
 
-import { GetTicketsSalesSummaryInput } from "../../utils/schema-validations/sales-analysis.ts/getTicketsSalesSummarySchemaValidation";
+import { GetTicketsSalesSummaryInput } from "../../utils/schema-validations/sales-analysis/getTicketsSalesSummarySchemaValidation";
 
 const getTicketsSalesSummary = async (
   req: Request,

@@ -10,7 +10,7 @@ import { OrderModel } from "../../mongoose/models/order";
 
 import { TicketModel } from "../../mongoose/models/ticket";
 
-import { GetSalesSummaryInput } from "../../utils/schema-validations/sales-analysis.ts/getSalesSummarySchemaValidation";
+import { GetSalesSummaryInput } from "../../utils/schema-validations/sales-analysis/getSalesSummarySchemaValidation";
 
 const getSalesSummary = async (req: Request, res: Response): Promise<any> => {
   try {
