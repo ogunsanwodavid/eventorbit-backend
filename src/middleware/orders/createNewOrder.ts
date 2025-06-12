@@ -38,6 +38,13 @@ const createNewOrder = async (
       itemsQuantity: tickets.reduce((sum, t) => sum + t.quantityPurchased, 0),
       payment: priceCalculation,
       checkoutResponses: order.checkoutResponses,
+      buyer: {
+        name:
+          user.userType === "individual"
+            ? `${user.firstName} ${user.lastName}`
+            : `${user.organizationName}`,
+        email: user.email,
+      },
     });
 
     //Attach new order to request

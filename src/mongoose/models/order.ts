@@ -28,6 +28,10 @@ export interface IOrder extends Document {
   itemsQuantity: number;
   payment: Payment;
   checkoutResponses?: CheckoutResponse[];
+  buyer: {
+    name: string;
+    email: string;
+  };
 }
 
 //================== SUB-SCHEMAS ==================
@@ -105,6 +109,16 @@ const OrderSchema = new Schema(
     },
     payment: PaymentSchema,
     checkoutResponses: [CheckoutResponseSchema],
+    buyer: {
+      name: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+    },
   },
   { timestamps: true }
 );
