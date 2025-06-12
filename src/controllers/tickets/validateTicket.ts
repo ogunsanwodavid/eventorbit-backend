@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 
-import { ValidateTicketInput } from "../../utils/schema-validations/tickets/validateTicketSchemaValidation";
-
 import { TicketModel } from "../../mongoose/models/ticket";
+
+import { ValidateTicketInput } from "../../utils/schema-validations/tickets/validateTicketSchemaValidation";
 
 const validateTicket = async (req: Request, res: Response): Promise<any> => {
   try {

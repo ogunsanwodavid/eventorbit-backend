@@ -4,7 +4,7 @@ import validateSchema from "../validateSchema";
 
 const validateTicketSchema = z.object({
   params: z.object({
-    ticketCode: z.string().min(1, "Ticket code os required"),
+    ticketCode: z.string().min(1, "Ticket code is required"),
   }),
 });
 
