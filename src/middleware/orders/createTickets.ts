@@ -68,6 +68,7 @@ const createTickets = async (
 
         //Create ticket instance
         const ticket = new TicketModel({
+          eventId: event._id,
           orderId: newOrder._id,
           buyerId: user._id,
           status: "reserved",
@@ -79,6 +80,7 @@ const createTickets = async (
           endDate: duration.endDate,
           timeZone: duration.timeZone,
           value: calculateTicketValue(ticketData),
+          currency: newOrder.payment.currency,
           attendee: {
             name: ticketData.attendee.name,
             email: ticketData.attendee.email,

@@ -30,8 +30,10 @@ router.get(
 );
 
 //Download ticket pdf
+//::Protected endpoint
 router.get(
   "/download-pdf/:ticketCode",
+  checkAuthStatus,
   downloadTicketPdfSchemaValidation,
   downloadTicketPdfHandler
 );

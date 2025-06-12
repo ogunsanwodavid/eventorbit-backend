@@ -6,17 +6,27 @@ import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
-import { OrderModel } from "../../mongoose/models/order";
+import { TicketModel, TicketStatus } from "../../mongoose/models/ticket";
 
-import { GetOrdersInput } from "../../utils/schema-validations/orders/getOrdersSchemaValidation";
+import { GetAttendeesInput } from "../../utils/schema-validations/events/getAttendeesSchemaValidation";
 
-const getOrders = async (req: Request, res: Response): Promise<any> => {
+export interface Attendee {
+  name: string;
+  email: string;
+  ticketType: string;
+  dateAttending: Date;
+  value: number;
+  currency: string;
+  status: TicketStatus;
+}
+
+const getAttendees = async (req: Request, res: Response): Promise<any> => {
   try {
     //Get user from request
     const user = (req as any)["user"] as IUser;
 
     //Get event's id from request params
-    const { eventId } = req.params as GetOrdersInput["params"];
+    const { eventId } = req.params as GetAttendeesInput["params"];
 
     //Validate event ID format
     if (!isValidObjectId(eventId)) {
@@ -39,7 +49,7 @@ const getOrders = async (req: Request, res: Response): Promise<any> => {
     }
 
     //Get query parameters from query
-    const queryParams = (req as any).query as GetOrdersInput["query"];
+    const queryParams = (req as any).query as GetAttendeesInput["query"];
 
     //Pagination info
     const page = queryParams.page || 1;
@@ -47,42 +57,49 @@ const getOrders = async (req: Request, res: Response): Promise<any> => {
     const skip = (page - 1) * limit;
 
     //Filters
-    const status = queryParams?.status;
     const search = queryParams?.search;
     const sort = queryParams?.sort || "desc";
 
     //Build DB query filters
     const filter: any = { eventId };
 
-    //Handle status filter
-    if (status) {
-      filter.status = status;
-    }
-
     //Handle search filter
-    //Search in buyer's name and email
+    //Search in tickets' attendee name and email
     if (search) {
       filter.$or = [
-        { "buyer.name": { $regex: search, $options: "i" } },
-        { "buyer.email": { $regex: search, $options: "i" } },
+        { "attendee.name": { $regex: search, $options: "i" } },
+        { "attendee.email": { $regex: search, $options: "i" } },
       ];
     }
 
     //Handle sort filter
     const sortOptions: any = {
-      dateOrdering: sort === "asc" ? 1 : -1,
+      startDate: sort === "asc" ? 1 : -1,
     };
 
-    //Get orders with pagination
-    const [orders, total] = await Promise.all([
-      OrderModel.find(filter).sort(sortOptions).skip(skip).limit(limit).lean(),
-      OrderModel.countDocuments(filter),
+    //Get all matching tickets with pagination
+    const [tickets, total] = await Promise.all([
+      TicketModel.find(filter).sort(sortOptions).skip(skip).limit(limit).lean(),
+      TicketModel.countDocuments(filter),
     ]);
+
+    //Get attendees from tickets
+    const attendees: Attendee[] = tickets.map((ticket) => {
+      return {
+        name: ticket.attendee.name,
+        email: ticket.attendee.email,
+        ticketType: ticket.name,
+        dateAttending: ticket.startDate,
+        value: ticket.value,
+        currency: ticket.currency,
+        status: ticket.status,
+      };
+    });
 
     res.status(200).json({
       message: "Orders fetched successfully",
       data: {
-        orders,
+        attendees,
         pagination: {
           total,
           page,
@@ -100,4 +117,4 @@ const getOrders = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-export default getOrders;
+export default getAttendees;

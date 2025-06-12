@@ -14,6 +14,8 @@ import deleteEventSchemaValidation from "../utils/schema-validations/events/dele
 import findEventsSchemaValidation from "../utils/schema-validations/events/findEventsSchemaValidation";
 import updateEventStatusSchemaValidation from "../utils/schema-validations/events/updateEventStatusSchemaValidation";
 import getEventTimeSlotsSchemaValidation from "../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
+import getAttendeesSchemaValidation from "../utils/schema-validations/events/getAttendeesSchemaValidation";
+import getOrdersSchemaValidation from "../utils/schema-validations/events/getOrdersSchemaValidation";
 
 import autoCreateDefaultCheckoutQuestions from "../middleware/events/autoCreateDefaultCheckoutQuestions";
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
@@ -34,6 +36,8 @@ import deleteEventHandler from "../controllers/events/deleteEvent";
 import findEventsHandler from "../controllers/events/findEvents";
 import updateEventStatusHandler from "../controllers/events/updateEventStatus";
 import getEventTimeSlotsHandler from "../controllers/events/getEventTimeSlots";
+import getAttendeesHandler from "../controllers/events/getAttendees";
+import getOrders from "../controllers/events/getOrders";
 
 //Define router
 const router = Router();
@@ -97,6 +101,24 @@ router.get(
   checkAuthStatus,
   getEventTimeSlotsSchemaValidation,
   getEventTimeSlotsHandler
+);
+
+//Get all orders placed for an event
+//::Protected endpoint
+router.get(
+  "/get-orders/:eventId",
+  checkAuthStatus,
+  getOrdersSchemaValidation,
+  getOrders
+);
+
+//Get attendees for an event
+//::Protected endpoint
+router.get(
+  "/get-attendees/:eventId",
+  checkAuthStatus,
+  getAttendeesSchemaValidation,
+  getAttendeesHandler
 );
 
 //Update event status

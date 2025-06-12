@@ -14,9 +14,6 @@ import generateTicketPdfs from "../middleware/orders/generateTicketPdfs";
 import mailTickets from "../middleware/orders/mailTickets";
 
 import processOrderSchemaValidation from "../utils/schema-validations/orders/processOrderSchemaValidation";
-import getOrdersSchemaValidation from "../utils/schema-validations/orders/getOrdersSchemaValidation";
-
-import getOrders from "../controllers/orders/getOrders";
 
 //Define router
 const router = Router();
@@ -53,15 +50,6 @@ router.post(
       message: "Order processed successfully",
     });
   }
-);
-
-//Get all orders placed for an event
-//::Protected endpoint
-router.get(
-  "/get-orders/:eventId",
-  checkAuthStatus,
-  getOrdersSchemaValidation,
-  getOrders
 );
 
 export default router;

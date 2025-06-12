@@ -15,6 +15,7 @@ export interface CheckoutResponse {
 
 //================== ORDER MAIN INTERFACE ==================
 export interface ITicket extends Document {
+  eventId: Schema.Types.ObjectId;
   orderId: Schema.Types.ObjectId;
   buyerId: Schema.Types.ObjectId;
   status: TicketStatus;
@@ -25,6 +26,7 @@ export interface ITicket extends Document {
   endDate: Date;
   timeZone: string;
   value: number;
+  currency: string;
   attendee: Attendee;
   checkoutResponses?: CheckoutResponse[];
   event: {
@@ -82,6 +84,12 @@ const EventLocationSchema = new Schema({
 
 //================== MAIN SCHEMA ==================
 const TicketSchema = new Schema({
+  eventId: {
+    type: Schema.Types.ObjectId,
+    ref: "Event",
+    required: true,
+    index: true,
+  },
   orderId: {
     type: Schema.Types.ObjectId,
     ref: "Order",
@@ -127,6 +135,10 @@ const TicketSchema = new Schema({
   },
   value: {
     type: Number,
+    required: true,
+  },
+  currency: {
+    type: String,
     required: true,
   },
   attendee: AttendeeSchema,
