@@ -83,75 +83,78 @@ const EventLocationSchema = new Schema({
 });
 
 //================== MAIN SCHEMA ==================
-const TicketSchema = new Schema({
-  eventId: {
-    type: Schema.Types.ObjectId,
-    ref: "Event",
-    required: true,
-    index: true,
-  },
-  orderId: {
-    type: Schema.Types.ObjectId,
-    ref: "Order",
-    required: true,
-    index: true,
-  },
-  buyerId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true,
-  },
-  status: {
-    type: String,
-    enum: ["reserved", "attended", "cancelled"],
-    default: "reserved",
-    index: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  code: {
-    type: String,
-    required: true,
-  },
-  qrCode: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  startDate: {
-    type: Date,
-    required: true,
-  },
-  endDate: {
-    type: Date,
-    required: true,
-  },
-  timeZone: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: Number,
-    required: true,
-  },
-  currency: {
-    type: String,
-    required: true,
-  },
-  attendee: AttendeeSchema,
-  checkoutResponses: [CheckoutResponseSchema],
-  event: {
-    name: { type: String, required: true },
-    location: EventLocationSchema,
-    organizerName: { type: String, required: true },
-    coverPhoto: {
+const TicketSchema = new Schema(
+  {
+    eventId: {
+      type: Schema.Types.ObjectId,
+      ref: "Event",
+      required: true,
+      index: true,
+    },
+    orderId: {
+      type: Schema.Types.ObjectId,
+      ref: "Order",
+      required: true,
+      index: true,
+    },
+    buyerId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    status: {
+      type: String,
+      enum: ["reserved", "attended", "cancelled"],
+      default: "reserved",
+      index: true,
+    },
+    name: {
       type: String,
       required: true,
     },
+    code: {
+      type: String,
+      required: true,
+    },
+    qrCode: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    timeZone: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: Number,
+      required: true,
+    },
+    currency: {
+      type: String,
+      required: true,
+    },
+    attendee: AttendeeSchema,
+    checkoutResponses: [CheckoutResponseSchema],
+    event: {
+      name: { type: String, required: true },
+      location: EventLocationSchema,
+      organizerName: { type: String, required: true },
+      coverPhoto: {
+        type: String,
+        required: true,
+      },
+    },
   },
-});
+  { timestamps: true }
+);
 
 export const TicketModel = model<ITicket>("Ticket", TicketSchema);

@@ -26,6 +26,7 @@ import checkoutQuestionsRoutes from "./routes/checkoutQuestions";
 import discountCodesRoutes from "./routes/discountCodes";
 import ordersRoutes from "./routes/orders";
 import ticketsRoutes from "./routes/tickets";
+import salesAnalysisRoutes from "./routes/salesAnalysis";
 
 //Cron jobs
 import { runAllCronJobs } from "./jobs/index.job";
@@ -96,6 +97,7 @@ app.use("/api/checkout-questions", checkoutQuestionsRoutes);
 app.use("/api/discount-codes", discountCodesRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/tickets", ticketsRoutes);
+app.use("/api/sales-analysis", salesAnalysisRoutes);
 
 //Start server function
 const start = async () => {
