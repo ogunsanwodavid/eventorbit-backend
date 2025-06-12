@@ -27,8 +27,8 @@ import discountCodesRoutes from "./routes/discountCodes";
 import ordersRoutes from "./routes/orders";
 import ticketsRoutes from "./routes/tickets";
 
-//Import cron jobs
-import setupEventExpirationJob from "./jobs/events/eventExpiration.job";
+//Cron jobs
+import { runAllCronJobs } from "./jobs/index.job";
 
 //Configure environmental variables
 dotenv.config();
@@ -105,8 +105,8 @@ const start = async () => {
     //Connect to MongoDB
     await connectDB(mongoURI);
 
-    //Initialize cron job after DB connection
-    setupEventExpirationJob();
+    //Initialize all cron jobs after DB connection
+    runAllCronJobs();
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
