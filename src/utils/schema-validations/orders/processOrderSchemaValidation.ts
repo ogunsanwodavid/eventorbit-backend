@@ -9,6 +9,7 @@ const DurationSchema = z
   .object({
     startDate: DateStringSchema.transform((val) => new Date(val)),
     endDate: DateStringSchema.transform((val) => new Date(val)),
+    timeZone: z.string().min(1, "Timezone is required"),
     scheduleId: z
       .string()
       .regex(/^[0-9a-fA-F]{24}$/, "Invalid MongoDB ObjectId")

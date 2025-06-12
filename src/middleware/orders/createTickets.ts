@@ -77,6 +77,7 @@ const createTickets = async (
           qrCode: qrCodeUrl,
           startDate: duration.startDate,
           endDate: duration.endDate,
+          timeZone: duration.timeZone,
           value: calculateTicketValue(ticketData),
           attendee: {
             name: ticketData.attendee.name,

@@ -4,6 +4,7 @@ const DurationSchema = z
   .object({
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
+    timeZone: z.string().min(1, "Timezoen is required"),
   })
   .superRefine((data, ctx) => {
     // Convert string dates to Date objects if needed

@@ -4,21 +4,17 @@ import { isValidObjectId, Types } from "mongoose";
 
 import { EventModel, WeekDay } from "../../mongoose/models/event";
 
-import { IUser } from "../../mongoose/models/user";
-
 import { GetEventTimeSlotsInput } from "../../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
 
 export interface TimeSlotResult {
   scheduleId: Types.ObjectId;
   startDate: Date;
   endDate: Date;
+  timeZone: String;
 }
 
 const getEventTimeSlots = async (req: Request, res: Response): Promise<any> => {
   try {
-    //Get user from request
-    const user = (req as any)["user"] as IUser;
-
     //Get event's id from request params
     const { eventId } = req.params as GetEventTimeSlotsInput["params"];
 
@@ -78,6 +74,7 @@ const getEventTimeSlots = async (req: Request, res: Response): Promise<any> => {
             scheduleId: schedule._id,
             startDate: slotStart,
             endDate: slotEnd,
+            timeZone: startTime.timeZone,
           });
         } else {
           //Repeating schedule - generate slots for each matching day
@@ -101,6 +98,7 @@ const getEventTimeSlots = async (req: Request, res: Response): Promise<any> => {
                 scheduleId: schedule._id,
                 startDate: slotStart,
                 endDate: slotEnd,
+                timeZone: startTime.timeZone,
               });
             }
 

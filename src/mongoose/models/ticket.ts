@@ -23,6 +23,7 @@ export interface ITicket extends Document {
   qrCode: string;
   startDate: Date;
   endDate: Date;
+  timeZone: string;
   value: number;
   attendee: Attendee;
   checkoutResponses?: CheckoutResponse[];
@@ -118,6 +119,10 @@ const TicketSchema = new Schema({
   },
   endDate: {
     type: Date,
+    required: true,
+  },
+  timeZone: {
+    type: String,
     required: true,
   },
   value: {

@@ -28,6 +28,7 @@ export type TimeSlot = {
 export interface Duration {
   startDate: Date;
   endDate: Date;
+  timeZone: string;
 }
 
 export interface Schedule {
@@ -133,25 +134,8 @@ const TicketUrgencySchema = new Schema({
 const DurationSchema = new Schema<Duration>({
   startDate: { type: Date },
   endDate: { type: Date },
+  timeZone: { type: String },
 });
-
-/* const TimeSlotSchema = new Schema<TimeSlot>({
-  startTime: { type: TimeSchema, required: true },
-  endTime: {
-    type: TimeSchema,
-    required: true,
-    validate: {
-      validator: function (this: TimeSlot, endTime: ITime) {
-        const start = this.startTime;
-        if (start.hours > endTime.hours) return false;
-        if (start.hours === endTime.hours && start.minutes >= endTime.minutes)
-          return false;
-        return true;
-      },
-      message: "End time must be after start time",
-    },
-  },
-}); */
 
 const TimeSlotSchema = new Schema<TimeSlot>({
   startTime: { type: TimeSchema, required: true },
@@ -160,31 +144,6 @@ const TimeSlotSchema = new Schema<TimeSlot>({
     unit: { type: String, enum: ["hours", "mins"] },
   },
 });
-
-/* const ScheduleSchema = new Schema<Schedule>({
-  startDate: { type: Date, required: true },
-  endDate: {
-    type: Date,
-    validate: {
-      validator: function (this: Schedule, endDate: Date) {
-        return !endDate || endDate > this.startDate;
-      },
-      message: "End date must be after start date",
-    },
-  },
-  timeSlots: {
-    type: [TimeSlotSchema],
-    required: true,
-    validate: {
-      validator: (slots: TimeSlot[]) => slots.length > 0,
-      message: "At least one time slot is required",
-    },
-  },
-  repeatDays: {
-    type: [String],
-    enum: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
-  },
-}); */
 
 const ScheduleSchema = new Schema<Schedule>({
   _id: {

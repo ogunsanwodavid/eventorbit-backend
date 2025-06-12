@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { ITicket } from "../../mongoose/models/ticket";
 
 import formatDate from "../../utils/helpers/orders/formatDate";
+import formatTimeZoneToShortForm from "../../utils/helpers/orders/formatTimeZoneToShortForm";
 
 export interface FormattedTicket {
   organizerName: string;
@@ -10,6 +11,7 @@ export interface FormattedTicket {
   eventName: string;
   startDate: string;
   endDate: string;
+  timeZone: string;
   location: string;
   attendeeName: string;
   ticketName: string;
@@ -47,6 +49,7 @@ const formatTickets = async (
         eventName: ticket.event.name,
         startDate: formatDate(ticket.startDate),
         endDate: formatDate(ticket.endDate),
+        timeZone: formatTimeZoneToShortForm(ticket.timeZone),
         location,
         attendeeName: ticket.attendee.name,
         ticketName: ticket.name,
