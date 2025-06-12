@@ -12,10 +12,8 @@ import updateCheckoutQuestionsHandler from "../controllers/checkout-questions/up
 const router = Router();
 
 //Fetch checkout questions by event ID
-//::Protected endpoint
 router.get(
   "/get/:eventId",
-  checkAuthStatus,
   getCheckoutQuestionsSchemaValidation,
   getCheckoutQuestionsHandler
 );

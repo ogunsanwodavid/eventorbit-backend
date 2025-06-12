@@ -23,6 +23,7 @@ const router = Router();
 //::Update order status after payment
 //::Create tickets in database
 //::Resolve sold status in tickets and schedules
+//::Format tickets to be parse-able into PDFs
 router.post(
   "/process/:eventId",
   checkAuthStatus,

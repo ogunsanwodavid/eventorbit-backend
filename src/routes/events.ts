@@ -77,7 +77,6 @@ router.post(
 //Get an event by its alias
 router.get(
   "/get-by-alias/:alias",
-  //checkAuthStatus,
   getEventByAliasSchemaValidation,
   getEventByAliasHandler
 );

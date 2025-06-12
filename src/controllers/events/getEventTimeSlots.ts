@@ -30,10 +30,9 @@ const getEventTimeSlots = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    //Find event and verify ownership using hostId
+    //Find event
     const event = await EventModel.findOne({
       _id: eventId,
-      hostId: user._id,
     });
 
     if (!event) {

@@ -15,7 +15,6 @@ const router = Router();
 //::Protected endpoint
 router.get(
   "/get/:eventId",
-  checkAuthStatus,
   getDiscountCodesSchemaValidation,
   getDiscountCodesHandler
 );
