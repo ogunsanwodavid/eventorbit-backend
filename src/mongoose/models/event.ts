@@ -32,7 +32,7 @@ export interface Duration {
 }
 
 export interface Schedule {
-  _id: Types.ObjectId; //Stable identifier
+  _id: Types.ObjectId;
   startDate: Date;
   endDate?: Date;
   timeSlots: TimeSlot[];

@@ -16,6 +16,7 @@ import updateEventStatusSchemaValidation from "../utils/schema-validations/event
 import getEventTimeSlotsSchemaValidation from "../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
 import getAttendeesSchemaValidation from "../utils/schema-validations/events/getAttendeesSchemaValidation";
 import getOrdersSchemaValidation from "../utils/schema-validations/events/getOrdersSchemaValidation";
+import getRandomEventsSchemaValidation from "../utils/schema-validations/events/getRandomEventsSchemaValidation";
 
 import autoCreateDefaultCheckoutQuestions from "../middleware/events/autoCreateDefaultCheckoutQuestions";
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
@@ -37,7 +38,8 @@ import findEventsHandler from "../controllers/events/findEvents";
 import updateEventStatusHandler from "../controllers/events/updateEventStatus";
 import getEventTimeSlotsHandler from "../controllers/events/getEventTimeSlots";
 import getAttendeesHandler from "../controllers/events/getAttendees";
-import getOrders from "../controllers/events/getOrders";
+import getOrdersHandler from "../controllers/events/getOrders";
+import getRandomEventsHandler from "../controllers/events/getRandomEvents";
 
 //Define router
 const router = Router();
@@ -94,6 +96,14 @@ router.get(
   getMyEventsHandler
 );
 
+//Get a fixed number of random events
+router.get(
+  "/get-random-events",
+  checkAuthStatus,
+  getRandomEventsSchemaValidation,
+  getRandomEventsHandler
+);
+
 //Get all timeslots for a timed-entry event
 //::Protected endpoint
 router.get(
@@ -109,7 +119,7 @@ router.get(
   "/get-orders/:eventId",
   checkAuthStatus,
   getOrdersSchemaValidation,
-  getOrders
+  getOrdersHandler
 );
 
 //Get attendees for an event
