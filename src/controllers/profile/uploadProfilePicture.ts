@@ -35,10 +35,14 @@ const uploadProfilePicture = async (
     }
 
     //Upload to Cloudinary
-    const secureUrl = await uploadStream(req.file.buffer, "profile-pictures", {
-      public_id: `user-${userId}-profile`,
-      overwrite: true,
-    });
+    const secureUrl = await uploadStream(
+      req.file.buffer,
+      "eventorbit/profile-pictures",
+      {
+        public_id: `user-${userId}-profile`,
+        overwrite: true,
+      }
+    );
 
     //Update both Profile and User in parallel
     await Promise.all([

@@ -50,7 +50,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       uploadTasks.push(
         uploadBase64(
           eventData.additionalDetails.socialMediaPhoto,
-          "events/social",
+          "eventorbit/events/social",
           {
             public_id: `${hostId}-${eventId}-social`,
             overwrite: true,
@@ -72,7 +72,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       uploadTasks.push(
         uploadBase64(
           eventData.additionalDetails.eventCoverPhoto,
-          "events/covers",
+          "eventorbit/events/covers",
           {
             public_id: `${hostId}-${eventId}-social`,
             overwrite: true,
@@ -96,7 +96,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     ) {
       eventData.additionalDetails.additionalPhotos.forEach((base64, index) => {
         uploadTasks.push(
-          uploadBase64(base64, "events/additionals", {
+          uploadBase64(base64, "eventorbit/events/additionals", {
             public_id: `${hostId}-${eventId}-additional-${index}`,
             overwrite: true,
             invalidate: true,

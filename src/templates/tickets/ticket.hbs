@@ -10,11 +10,13 @@
     <style>
       @import
       url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
-      * { font-family: Nunito, Arial, sans-serif; margin: 0; padding: 0;
-      box-sizing: border-box; } body { background-color: #fff; max-width: 260mm;
-      height: 500px; margin: auto; } .ticket-page { width: 100%; height: 100%;
-      padding: 10mm; margin: auto; } .ticket-header { width: 100%; display:
-      flex; align-items: center; justify-content: space-between; }
+      @import
+      url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+      * { font-family: Quicksand, Nunito, Arial, sans-serif; margin: 0; padding:
+      0; box-sizing: border-box; } body { background-color: #fff; max-width:
+      260mm; height: 500px; margin: auto; } .ticket-page { width: 100%; height:
+      100%; padding: 10mm; margin: auto; } .ticket-header { width: 100%;
+      display: flex; align-items: center; justify-content: space-between; }
       .ticket-header h1 { color: #000; font-weight: 600; font-size: 23px; }
       .ticket-header .organizer-info { display: flex; flex-direction: column;
       align-items: end; } .ticket-header .organizer-info h3 { color: #555;
@@ -27,21 +29,26 @@
       relative; flex-shrink: 0; } .cover-photo-inner { width: 95mm; height:
       32mm; transform: rotate(270deg); position: absolute; top: 95mm;
       transform-origin: top left; } .cover-photo img { width: 100%; height:
-      100%; object-fit: cover; } .qr-code { width: 48mm; height: 100%;
+      100%; object-fit: cover; } .middle-section { height: 100%; width: 100%;
+      padding: 25px 25px 10px 25px; display: flex; flex-direction: column;
+      justify-content: space-between; } .ticket-info { width: 100%; display:
+      flex; flex-direction: column; gap: 35px; } .ticket-info h2 { font-size:
+      22px; font-weight: 600; } .ticket-info i { font-size: 16px; text-align:
+      center; color: #555; margin-right: 13px; } .event-details { display: flex;
+      flex-direction: column; gap: 15px; } .event-details p { display: flex;
+      align-items: center; } .event-details p span { color: #555; font-size:
+      17px; font-weight: 600; } .buyer-details { width: 100%; display: flex;
+      flex-wrap: wrap; gap: 15px; } .buyer-details .detail { width: calc(50% -
+      7.5px); } .buyer-details .detail h5 { color: #555; font-size: 16px;
+      font-weight: 600; } .buyer-details .detail p { color: #000; font-size:
+      17px; font-weight: 500; margin-top: 5px; } .powered-by{ width:
+      max-content; margin-left:auto; display: flex; align-items: center; gap:
+      7px } .powered-by p{ color: #555; font-size: 15px; font-weight: 600 }
+      .powered-by img{ height: 20px } .qr-code { width: 48mm; height: 100%;
       border-left: 1.5px solid #bbb; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 16px; flex-shrink: 0; }
       .qr-code img { height: 33mm; width: 33mm; } .qr-code p { color: #000;
-      font-weight: 500; font-size: 18px; } .ticket-info { height: 100%; width:
-      100%; padding: 25px; display: flex; flex-direction: column; gap: 35px; }
-      .ticket-info h2 { font-size: 22px; font-weight: 600; } .ticket-info i {
-      font-size: 16px; text-align: center; color: #555; margin-right: 13px; }
-      .event-details { display: flex; flex-direction: column; gap: 15px; }
-      .event-details p { display: flex; align-items: center; } .event-details p
-      span { color: #555; font-size: 17px; font-weight: 600; } .buyer-details {
-      width: 100%; display: flex; flex-wrap: wrap; gap: 15px; } .buyer-details
-      .detail { width: calc(50% - 7.5px); } .buyer-details .detail h5 { color:
-      #555; font-size: 16px; font-weight: 600; } .buyer-details .detail p {
-      color: #000; font-size: 17px; font-weight: 500; margin-top: 5px; }
+      font-weight: 500; font-size: 18px; }
     </style>
   </head>
 
@@ -56,42 +63,52 @@
         </div>
       </header>
 
-      <div class="ticket-container">
+      <section class="ticket-container">
         <div class="cover-photo">
           <div class="cover-photo-inner">
             <img src={{eventCoverPhoto}} alt="event cover photo" />
           </div>
         </div>
 
-        <div class="ticket-info">
-          <h2>{{eventName}}</h2>
+        <div class="middle-section">
+          <div class="ticket-info">
+            <h2>{{eventName}}</h2>
 
-          <div class="event-details">
-            <p class="date">
-              <i class="fas fa-calendar-alt"></i>
-              <span>{{startDate}} - {{endDate}} {{timeZone}}</span>
-            </p>
-            <p class="location">
-              <i class="fas fa-location-dot"></i>
-              <span>{{location}}</span>
-            </p>
+            <div class="event-details">
+              <p class="date">
+                <i class="fas fa-calendar-alt"></i>
+                <span>{{startDate}} - {{endDate}} {{timeZone}}</span>
+              </p>
+              <p class="location">
+                <i class="fas fa-location-dot"></i>
+                <span>{{location}}</span>
+              </p>
+            </div>
+
+            <div class="buyer-details">
+              <div class="detail">
+                <h5>Name</h5>
+                <p>{{attendeeName}}</p>
+              </div>
+
+              <div class="detail">
+                <h5>Ticket Type</h5>
+                <p>{{ticketName}}</p>
+              </div>
+
+              <div class="detail">
+                <h5>Purchased by</h5>
+                <p>{{attendeeEmail}}</p>
+              </div>
+            </div>
           </div>
 
-          <div class="buyer-details">
-            <div class="detail">
-              <h5>Name</h5>
-              <p>{{attendeeName}}</p>
-            </div>
-
-            <div class="detail">
-              <h5>Ticket Type</h5>
-              <p>{{ticketName}}</p>
-            </div>
-
-            <div class="detail">
-              <h5>Purchased by</h5>
-              <p>{{attendeeEmail}}</p>
-            </div>
+          <div class="powered-by">
+            <p>Powered by:</p>
+            <img
+              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749857926/eventorbit-logo-teal_wdhm3v.png"
+              alt="event-orbit-teal-logo"
+            />
           </div>
         </div>
 
@@ -100,7 +117,7 @@
 
           <p>{{ticketCode}}</p>
         </div>
-      </div>
+      </section>
     </div>
   </body>
 </html>

@@ -36,7 +36,7 @@ const uploadCoverPhoto = async (
 
     //Generate public ID and folder path
     const publicId = `user-${userId}-profile`;
-    const folder = "cover-photos";
+    const folder = "eventorbit/cover-photos";
 
     //Upload to Cloudinary using your existing utility
     const secureUrl = await uploadStream(req.file.buffer, folder, {

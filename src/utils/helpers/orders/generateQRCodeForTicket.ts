@@ -24,11 +24,18 @@ async function generateQRCodeForTicket(orderId: string, ticketCode: string) {
     });
 
     //Upload to Cloudinary
-    const qrCodeUrl = await uploadStream(qrBuffer, "tickets/qr_codes", {
-      public_id: `ticket_${orderId}_${ticketCode}`,
-      format: "png",
-      transformation: [{ width: 500, crop: "scale" }, { background: "white" }],
-    });
+    const qrCodeUrl = await uploadStream(
+      qrBuffer,
+      "eventorbit/tickets/qr-codes",
+      {
+        public_id: `ticket_${orderId}_${ticketCode}`,
+        format: "png",
+        transformation: [
+          { width: 500, crop: "scale" },
+          { background: "white" },
+        ],
+      }
+    );
 
     return qrCodeUrl;
   } catch (error) {
