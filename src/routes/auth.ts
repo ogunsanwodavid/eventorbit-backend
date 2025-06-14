@@ -24,6 +24,7 @@ import decodeLocationGoogleState from "../middleware/auth/decodeLocationGoogleSt
 import cleanUserFields from "../middleware/auth/cleanUserFields";
 import autoCreateUserProfile from "../middleware/auth/autoCreateUserProfile";
 import autoCreateDefaultEmailPreferences from "../middleware/auth/autoCreateDefaultEmailPreferences";
+import sendWelcomeEmail from "../middleware/auth/sendWelcomeEmail";
 
 //Define router
 const router = Router();
@@ -48,10 +49,12 @@ router.post(
 );
 
 //Verify new user's email
+//::Send welcome email to user
 router.get(
   "/verify-email",
   verifyEmailValidationSchema,
   verifyUserEmailHandler,
+  sendWelcomeEmail,
   createSession(),
   (_, res: Response) => {
     res.status(200).json({ message: "Email verified successfully." });
@@ -111,6 +114,7 @@ router.get("/google", parseLocationGoogleState);
 //::Save location to user object
 //::Auto create user profile with user info
 //::Create the default email preferences for user
+//::Send welcome email to user
 //::Create new session
 router.get(
   "/google/callback",
@@ -122,6 +126,7 @@ router.get(
   setUserLocationHandler,
   autoCreateUserProfile,
   autoCreateDefaultEmailPreferences,
+  sendWelcomeEmail,
   createSession(),
   (_, res: Response) => {
     //Redirect to home
