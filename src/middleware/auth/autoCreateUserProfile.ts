@@ -12,8 +12,12 @@ const autoCreateUserProfile = async (
   next: NextFunction
 ) => {
   try {
-    //Get user from request
-    const user = (req as any)["user"] as IUser;
+    //Get user and is existing user status from request
+    const user = (req as any).user as IUser & { isExistingUser: boolean };
+    const { isExistingUser, _id: userId } = user;
+
+    //Go to next middleware if user exists
+    if (isExistingUser) return next();
 
     let profileSlug = generateProfileSlug(user);
     let attempt = 0;

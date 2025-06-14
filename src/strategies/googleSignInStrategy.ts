@@ -21,7 +21,31 @@ const googleSignInStrategy = new GoogleStrategy(
       //Find user from database
       let user = await User.findOne({ email });
 
+      //Flag if user already exists
+      const isExistingUser = !!user;
+
       //Create user if not in database
+      if (!user) {
+        user = await User.create({
+          email,
+          firstName: profile.name?.givenName || "",
+          lastName: profile.name?.familyName || "",
+          profilePicture: profile.photos?.[0]?.value || undefined,
+          userType: "individual",
+          isVerified: true,
+          isGoogle: true,
+        });
+      }
+
+      //Return user object with isExistingUser flag
+      done(null, { ...user.toObject(), isExistingUser });
+    } catch (err) {
+      done(err);
+    }
+  }
+);
+
+/*       //Create user if not in database
       if (!user) {
         user = await User.create({
           email,
@@ -40,6 +64,6 @@ const googleSignInStrategy = new GoogleStrategy(
       done(err);
     }
   }
-);
+); */
 
 export default googleSignInStrategy;

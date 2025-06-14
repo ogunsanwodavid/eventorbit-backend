@@ -8,7 +8,7 @@ const createSession = (userKey: "user" | "payload" = "user") => {
     const user = (req as any)[userKey] as IUser;
 
     //Check for user credentials
-    if (!user || !user.id || !user.email) {
+    if (!user || !user._id || !user.email) {
       res
         .status(400)
         .json({ message: "Cannot create session. Missing user data." });

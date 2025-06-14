@@ -86,7 +86,7 @@ router.patch(
 //Disable user's account
 //::Protected endpoint
 //::Deletes session after completion
-router.patch(
+router.post(
   "/disable",
   checkAuthStatus,
   disableAccountSchemaValidation,

@@ -1,0 +1,86 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eventorbit: Disable Account</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <style>
+      @import
+      url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+      @import
+      url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+      * { font-family: Quicksand, Nunito, Arial, Helvetica, sans-serif; margin:
+      0; padding: 0; box-sizing: border-box; } body { background-color: #fafafa;
+      } .container { margin: 30px auto; max-width: 500px; display: flex;
+      flex-direction: column; gap: 20px; } .logo { width: max-content; margin: 0
+      auto; } .logo img { height: 30px; } main { width: 100%; background-color:
+      #fff; border-radius: 30px; padding: 40px; } main .inner { max-width:
+      300px; margin: 0 auto; } main .inner h2 { color: #000; font-size: 24px;
+      font-weight: 600; } main .inner .texts { margin-top: 20px; } main .inner
+      .texts p { color: #6f7881; font-size: 16px; margin-top: 10px; } main
+      .inner .final-texts { margin-top: 40px; display: flex; flex-direction:
+      row; flex-direction: column; align-items: center; gap: 5px; } main .inner
+      .final-texts p { width: max-content; color: #6f7881; font-size: 16px; }
+      main .inner a.verify-btn { display: block; text-decoration: none; width:
+      100%; margin-top: 30px; } main .inner a.verify-btn button { width: 100%;
+      background-color: #008080; border-radius: 10px; padding: 12px; color:
+      #fff; border: 0; outline: 0; font-family: inherit; font-size: 17px;
+      font-weight: 500; cursor: pointer; } footer { width: 100%; display: flex;
+      flex-direction: column; align-items: center; gap: 0; } footer p { width:
+      max-content; color: #6f7881; margin-top: 10px; } footer p a { color: blue;
+      font-weight: 500; }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <main>
+        <div class="inner">
+          <h2>Your Account Has Been Disabled</h2>
+
+          <div class="texts">
+            <p>Dear {{name}},</p>
+
+            <p>
+              We wanted to inform you that your account with EventOrbit has been
+              disabled as of
+              {{formattedDate}}. This action was taken at your request.
+            </p>
+
+            <p>
+              While your account is disabled, you will not be able to log in or
+              access our services. Your data remains securely stored, and you
+              can request reactivation by contacting our
+              <a href="mailto:ogunsanwodavid123@gmail.com">support team</a>
+            </p>
+
+            <p>
+              If you believe this was an error or have any questions, please
+              <a href="tel:+2348159867285">reach out</a>
+              to us or reply to this email.
+            </p>
+          </div>
+
+          <div class="final-texts">
+            <p>Best regards,</p>
+            <p>The EventOrbit Team</p>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          Made with ❤️ by
+          <a
+            href="https://linkedin.com/in/ogunsanwo-david-399817238"
+          >00xdave</a>
+        </p>
+
+        <p>© {{year}} <a href={{clientUrl}}>EventOrbit</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

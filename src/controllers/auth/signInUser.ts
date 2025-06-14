@@ -59,6 +59,13 @@ const signInUser = async (
     if (!isMatch)
       return res.status(400).json({ message: "Invalid email or password." });
 
+    //Check if user's account is not disabled
+    if (user.isDisabled) {
+      return res
+        .status(403)
+        .json({ message: "Your account has been disabled." });
+    }
+
     //Parse user's object as req for the next function
     (req as any).user = user;
 

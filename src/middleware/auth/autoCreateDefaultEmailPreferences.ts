@@ -10,8 +10,12 @@ const autoCreateDefaultEmailPreferences = async (
   next: NextFunction
 ) => {
   try {
-    //Get user from request
-    const { _id: userId } = (req as any)["user"] as IUser;
+    //Get user and is existing user status from request
+    const user = (req as any).user as IUser & { isExistingUser: boolean };
+    const { isExistingUser, _id: userId } = user;
+
+    //Go to next middleware if user exists
+    if (isExistingUser) return next();
 
     //Default email preferences
     const defaultEmailPreferences = {
