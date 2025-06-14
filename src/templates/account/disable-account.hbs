@@ -1,86 +1,151 @@
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Eventorbit: Disable Account</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    />
-    <style>
-      @import
-      url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
-      @import
-      url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
-      * { font-family: Quicksand, Nunito, Arial, Helvetica, sans-serif; margin:
-      0; padding: 0; box-sizing: border-box; } body { background-color: #fafafa;
-      } .container { margin: 30px auto; max-width: 500px; display: flex;
-      flex-direction: column; gap: 20px; } .logo { width: max-content; margin: 0
-      auto; } .logo img { height: 30px; } main { width: 100%; background-color:
-      #fff; border-radius: 30px; padding: 40px; } main .inner { max-width:
-      300px; margin: 0 auto; } main .inner h2 { color: #000; font-size: 24px;
-      font-weight: 600; } main .inner .texts { margin-top: 20px; } main .inner
-      .texts p { color: #6f7881; font-size: 16px; margin-top: 10px; } main
-      .inner .final-texts { margin-top: 40px; display: flex; flex-direction:
-      row; flex-direction: column; align-items: center; gap: 5px; } main .inner
-      .final-texts p { width: max-content; color: #6f7881; font-size: 16px; }
-      main .inner a.verify-btn { display: block; text-decoration: none; width:
-      100%; margin-top: 30px; } main .inner a.verify-btn button { width: 100%;
-      background-color: #008080; border-radius: 10px; padding: 12px; color:
-      #fff; border: 0; outline: 0; font-family: inherit; font-size: 17px;
-      font-weight: 500; cursor: pointer; } footer { width: 100%; display: flex;
-      flex-direction: column; align-items: center; gap: 0; } footer p { width:
-      max-content; color: #6f7881; margin-top: 10px; } footer p a { color: blue;
-      font-weight: 500; }
+    <title>Eventorbit: Account Disabled</title>
+    <style type="text/css">
+      /* Client-specific styles */ body, table, td, a {
+      -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; } table, td {
+      mso-table-lspace: 0pt; mso-table-rspace: 0pt; } img {
+      -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height:
+      100%; outline: none; text-decoration: none; display: block; } /* Reset
+      styles */ body { margin: 0 !important; padding: 0 !important; width: 100%
+      !important; } a { cursor: pointer; } /* iOS BLUE LINKS */
+      a[x-apple-data-detectors] { color: inherit !important; text-decoration:
+      none !important; font-size: inherit !important; font-family: inherit
+      !important; font-weight: inherit !important; line-height: inherit
+      !important; }
     </style>
   </head>
+  <body
+    style="margin: 0; padding: 0; background-color: #fafafa; font-family: Arial, Helvetica, sans-serif;"
+  >
+    <!-- Email wrapper -->
+    <table
+      role="presentation"
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+    >
+      <tr>
+        <td align="center" style="padding: 30px 10px;">
+          <!-- Main container -->
+          <table
+            role="presentation"
+            width="100%"
+            border="0"
+            cellspacing="0"
+            cellpadding="0"
+            style="max-width: 500px; margin: 0 auto;"
+          >
+            <!-- Logo section -->
+            <tr>
+              <td align="center" style="padding-bottom: 20px;">
+                <img
+                  src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749862482/eventorbit-logo-gray_q3ayzl.png"
+                  alt="eventorbit logo"
+                  width="120"
+                  style="height: auto; display: block;"
+                />
+              </td>
+            </tr>
 
-  <body>
-    <div class="container">
-      <main>
-        <div class="inner">
-          <h2>Your Account Has Been Disabled</h2>
+            <!-- Content card -->
+            <tr>
+              <td
+                style="background-color: #ffffff; border-radius: 30px; padding: 40px;"
+              >
+                <!-- Inner content -->
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 24px; font-weight: bold;"
+                      >Your Account Has Been Disabled</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <p
+                        style="margin: 0 0 10px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >Dear {{name}},</p>
+                      <p
+                        style="margin: 0 0 10px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        We wanted to inform you that your account with
+                        EventOrbit has been disabled as of
+                        {{formattedDate}}. This action was taken at your
+                        request.
+                      </p>
+                      <p
+                        style="margin: 0 0 10px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        While your account is disabled, you will not be able to
+                        log in or access our services. Your data remains
+                        securely stored, and you can request reactivation by
+                        contacting our
+                        <a
+                          href="mailto:ogunsanwodavid123@gmail.com"
+                          style="color: #0000ff; text-decoration: none;"
+                        >support team</a>
+                      </p>
+                      <p
+                        style="margin: 0 0 10px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        If you believe this was an error or have any questions,
+                        please
+                        <a
+                          href="tel:+2348159867285"
+                          style="color: #0000ff; text-decoration: none;"
+                        >reach out</a>
+                        to us or reply to this email.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 40px; text-align: center;">
+                      <p
+                        style="margin: 0 0 5px 0; color: #6f7881; font-size: 16px;"
+                      >Best regards,</p>
+                      <p style="margin: 0; color: #6f7881; font-size: 16px;">The
+                        EventOrbit Team</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 
-          <div class="texts">
-            <p>Dear {{name}},</p>
-
-            <p>
-              We wanted to inform you that your account with EventOrbit has been
-              disabled as of
-              {{formattedDate}}. This action was taken at your request.
-            </p>
-
-            <p>
-              While your account is disabled, you will not be able to log in or
-              access our services. Your data remains securely stored, and you
-              can request reactivation by contacting our
-              <a href="mailto:ogunsanwodavid123@gmail.com">support team</a>
-            </p>
-
-            <p>
-              If you believe this was an error or have any questions, please
-              <a href="tel:+2348159867285">reach out</a>
-              to us or reply to this email.
-            </p>
-          </div>
-
-          <div class="final-texts">
-            <p>Best regards,</p>
-            <p>The EventOrbit Team</p>
-          </div>
-        </div>
-      </main>
-
-      <footer>
-        <p>
-          Made with ❤️ by
-          <a
-            href="https://linkedin.com/in/ogunsanwo-david-399817238"
-          >00xdave</a>
-        </p>
-
-        <p>© {{year}} <a href={{clientUrl}}>EventOrbit</a></p>
-      </footer>
-    </div>
+            <!-- Footer -->
+            <tr>
+              <td style="padding-top: 20px; text-align: center;">
+                <p style="margin: 10px 0; color: #6f7881; font-size: 14px;">
+                  Made with ❤️ by
+                  <a
+                    href="https://linkedin.com/in/ogunsanwo-david-399817238"
+                    style="color: #0000ff; font-weight: bold; text-decoration: none;"
+                  >00xdave</a>
+                </p>
+                <p style="margin: 10px 0; color: #6f7881; font-size: 14px;">
+                  ©
+                  {{year}}
+                  <a
+                    href="{{clientUrl}}"
+                    style="color: #0000ff; text-decoration: none;"
+                  >EventOrbit</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>

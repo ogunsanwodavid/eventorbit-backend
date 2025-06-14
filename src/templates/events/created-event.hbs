@@ -1,0 +1,389 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eventorbit: Created New Event</title>
+    <style type="text/css">
+      /* Client-specific styles */ body, table, td, a {
+      -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; } table, td {
+      mso-table-lspace: 0pt; mso-table-rspace: 0pt; } img {
+      -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height:
+      100%; outline: none; text-decoration: none; display: block; } /* Reset
+      styles */ body { margin: 0 !important; padding: 0 !important; width: 100%
+      !important; font-family: Arial, Helvetica, sans-serif; background-color:
+      #fafafa; } /* iOS BLUE LINKS */ a[x-apple-data-detectors] { color: inherit
+      !important; text-decoration: none !important; font-size: inherit
+      !important; font-family: inherit !important; font-weight: inherit
+      !important; line-height: inherit !important; }
+    </style>
+  </head>
+  <body
+    style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #fafafa;"
+  >
+    <!-- Email wrapper -->
+    <table
+      role="presentation"
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+    >
+      <tr>
+        <td align="center" style="padding: 30px 10px;">
+          <!-- Main container -->
+          <table
+            role="presentation"
+            width="100%"
+            border="0"
+            cellspacing="0"
+            cellpadding="0"
+            style="max-width: 500px; margin: 0 auto;"
+          >
+            <!-- Logo section -->
+            <tr>
+              <td align="center" style="padding-bottom: 20px;">
+                <img
+                  src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749862482/eventorbit-logo-gray_q3ayzl.png"
+                  alt="eventorbit logo"
+                  width="120"
+                  style="height: auto; display: block;"
+                />
+              </td>
+            </tr>
+
+            <!-- Main content card -->
+            <tr>
+              <td
+                style="background-color: #ffffff; border-radius: 30px 30px 0 0; padding: 40px;"
+              >
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <img
+                        src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749887394/eventorbit-create-event-email_ifnbcb.png"
+                        alt="eventorbit created event image"
+                        width="100%"
+                        style="display: block;"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 24px; font-weight: bold;"
+                      >Your event is now live.</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <p
+                        style="margin: 0 0 10px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >Hey {{name}},</p>
+                      <p
+                        style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >{{eventName}} has been posted successfully</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 15px;">
+                      <img
+                        src="{{eventCoverPhoto}}"
+                        alt="cover photo"
+                        width="100%"
+                        style="display: block;"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Event details section -->
+            <tr>
+              <td style="background-color: #f5f5f5; padding: 25px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 22px; font-weight: 500;"
+                      >{{eventName}}</h2>
+                    </td>
+                  </tr>
+                  <!-- Date -->
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="20"
+                            valign="top"
+                            style="padding-right: 8px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749889621/gray-calendar-icon_ydq0fo.png"
+                              alt="calendar icon"
+                              width="13"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td>
+                            <p
+                              style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                            >{{formattedStartDate}}</p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Location -->
+                  <tr>
+                    <td style="padding-top: 15px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="20"
+                            valign="top"
+                            style="padding-right: 8px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749889622/gray-location-icon_yyoevu.png"
+                              alt="location icon"
+                              width="13"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td>
+                            {{#if venueName}}
+                              <p
+                                style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                              >
+                                <a
+                                  href="{{locationGoogleMapsUrl}}"
+                                  style="color: #0000ff; text-decoration: none;"
+                                >{{venueName}}</a>
+                              </p>
+                            {{else}}
+                              <p
+                                style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                              >{{connectionDetails}}</p>
+                            {{/if}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Manage events section -->
+            <tr>
+              <td style="background-color: #ffffff; padding: 25px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 22px; font-weight: 500;"
+                      >Manage your events</h2>
+                    </td>
+                  </tr>
+                  <!-- Sell -->
+                  <tr>
+                    <td style="padding-top: 30px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="80"
+                            valign="top"
+                            style="padding-right: 25px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749890405/blue-sell-icon_xic93p.png"
+                              alt="sell blue icon"
+                              width="80"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td valign="middle">
+                            <a
+                              href="{{clientUrl}}"
+                              style="color: #0000ff; font-size: 18px; text-decoration: none; line-height: 1.4;"
+                            >Learn how to sell tickets on your website</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Promote -->
+                  <tr>
+                    <td style="padding-top: 30px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="80"
+                            valign="top"
+                            style="padding-right: 25px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749890405/blue-promote-icon_wlpt6r.png"
+                              alt="promote blue icon"
+                              width="80"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td valign="middle">
+                            <a
+                              href="{{clientUrl}}"
+                              style="color: #0000ff; font-size: 18px; text-decoration: none; line-height: 1.4;"
+                            >Promote your event and sell more tickets</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Paid -->
+                  <tr>
+                    <td style="padding-top: 30px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="80"
+                            valign="top"
+                            style="padding-right: 25px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749890405/blue-paid-icon_dq3c52.png"
+                              alt="paid blue icon"
+                              width="80"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td valign="middle">
+                            <a
+                              href="{{clientUrl}}"
+                              style="color: #0000ff; font-size: 18px; text-decoration: none; line-height: 1.4;"
+                            >Learn how to get paid after your event</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Have questions section -->
+            <tr>
+              <td style="padding: 25px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 22px; font-weight: 500;"
+                      >Have questions?</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 15px;">
+                      <p
+                        style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        We are here to help, learn more about
+                        <a
+                          href="{{clientUrl}}"
+                          style="color: #0000ff; text-decoration: none;"
+                        >payments</a>
+                        here.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding-top: 20px; text-align: center;">
+                <p style="margin: 10px 0; color: #6f7881; font-size: 14px;">
+                  Made with
+                  <span style="color: red;">❤</span>
+                  by
+                  <a
+                    href="https://linkedin.com/in/ogunsanwo-david-399817238"
+                    style="color: #0000ff; font-weight: bold; text-decoration: none;"
+                  >00xdave</a>
+                </p>
+                <p style="margin: 10px 0; color: #6f7881; font-size: 14px;">
+                  ©
+                  {{year}}
+                  <a
+                    href="{{clientUrl}}"
+                    style="color: #0000ff; text-decoration: none;"
+                  >EventOrbit</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -24,6 +24,7 @@ import locationSearchMiddleware from "../middleware/events/locationSearchMiddlew
 import timeFrameFilterMiddleware from "../middleware/events/timeFrameFilterMiddleware";
 import priceFilterMiddleware from "../middleware/events/priceFilterMiddleware";
 import categoryFilterMiddleware from "../middleware/events/categoryFilterMiddleware";
+import sendCreatedEventEmail from "../middleware/events/sendCreatedEventEmail";
 
 import createEventHandler from "../controllers/events/createEvent";
 import getEventByAliasHandler from "../controllers/events/getEventByAlias";
@@ -67,11 +68,13 @@ router.get(
 //Create a new event
 //::Protected endpoint
 //::Create default checkout questions
+//::Send email to user
 router.post(
   "/create",
   checkAuthStatus,
   createEventSchemaValidation,
   createEventHandler,
+  sendCreatedEventEmail,
   autoCreateDefaultCheckoutQuestions,
   (_, res: Response) => {
     res.status(201).json({

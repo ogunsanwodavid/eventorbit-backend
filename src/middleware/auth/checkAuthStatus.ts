@@ -14,7 +14,7 @@ const checkAuthStatus = async (
 
   //Check if user's account exists and is not disabled
   //::If disabled, delete current session
-  const user = await User.findById(req.session.user?.id);
+  const user = await User.findById(req.session.user?._id);
   if (!user) {
     return res.status(401).json({ message: "User not found" });
   }
