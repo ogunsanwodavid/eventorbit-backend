@@ -2,14 +2,24 @@ import nodemailer from "nodemailer";
 
 import { User } from "../../../mongoose/models/user";
 
+import fs from "fs/promises";
+
+import handlebars from "handlebars";
+
+import path from "path";
+
+import juice from "juice";
+
 export const sendVerificationEmail = async (to: string, token: string) => {
-  //Google gmail API Env. variabes
+  //Env. variabes
   const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
   const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
+  const clientUrl = process.env.CLIENT_URL;
 
-  //Throw error if any gmail API Variable is missing
+  //Throw error if any env variable is missing
   if (!googleAPIEmailUser) throw new Error("Missing google API Email User");
   if (!googleAPIEmailPass) throw new Error("Missing google API Email Pass");
+  if (!clientUrl) throw new Error("Missing client url in .env");
 
   //Create nodemailer transport
   const transporter = nodemailer.createTransport({
@@ -20,8 +30,8 @@ export const sendVerificationEmail = async (to: string, token: string) => {
     },
   });
 
-  //Client-side url
-  const url = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
+  //Client-side verification url
+  const verificationUrl = `${clientUrl}/verify-email?token=${token}`;
 
   //Check for user
   const user = await User.findOne({ email: to });
@@ -32,13 +42,33 @@ export const sendVerificationEmail = async (to: string, token: string) => {
   //Recepient's info
   const { firstName, organizationName } = user;
 
+  //Load and compile template
+  const templatePath = path.join(
+    __dirname,
+    "../../../templates/auth/verify-email.hbs"
+  );
+  const templateContent = await fs.readFile(templatePath, "utf-8");
+  const template = handlebars.compile(templateContent);
+
+  //Data for template
+  const templateData = {
+    name: `${firstName || organizationName}`,
+    verificationUrl,
+    clientUrl,
+    year: new Date().getFullYear(),
+  };
+
+  //Generate HTML
+  const htmlToSend = template(templateData);
+
+  //Juice html template to use inline css
+  const htmlWithInlinedCss = juice(htmlToSend);
+
   //Send mail
   await transporter.sendMail({
-    from: `"EventOrbit" <${process.env.GOOGLE_GMAIL_API_MAIL_USER}>`,
+    from: `"EventOrbit" <${googleAPIEmailUser}>`,
     to,
     subject: "Events await! Please confirm your account.",
-    html: `<p>Hey ${
-      firstName || organizationName
-    },</p><p>We've finished setting up your EventOrbit account. Just <a href="${url}" style="display:inline;color:#007bff;text-decoration: none;">confirm your email</a> to get started!</p>`,
+    html: htmlWithInlinedCss,
   });
 };
