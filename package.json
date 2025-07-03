@@ -2,10 +2,10 @@
   "name": "eventorbit-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "/dist/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/index.js",
+    "start": "node ./dist/index.js",
     "build": "rm -rf dist/ && tsc",
     "dev": "nodemon --watch src --ext ts --exec \"ts-node src/index.ts\""
   },
