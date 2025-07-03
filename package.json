@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --max-old-space-size=1024 ./dist/index.js",
     "build": "rm -rf dist/ && tsc && ls -la dist/ > build.log",
-    "dev": "nodemon --watch src --ext ts --exec \"ts-node src/index.ts\"",
-    "prestart": "npm run build"
+    "dev": "nodemon --watch src --ext ts --exec \"ts-node src/index.ts\""
   },
   "keywords": [],
   "author": "",
