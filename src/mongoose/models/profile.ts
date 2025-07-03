@@ -2,7 +2,7 @@ import { Schema, model, Document } from "mongoose";
 
 import { UserType } from "./user";
 
-interface IProfile extends Document {
+export interface IProfile extends Document {
   userId: Schema.Types.ObjectId;
   isDisabled: boolean;
   info: {

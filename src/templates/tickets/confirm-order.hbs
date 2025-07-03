@@ -1,0 +1,430 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eventorbit: Order Confirmed</title>
+    <style type="text/css">
+      /* Client-specific styles */ body, table, td, a {
+      -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; } table, td {
+      mso-table-lspace: 0pt; mso-table-rspace: 0pt; } img {
+      -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height:
+      100%; outline: none; text-decoration: none; display: block; } /* Reset
+      styles */ body { margin: 0 !important; padding: 0 !important; width: 100%
+      !important; font-family: Arial, Helvetica, sans-serif; background-color:
+      #fafafa; } /* iOS BLUE LINKS */ a[x-apple-data-detectors] { color: inherit
+      !important; text-decoration: none !important; font-size: inherit
+      !important; font-family: inherit !important; font-weight: inherit
+      !important; line-height: inherit !important; }
+    </style>
+  </head>
+  <body
+    style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #fafafa;"
+  >
+    <!-- Email wrapper -->
+    <table
+      role="presentation"
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+    >
+      <tr>
+        <td align="center" style="padding: 30px 10px;">
+          <!-- Main container -->
+          <table
+            role="presentation"
+            width="100%"
+            border="0"
+            cellspacing="0"
+            cellpadding="0"
+            style="max-width: 500px; margin: 0 auto;"
+          >
+            <!-- Logo section -->
+            <tr>
+              <td align="center" style="padding-bottom: 20px;">
+                <img
+                  src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749862482/eventorbit-logo-gray_q3ayzl.png"
+                  alt="eventorbit logo"
+                  width="120"
+                  style="height: auto; display: block;"
+                />
+              </td>
+            </tr>
+
+            <!-- Main content card -->
+            <tr>
+              <td
+                style="background-color: #ffffff; border-radius: 30px 30px 0 0; padding: 40px;"
+              >
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 24px; font-weight: bold;"
+                      >Hey
+                        {{name}}, you've reserved your spot for
+                        {{eventName}}!</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 20px;">
+                      <p
+                        style="margin: 0 0 10px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        This is your order confirmation for
+                        <a
+                          href="{{eventUrl}}"
+                          style="color: #0000ff; text-decoration: none;"
+                        >{{eventName}}</a>. Please see the attached PDF for more
+                        details.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 15px;">
+                      <img
+                        src="{{eventCoverPhoto}}"
+                        alt="event cover photo"
+                        width="100%"
+                        style="display: block;"
+                      />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Event details section -->
+            <tr>
+              <td style="background-color: #f5f5f5; padding: 25px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <!-- Date -->
+                  <tr>
+                    <td style="padding-bottom: 15px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="20"
+                            valign="top"
+                            style="padding-right: 8px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749889621/gray-calendar-icon_ydq0fo.png"
+                              alt="calendar icon"
+                              width="13"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td>
+                            <p
+                              style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                            >{{formattedStartDate}}</p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Location -->
+                  <tr>
+                    <td style="padding-bottom: 15px;">
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="20"
+                            valign="top"
+                            style="padding-right: 8px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1749889622/gray-location-icon_yyoevu.png"
+                              alt="location icon"
+                              width="13"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td>
+                            {{#if venueName}}
+                              <p
+                                style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                              >
+                                <a
+                                  href="{{locationGoogleMapsUrl}}"
+                                  style="color: #0000ff; text-decoration: none;"
+                                >{{venueName}}</a>
+                              </p>
+                            {{else}}
+                              <p
+                                style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                              >{{connectionDetails}}</p>
+                            {{/if}}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <!-- Organizer -->
+                  <tr>
+                    <td>
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                      >
+                        <tr>
+                          <td
+                            width="20"
+                            valign="top"
+                            style="padding-right: 8px;"
+                          >
+                            <img
+                              src="https://res.cloudinary.com/ddcjuf3hq/image/upload/v1751554674/gray-profile-icon_kaub7v.png"
+                              alt="organizer icon"
+                              width="13"
+                              style="display: block;"
+                            />
+                          </td>
+                          <td>
+                            <p
+                              style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.4;"
+                            >
+                              <a
+                                href="{{organizerUrl}}"
+                                style="color: #0000ff; text-decoration: none;"
+                              >{{organizerName}}</a>
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Tickets section -->
+            <tr>
+              <td style="background-color: #ffffff; padding: 30px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 22px; font-weight: 500;"
+                      >Your ticket{{#if hasMultipleTickets}}s{{/if}}</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 25px;">
+                      <!-- Tickets container -->
+                      <table
+                        role="presentation"
+                        width="100%"
+                        border="0"
+                        cellspacing="0"
+                        cellpadding="0"
+                        style="border: 1px solid #e2e5e7; border-radius: 8px; overflow: hidden;"
+                      >
+                        <tr>
+                          <td style="background-color: #fafafa; padding: 16px;">
+                            <p
+                              style="margin: 0; color: #000000; font-size: 18px; font-weight: 500;"
+                            >{{eventName}}</p>
+                          </td>
+                        </tr>
+                        {{#each formattedTickets}}
+                          <tr>
+                            <td
+                              style="padding: 24px 16px; border-top: 1px solid #f5f5f5;"
+                            >
+                              <!-- Ticket details -->
+                              <table
+                                role="presentation"
+                                width="100%"
+                                border="0"
+                                cellspacing="0"
+                                cellpadding="0"
+                              >
+                                <tr>
+                                  <td style="padding-bottom: 20px;">
+                                    <p
+                                      style="margin: 0 0 3px 0; color: #6f7881; font-size: 14px;"
+                                    >Name</p>
+                                    <p
+                                      style="margin: 0; color: #000000; font-size: 16px; font-weight: 500;"
+                                    >{{attendeeName}}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding-bottom: 20px;">
+                                    <p
+                                      style="margin: 0 0 3px 0; color: #6f7881; font-size: 14px;"
+                                    >Ticket Type</p>
+                                    <p
+                                      style="margin: 0; color: #000000; font-size: 16px; font-weight: 500;"
+                                    >{{ticketName}}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding-bottom: 20px;">
+                                    <p
+                                      style="margin: 0 0 3px 0; color: #6f7881; font-size: 14px;"
+                                    >Duration</p>
+                                    <p
+                                      style="margin: 0; color: #000000; font-size: 16px; font-weight: 500;"
+                                    >{{startDate}} - {{endDate}}</p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td align="center">
+                                    <!-- QR Code -->
+                                    <img
+                                      src="{{qrCode}}"
+                                      alt="Ticket QR Code"
+                                      width="150"
+                                      style="display: block; margin: 0 auto;"
+                                    />
+                                    <p
+                                      style="margin: 10px 0 0 0; color: #6f7881; font-size: 15px; font-weight: 500; text-align: center;"
+                                    >{{ticketCode}}</p>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        {{/each}}
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Additional info section -->
+            <tr>
+              <td style="background-color: #f5f5f5; padding: 25px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0 0 12px 0; color: #000000; font-size: 22px; font-weight: 500;"
+                      >Additional Info</h2>
+                      <p
+                        style="margin: 0; color: #1c232b; font-size: 16px; line-height: 1.5;"
+                      >{{additionalInfo}}</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Have questions section -->
+            <tr>
+              <td style="background-color: #ffffff; padding: 30px;">
+                <table
+                  role="presentation"
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="max-width: 300px; margin: 0 auto;"
+                >
+                  <tr>
+                    <td>
+                      <h2
+                        style="margin: 0; color: #000000; font-size: 22px; font-weight: 500;"
+                      >Have questions?</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding-top: 15px;">
+                      <p
+                        style="margin: 0 0 15px 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        For event-specific questions, contact your event
+                        organizer:
+                        {{organizerContact}}
+                      </p>
+                      <p
+                        style="margin: 0; color: #6f7881; font-size: 16px; line-height: 1.5;"
+                      >
+                        For frequently-asked questions about ticketing, visit
+                        our
+                        <a
+                          href="mailto:ogunsanwodavid123@gmail.com"
+                          style="color: #0000ff; text-decoration: none;"
+                        >Help Centre</a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding-top: 20px; text-align: center;">
+                <p style="margin: 10px 0; color: #6f7881; font-size: 14px;">
+                  Made with
+                  <span style="color: red;">❤</span>
+                  by
+                  <a
+                    href="https://linkedin.com/in/ogunsanwo-david-399817238"
+                    style="color: #0000ff; font-weight: bold; text-decoration: none;"
+                  >00xdave</a>
+                </p>
+                <p style="margin: 10px 0; color: #6f7881; font-size: 14px;">
+                  ©
+                  {{year}}
+                  <a
+                    href="{{clientUrl}}"
+                    style="color: #0000ff; text-decoration: none;"
+                  >EventOrbit</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

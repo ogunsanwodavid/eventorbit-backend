@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
-import { IUser } from "../../mongoose/models/user";
+import { IUser, User } from "../../mongoose/models/user";
 
 import { IEvent } from "../../mongoose/models/event";
+
+import { Profile } from "../../mongoose/models/profile";
 
 import { FormattedTicket } from "./formatTickets";
 
@@ -20,6 +22,13 @@ async function mailTickets(
     //Get event from request
     const event = (req as any)["event"] as IEvent;
 
+    //Get organizer's profile from event
+    const organizerProfile = await Profile.findOne({ userId: event.hostId });
+    if (!organizerProfile)
+      return res
+        .status(401)
+        .json({ message: "Event organizer's profile not found" });
+
     //Get formatted tickets from request
     const formattedTickets: FormattedTicket[] = (req as any).formattedTickets;
 
@@ -31,7 +40,13 @@ async function mailTickets(
     }
 
     //Send order confirmation mail
-    await sendOrderConfirmationEmail(user, event, formattedTickets, pdfBuffer);
+    await sendOrderConfirmationEmail(
+      user,
+      event,
+      organizerProfile,
+      formattedTickets,
+      pdfBuffer
+    );
 
     next();
   } catch (error) {
