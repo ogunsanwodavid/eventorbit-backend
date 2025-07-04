@@ -38,7 +38,7 @@ dotenv.config();
 const app = express();
 
 //Port which app runs or 5000
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 //Mongo URI
 const mongoURI = process.env.MONGO_URI!;
@@ -110,7 +110,7 @@ const start = async () => {
     //Initialize all cron jobs after DB connection
     runAllCronJobs();
 
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   } catch (error) {
