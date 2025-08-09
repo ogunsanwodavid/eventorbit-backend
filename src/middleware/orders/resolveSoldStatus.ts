@@ -2,6 +2,10 @@ import { Request, Response, NextFunction } from "express";
 
 import { EventModel, IEvent } from "../../mongoose/models/event";
 
+import { IOrder } from "../../mongoose/models/order";
+
+import { ITicket, TicketModel } from "../../mongoose/models/ticket";
+
 import { ProcessOrderInput } from "../../utils/schema-validations/orders/processOrderSchemaValidation";
 
 const resolveSoldStatus = async (
@@ -70,6 +74,20 @@ const resolveSoldStatus = async (
 
     next();
   } catch (error) {
+    //Get new order from request
+    const newOrder = (req as any).newOrder as IOrder;
+
+    //Get created tickets from request body
+    const createdTickets = (req as any).createdTickets as ITicket[];
+
+    //Update status to failed
+    newOrder.status = "failed";
+    await newOrder.save();
+
+    //Delete all tickets
+    const ticketIds = createdTickets.map((t) => t._id);
+    await TicketModel.deleteMany({ _id: { $in: ticketIds } });
+
     next(error);
   }
 };

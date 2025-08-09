@@ -41,7 +41,8 @@ const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
 //Mongo URI
-const mongoURI = process.env.MONGO_URI!;
+const mongoURI = process.env.MONGO_URI;
+if (!mongoURI) throw new Error("MONGO_URI not defined in .env");
 
 //Express session secret
 const expressSessionSecret = process.env.SESSION_SECRET!;
@@ -66,7 +67,6 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      //secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
     store: MongoStore.create({
