@@ -37,12 +37,6 @@ const forgotPassword = async (
     //Return error if user not found
     if (!user) return res.status(400).json({ message: "User not found." });
 
-    //Prevent Google accounts from manually resetting password
-    if (user.isGoogle)
-      return res.status(403).json({
-        message: "You signed up with a Google account.",
-      });
-
     //Dont send reset email if user's account is disabled
     if (user.isDisabled) {
       return res

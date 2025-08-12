@@ -31,7 +31,7 @@ const sendPasswordResetEmail = async (to: string, token: string) => {
   });
 
   //Client-side password reset url
-  const passwordResetUrl = `${clientUrl}/reset-password?token=${token}`;
+  const passwordResetUrl = `${clientUrl}/set-password?token=${token}`;
 
   //Check for user
   const user = await User.findOne({ email: to });
