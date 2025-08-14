@@ -47,8 +47,8 @@ const sendWelcomeEmail = async (
 
   //Load and compile template
   const templatePath = path.join(
-    __dirname,
-    "../../templates/auth/welcome-email.hbs"
+    process.cwd(),
+    "src/templates/auth/welcome-email.hbs"
   );
   const templateContent = await fs.readFile(templatePath, "utf-8");
   const template = handlebars.compile(templateContent);

@@ -53,8 +53,8 @@ const sendCreatedEventEmail = async (
 
   //Load and compile template
   const templatePath = path.join(
-    __dirname,
-    "../../templates/events/created-event.hbs"
+    process.cwd(),
+    "src/templates/events/created-event.hbs"
   );
   const templateContent = await fs.readFile(templatePath, "utf-8");
   const template = handlebars.compile(templateContent);

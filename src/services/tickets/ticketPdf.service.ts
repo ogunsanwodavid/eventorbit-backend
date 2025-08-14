@@ -20,10 +20,7 @@ class PdfService {
     });
 
     //Load and compile template
-    const templatePath = path.join(
-      __dirname,
-      "../../templates/tickets/ticket.hbs"
-    );
+    const templatePath = path.join(process.cwd(), "src/tickets/ticket.hbs");
     const templateContent = await fs.readFile(templatePath, "utf-8");
     this.template = handlebars.compile(templateContent);
   }

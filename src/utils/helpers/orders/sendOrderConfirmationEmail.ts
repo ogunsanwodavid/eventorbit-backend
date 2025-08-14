@@ -53,8 +53,8 @@ const sendOrderConfirmationEmail = async (
 
   //Load and compile template
   const templatePath = path.join(
-    __dirname,
-    "../../../templates/tickets/confirm-order.hbs"
+    process.cwd(),
+    "src/templates/tickets/confirm-order.hbs"
   );
   const templateContent = await fs.readFile(templatePath, "utf-8");
   const template = handlebars.compile(templateContent);

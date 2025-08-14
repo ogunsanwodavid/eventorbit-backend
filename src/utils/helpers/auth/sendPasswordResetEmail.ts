@@ -44,8 +44,8 @@ const sendPasswordResetEmail = async (to: string, token: string) => {
 
   //Load and compile template
   const templatePath = path.join(
-    __dirname,
-    "../../../templates/auth/forgot-password.hbs"
+    process.cwd(),
+    "src/templates/auth/forgot-password.hbs"
   );
   const templateContent = await fs.readFile(templatePath, "utf-8");
   const template = handlebars.compile(templateContent);
