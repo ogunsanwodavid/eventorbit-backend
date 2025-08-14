@@ -16,6 +16,8 @@ import { v2 as cloudinary } from "cloudinary";
 
 import dotenv from "dotenv";
 
+import cors from "cors";
+
 //Import routes
 import authRoutes from "./routes/auth";
 import accountRoutes from "./routes/account";
@@ -98,6 +100,26 @@ app.use("/api/discount-codes", discountCodesRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/tickets", ticketsRoutes);
 app.use("/api/sales-analysis", salesAnalysisRoutes);
+
+//Allowed client side CORS origins
+const allowedOrigins = [
+  "http://localhost:4000",
+  "https://eventorbit.vercel.app",
+];
+
+//Prevent requests from unallowed orgins
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 //Start server function
 const start = async () => {
