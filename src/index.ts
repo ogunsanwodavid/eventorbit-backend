@@ -89,18 +89,6 @@ cloudinary.config({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Register and utilize routes
-app.use("/api/auth", authRoutes);
-app.use("/api/account", accountRoutes);
-app.use("/api/profile", profileRoutes);
-app.use("/api/email-preferences", emailPreferencesRoutes);
-app.use("/api/events", eventsRoutes);
-app.use("/api/checkout-questions", checkoutQuestionsRoutes);
-app.use("/api/discount-codes", discountCodesRoutes);
-app.use("/api/orders", ordersRoutes);
-app.use("/api/tickets", ticketsRoutes);
-app.use("/api/sales-analysis", salesAnalysisRoutes);
-
 //Allowed client side CORS origins
 const allowedOrigins = [
   "http://localhost:4000",
@@ -120,6 +108,18 @@ app.use(
     credentials: true,
   })
 );
+
+//Register and utilize routes
+app.use("/api/auth", authRoutes);
+app.use("/api/account", accountRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/email-preferences", emailPreferencesRoutes);
+app.use("/api/events", eventsRoutes);
+app.use("/api/checkout-questions", checkoutQuestionsRoutes);
+app.use("/api/discount-codes", discountCodesRoutes);
+app.use("/api/orders", ordersRoutes);
+app.use("/api/tickets", ticketsRoutes);
+app.use("/api/sales-analysis", salesAnalysisRoutes);
 
 //Start server function
 const start = async () => {
