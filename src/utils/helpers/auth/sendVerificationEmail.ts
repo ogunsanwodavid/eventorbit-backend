@@ -43,9 +43,13 @@ export const sendVerificationEmail = async (to: string, token: string) => {
   const { firstName, organizationName } = user;
 
   //Load and compile template
-  const templatePath = path.join(
+  /* const templatePath = path.join(
     __dirname,
     "../../../templates/auth/verify-email.hbs"
+  ); */
+  const templatePath = path.join(
+    process.cwd(),
+    "src/templates/auth/verify-email.hbs"
   );
   const templateContent = await fs.readFile(templatePath, "utf-8");
   const template = handlebars.compile(templateContent);
