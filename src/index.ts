@@ -82,14 +82,18 @@ app.use(
 app.use(cookieParser());
 
 //Set up express session
+app.set("trust proxy", 1);
+
 app.use(
   session({
     secret: expressSessionSecret!,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      secure: process.env.NODE_ENV === "production", // true if HTTPS in production
+      sameSite: process.env.NODE_ENV === "production" && "lax",
     },
     store: MongoStore.create({
       mongoUrl: mongoURI!,
