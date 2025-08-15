@@ -10,7 +10,11 @@ import path from "path";
 
 import juice from "juice";
 
-export const sendVerificationEmail = async (to: string, token: string) => {
+export const sendVerificationEmail = async (
+  to: string,
+  token: string,
+  pageRedirect: string
+) => {
   //Env. variabes
   const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
   const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
@@ -30,8 +34,11 @@ export const sendVerificationEmail = async (to: string, token: string) => {
     },
   });
 
+  //Encoded page redirect url
+  const encodedRedirect = encodeURIComponent(pageRedirect);
+
   //Client-side verification url
-  const verificationUrl = `${clientUrl}/verify-email?token=${token}`;
+  const verificationUrl = `${clientUrl}/verify-email?token=${token}&redirect=${encodedRedirect}`;
 
   //Check for user
   const user = await User.findOne({ email: to });

@@ -43,7 +43,7 @@ router.post(
   autoCreateDefaultEmailPreferences,
   (_, res: Response) => {
     res.status(201).json({
-      message: "Registration successful. Verification email sent",
+      message: "Verification email sent",
     });
   }
 );

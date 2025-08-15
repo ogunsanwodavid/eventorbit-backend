@@ -31,6 +31,9 @@ const registerUserValidationSchema = validateSchema(
         password: z
           .string({ required_error: "Password is required" })
           .min(6, "Password must be at least 6 characters"),
+        pageRedirect: z
+          .string({ required_error: "Page redirect is required" })
+          .optional(),
       }),
     })
     .superRefine((data, ctx) => {
