@@ -58,6 +58,26 @@ const cloudinarySecretKey = process.env.CLOUDINARY_API_SECRET!;
 //::Increase payload limit to 50mb
 app.use(express.json({ limit: "50mb" }));
 
+//Allowed client side CORS origins
+const allowedOrigins = [
+  "http://localhost:4000",
+  "https://eventorbit.vercel.app",
+];
+
+//Prevent requests from unallowed orgins
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 //Set up cookie parser
 app.use(cookieParser());
 
@@ -88,26 +108,6 @@ cloudinary.config({
 //Initialize Passport and session
 app.use(passport.initialize());
 app.use(passport.session());
-
-//Allowed client side CORS origins
-const allowedOrigins = [
-  "http://localhost:4000",
-  "https://eventorbit.vercel.app",
-];
-
-//Prevent requests from unallowed orgins
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
 
 //Register and utilize routes
 app.use("/api/auth", authRoutes);
