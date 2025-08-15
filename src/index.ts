@@ -92,8 +92,8 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      secure: process.env.NODE_ENV === "production", // true if HTTPS in production
-      sameSite: process.env.NODE_ENV === "production" && "lax",
+      secure: false, //process.env.NODE_ENV === "production", // true if HTTPS in production
+      sameSite: "lax", //process.env.NODE_ENV === "production" && "lax",
     },
     store: MongoStore.create({
       mongoUrl: mongoURI!,
