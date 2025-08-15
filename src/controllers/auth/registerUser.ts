@@ -13,7 +13,7 @@ const jwtSecret = process.env.JWT_SECRET!;
 
 //Register User props
 interface RegisterUserProps extends IUser {
-  pageRedirect: string;
+  pageRedirect?: string;
 }
 
 //Register user function

@@ -17,6 +17,7 @@ type SignInUserPayload = {
   password: string;
   latitude?: number;
   longitude?: number;
+  pageRedirect?: string;
 };
 
 // Sign in user function
@@ -27,7 +28,7 @@ const signInUser = async (
 ): Promise<any> => {
   try {
     //Destructure email and password from request body
-    const { email, password } = req.body;
+    const { email, password, pageRedirect } = req.body;
 
     //Find user by email
     const user = await User.findOne({ email });
@@ -43,7 +44,7 @@ const signInUser = async (
         expiresIn: "1d",
       });
 
-      await sendVerificationEmail(user.email, newToken);
+      await sendVerificationEmail(user.email, newToken, pageRedirect);
 
       return res.status(401).json({
         message: "Unverified email. New verification email sent",
