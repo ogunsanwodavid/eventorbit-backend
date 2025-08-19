@@ -8,7 +8,7 @@ const googleSignInRedirect = (req: Request, res: Response) => {
   const pageRedirect = getSafeRedirect(req.body?.pageRedirect);
 
   //Redirect on client-side
-  res.redirect(pageRedirect);
+  res.redirect(`${process.env.CLIENT_URL!}${pageRedirect}`);
 };
 
 export default googleSignInRedirect;

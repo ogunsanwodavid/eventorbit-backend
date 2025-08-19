@@ -122,7 +122,7 @@ router.get("/google", parseGoogleSignInState);
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login",
+    failureRedirect: "/sign-in",
     session: true,
   }),
   decodeGoogleSignInState,

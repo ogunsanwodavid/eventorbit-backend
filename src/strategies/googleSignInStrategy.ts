@@ -45,25 +45,4 @@ const googleSignInStrategy = new GoogleStrategy(
   }
 );
 
-/*       //Create user if not in database
-      if (!user) {
-        user = await User.create({
-          email,
-          firstName: profile.name?.givenName || "",
-          lastName: profile.name?.familyName || "",
-          profilePicture: profile.photos?.[0]?.value || undefined,
-          userType: "individual",
-          isVerified: true,
-          isGoogle: true,
-        });
-      }
-
-      //Return user's object
-      done(null, user);
-    } catch (err) {
-      done(err);
-    }
-  }
-); */
-
 export default googleSignInStrategy;
