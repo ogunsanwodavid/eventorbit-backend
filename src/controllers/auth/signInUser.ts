@@ -18,7 +18,7 @@ type SignInUserPayload = {
   pageRedirect?: string;
 };
 
-// Sign in user function
+//Sign in user function
 const signInUser = async (
   req: Request<{}, {}, SignInUserPayload>,
   res: Response,
