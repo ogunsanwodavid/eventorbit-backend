@@ -36,11 +36,15 @@ const sendWelcomeEmail = async (
     },
   });
 
-  //Get user object from request
-  const user = (req as any).user as IUser;
+  //Get user and is existing user status from request
+  const user = (req as any).user as IUser & { isExistingUser: boolean };
+  const { isExistingUser } = user;
 
   //Throw error if user not found
   if (!user) throw new Error("User not found");
+
+  //Go to next middleware if user exists
+  if (isExistingUser) return next();
 
   //Recepient's info
   const { firstName, organizationName } = user;
