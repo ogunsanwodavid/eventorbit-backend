@@ -92,7 +92,7 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      secure: false, //process.env.NODE_ENV === "production", // true if HTTPS in production
+      secure: true, //process.env.NODE_ENV === "production", // true if HTTPS in production
       sameSite: "none", //process.env.NODE_ENV === "production" && "lax",
     },
     store: MongoStore.create({
