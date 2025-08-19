@@ -34,7 +34,13 @@ const setUserLocation = async (
   if (latitude && longitude) {
     try {
       const locationRes: LocationResponseAPI = await axios.get(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`,
+        {
+          headers: {
+            "User-Agent": "EventOrbit/1.0 (ogunsanwodavid123@gmail.com)",
+            "Accept-Language": "en",
+          },
+        }
       );
 
       const state = locationRes.data.address.state || "";
