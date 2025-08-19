@@ -38,7 +38,10 @@ const googleSignInStrategy = new GoogleStrategy(
       }
 
       //Return user object with isExistingUser flag
-      done(null, { ...user.toObject(), isExistingUser });
+      const userWithFlag = user as any;
+      userWithFlag.isExistingUser = isExistingUser;
+
+      done(null, userWithFlag);
     } catch (err) {
       done(err);
     }
