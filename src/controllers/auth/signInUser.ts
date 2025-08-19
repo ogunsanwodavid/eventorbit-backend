@@ -45,16 +45,18 @@ const signInUser = async (
       await sendVerificationEmail(user.email, newToken, pageRedirect);
 
       return res.status(401).json({
-        message: "New verification email sent",
+        message: "Unverified account. New verification email sent.",
       });
     }
 
-    //Return error if password not found
-    if (!user.password)
-      return res.status(404).json({ message: "Password is required" });
+    //Return error if Google sign in user
+    if (user.isGoogle && !user.password)
+      return res.status(404).json({
+        message: "You signed up with Google. Please continue with Google.",
+      });
 
     //Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password!);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid email or password." });
 
