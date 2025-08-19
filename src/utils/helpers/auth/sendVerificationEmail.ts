@@ -10,10 +10,12 @@ import path from "path";
 
 import juice from "juice";
 
+import getSafeRedirect from "./getSafeRedirect";
+
 export const sendVerificationEmail = async (
   to: string,
   token: string,
-  pageRedirect: string
+  pageRedirect?: string
 ) => {
   //Env. variabes
   const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
@@ -35,7 +37,7 @@ export const sendVerificationEmail = async (
   });
 
   //Encoded page redirect url
-  const encodedRedirect = encodeURIComponent(pageRedirect);
+  const encodedRedirect = encodeURIComponent(getSafeRedirect(pageRedirect));
 
   //Client-side verification url
   const verificationUrl = `${clientUrl}/verify-email?token=${token}&redirect=${encodedRedirect}`;

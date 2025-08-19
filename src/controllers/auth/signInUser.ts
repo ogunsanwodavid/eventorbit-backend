@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import { User } from "../../mongoose/models/user";
 
 import { sendVerificationEmail } from "../../utils/helpers/auth/sendVerificationEmail";
-import getSafeRedirect from "../../utils/helpers/auth/getSafeRedirect";
 
 // JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
@@ -43,11 +42,7 @@ const signInUser = async (
         expiresIn: "1d",
       });
 
-      await sendVerificationEmail(
-        user.email,
-        newToken,
-        getSafeRedirect(pageRedirect)
-      );
+      await sendVerificationEmail(user.email, newToken, pageRedirect);
 
       return res.status(401).json({
         message: "New verification email sent",

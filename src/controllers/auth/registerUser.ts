@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import { IUser, User } from "../../mongoose/models/user";
 
 import { sendVerificationEmail } from "../../utils/helpers/auth/sendVerificationEmail";
-import getSafeRedirect from "../../utils/helpers/auth/getSafeRedirect";
 
 //JWT Secret key
 const jwtSecret = process.env.JWT_SECRET!;
@@ -65,7 +64,7 @@ const registerUser = async (
     });
 
     // Send verification email
-    await sendVerificationEmail(email, token, getSafeRedirect(pageRedirect));
+    await sendVerificationEmail(email, token, pageRedirect);
 
     //Parse user's object as req for the next function
     (req as any).user = newUser;
