@@ -61,6 +61,7 @@ app.use(express.json({ limit: "50mb" }));
 //Allowed client side CORS origins
 const allowedOrigins = [
   "http://localhost:4000",
+  "https://localhost:4000",
   "https://eventorbit.vercel.app",
 ];
 
@@ -92,8 +93,8 @@ app.use(
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      secure: true, //process.env.NODE_ENV === "production", // true if HTTPS in production
-      sameSite: "none", //process.env.NODE_ENV === "production" && "lax",
+      secure: true,
+      sameSite: "none",
     },
     store: MongoStore.create({
       mongoUrl: mongoURI!,
