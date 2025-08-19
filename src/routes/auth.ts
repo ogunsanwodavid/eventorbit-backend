@@ -19,12 +19,13 @@ import createSession from "../middleware/auth/createSession";
 import checkAuthStatus from "../middleware/auth/checkAuthStatus";
 import deleteSession from "../middleware/auth/deleteSession";
 import setUserLocationHandler from "../middleware/auth/setUserLocation";
-import parseLocationGoogleState from "../middleware/auth/parseLocationGoogleState";
-import decodeLocationGoogleState from "../middleware/auth/decodeLocationGoogleState";
+import parseGoogleSignInState from "../middleware/auth/parseGoogleSignInState";
+import decodeGoogleSignInState from "../middleware/auth/decodeGoogleSignInState";
 import cleanUserFields from "../middleware/auth/cleanUserFields";
 import autoCreateUserProfile from "../middleware/auth/autoCreateUserProfile";
 import autoCreateDefaultEmailPreferences from "../middleware/auth/autoCreateDefaultEmailPreferences";
 import sendWelcomeEmail from "../middleware/auth/sendWelcomeEmail";
+import googleSignInRedirect from "../middleware/auth/googleSignInRedirect";
 
 //Define router
 const router = Router();
@@ -39,6 +40,7 @@ router.post(
   registerUserValidationSchema,
   cleanUserFields,
   registerUserHandler,
+  setUserLocationHandler,
   autoCreateUserProfile,
   autoCreateDefaultEmailPreferences,
   (_, res: Response) => {
@@ -106,32 +108,30 @@ router.get("/signout", deleteSession, (_, res: Response) => {
 });
 
 //Google OAUth sign in
-//::Parse latitude and longitude as queries for callback
-router.get("/google", parseLocationGoogleState);
+//::Parse latitude, longitude and page redirect as queries for callback
+router.get("/google", parseGoogleSignInState);
 
 //Google sign in callback
-//::Decode lat and long from Google OAuth state params
+//::Decode lat, long & page redirect from Google OAuth state params
 //::Save location to user object
 //::Auto create user profile with user info
 //::Create the default email preferences for user
 //::Send welcome email to user
 //::Create new session
+//::Redirect to provided redirect route
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/login",
     session: true,
   }),
-  decodeLocationGoogleState,
+  decodeGoogleSignInState,
   setUserLocationHandler,
   autoCreateUserProfile,
   autoCreateDefaultEmailPreferences,
   sendWelcomeEmail,
   createSession(),
-  (_, res: Response) => {
-    //Redirect to home
-    res.redirect("/");
-  }
+  googleSignInRedirect
 );
 
 export default router;

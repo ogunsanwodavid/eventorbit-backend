@@ -31,6 +31,8 @@ const registerUserValidationSchema = validateSchema(
         password: z
           .string({ required_error: "Password is required" })
           .min(6, "Password must be at least 6 characters"),
+        latitude: z.number().min(-90).max(90).optional(),
+        longitude: z.number().min(-180).max(180).optional(),
         pageRedirect: z
           .string({ required_error: "Page redirect is required" })
           .optional(),

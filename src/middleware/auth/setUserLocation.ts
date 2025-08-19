@@ -37,8 +37,6 @@ const setUserLocation = async (
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
       );
 
-      //console.log(locationRes);
-
       const state = locationRes.data.address.state || "";
       const country = locationRes.data.address.country || "";
 
