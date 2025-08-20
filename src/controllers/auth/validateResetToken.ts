@@ -26,7 +26,7 @@ const validateResetToken = async (
     req.session.resetToken = token;
     req.session.resetUserId = user.id;
 
-    res.status(200).json({ message: "Reset token valid" });
+    res.status(200).json({ message: "Reset token valid", email: user.email });
   } catch (error) {
     console.error("Reset token validation error:", error);
     res.status(500).json({ message: "Failed to validate reset token" });
