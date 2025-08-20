@@ -8,6 +8,9 @@ const forgotPasswordSchemaValidation = validateSchema(
       email: z
         .string({ required_error: "Email is required" })
         .email("Invalid email address"),
+      pageRedirect: z
+        .string({ required_error: "Page redirect is required" })
+        .optional(),
     }),
   })
 );

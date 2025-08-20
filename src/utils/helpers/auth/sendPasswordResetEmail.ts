@@ -10,7 +10,13 @@ import path from "path";
 
 import juice from "juice";
 
-const sendPasswordResetEmail = async (to: string, token: string) => {
+import getSafeRedirect from "./getSafeRedirect";
+
+const sendPasswordResetEmail = async (
+  to: string,
+  token: string,
+  pageRedirect?: string
+) => {
   //Env. variabes
   const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
   const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
@@ -30,8 +36,11 @@ const sendPasswordResetEmail = async (to: string, token: string) => {
     },
   });
 
+  //Encoded page redirect url
+  const encodedRedirect = encodeURIComponent(getSafeRedirect(pageRedirect));
+
   //Client-side password reset url
-  const passwordResetUrl = `${clientUrl}/set-password?token=${token}`;
+  const passwordResetUrl = `${clientUrl}/set-password?token=${token}&redirect=${encodedRedirect}`;
 
   //Check for user
   const user = await User.findOne({ email: to });

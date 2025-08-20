@@ -12,6 +12,7 @@ const jwtSecret = process.env.JWT_SECRET!;
 //Forgot password payload
 type ForgotPasswordPayload = {
   email: string;
+  pageRedirect?: string;
 };
 
 //Register user function
@@ -21,7 +22,7 @@ const forgotPassword = async (
 ): Promise<any> => {
   try {
     //Destructure the email from the request body
-    const { email } = req.body;
+    const { email, pageRedirect } = req.body;
 
     //Rate-limit attempts using session to 5
     req.session.resetAttempts = (req.session.resetAttempts || 0) + 1;
@@ -56,7 +57,7 @@ const forgotPassword = async (
     await user.save();
 
     //Send password reset email
-    await sendPasswordResetEmail(email, token);
+    await sendPasswordResetEmail(email, token, pageRedirect);
 
     res.status(201).json({
       message: "Password reset email sent",

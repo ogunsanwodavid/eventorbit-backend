@@ -45,10 +45,10 @@ const registerUser = async (
     if (!password)
       return res.status(400).json({ message: "Password is required" });
 
-    // Hash password
+    //Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    //Create user
     const newUser = await User.create({
       userType,
       firstName,
@@ -58,7 +58,7 @@ const registerUser = async (
       password: hashedPassword,
     });
 
-    // Generate verification token
+    //Generate verification token
     const token = jwt.sign({ userId: newUser._id }, jwtSecret, {
       expiresIn: "1d",
     });

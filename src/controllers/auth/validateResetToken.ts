@@ -22,7 +22,7 @@ const validateResetToken = async (
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
-    // Store token and user ID in session
+    //Store token and user ID in session
     req.session.resetToken = token;
     req.session.resetUserId = user.id;
 
