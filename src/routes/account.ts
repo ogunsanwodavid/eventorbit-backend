@@ -34,7 +34,7 @@ router.patch(
   deleteSession,
   (_, res: Response) => {
     res.status(200).json({
-      message: "Email updated and verification sent",
+      message: "Email updated and verification email sent",
     });
   }
 );
