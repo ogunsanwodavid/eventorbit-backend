@@ -34,6 +34,15 @@ const updateEmail = async (
     //Return error if user not found
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    //Return error if password not found in user object
+    if (!user.password)
+      return res.status(404).json({ message: "Password is required" });
+
+    //Compare passwords
+    //Return error if invalid
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid password." });
+
     //Check if email is used
     const existingUser = await User.findOne({ email: newEmail });
     if (existingUser) {
@@ -52,15 +61,6 @@ const updateEmail = async (
         .status(400)
         .json({ message: "New email is the same as current email" });
     }
-
-    //Return error if password not found in user object
-    if (!user.password)
-      return res.status(404).json({ message: "Password is required" });
-
-    //Compare passwords
-    //Return error if invalid
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid password." });
 
     //Update user's email with new one
     //Make email unverified
