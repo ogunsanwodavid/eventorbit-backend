@@ -10,9 +10,16 @@ const getAccount = async (
   //Get user object from request
   const user = (req as any)["user"] as IUser;
 
+  //User account details
+  const userAccount = {
+    email: user.email,
+    location: user.location,
+    policies: user.policies,
+  };
+
   return res.status(200).json({
     message: "User account fetched successfully",
-    user,
+    userAccount,
   });
 };
 
