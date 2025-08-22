@@ -34,9 +34,17 @@ const updateEmail = async (
     //Return error if user not found
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    //Prevent Google sign up accounts without passwords from updating emails
+    if (user.isGoogle && !user.password)
+      return res.status(403).json({
+        message: "You signed up with Google. Set up a password first.",
+      });
+
     //Return error if password not found in user object
     if (!user.password)
-      return res.status(404).json({ message: "Password is required" });
+      return res
+        .status(404)
+        .json({ message: "You don't have a set current password" });
 
     //Compare passwords
     //Return error if invalid
@@ -48,12 +56,6 @@ const updateEmail = async (
     if (existingUser) {
       return res.status(400).json({ message: "Email is already in use" });
     }
-
-    //Prevent Google sign up accounts without passwords from updating emails
-    if (user.isGoogle && !user.password)
-      return res.status(403).json({
-        message: "You signed up with Google. Email can't be updated manually.",
-      });
 
     //Check if new email isnt same as before
     if (user.email === newEmail) {

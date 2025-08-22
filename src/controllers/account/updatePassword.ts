@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { IUser, User } from "../../mongoose/models/user";
 
 type UpdatePasswordPayload = {
-  oldPassword: string;
+  currentPassword: string;
   newPassword: string;
 };
 
@@ -18,7 +18,7 @@ const updatePassword = async (
   const { _id: userId } = (req as any)["user"] as IUser;
 
   //Destructure user's new eamil from body
-  const { oldPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
   try {
     //Find user by the id
@@ -27,27 +27,28 @@ const updatePassword = async (
     //Return error if user not found
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    //Prevent Google accounts from updating passwords manually
-    if (user.isGoogle)
+    //Prevent Google accounts with no password from updating passwords manually
+    if (user.isGoogle && !user.password)
       return res.status(403).json({
-        message:
-          "You signed up with Google. Password cannot be updated manually.",
+        message: "You signed up with Google. Set up a password first.",
       });
 
+    //Return error if password not found in user object
+    if (!user.password)
+      return res
+        .status(404)
+        .json({ message: "You don't have a set current password" });
+
     //Check if new password isnt same as before
-    if (oldPassword === newPassword) {
+    if (currentPassword === newPassword) {
       return res
         .status(400)
         .json({ message: "New password is the same as current password" });
     }
 
-    //Return error if password not found in user object
-    if (!user.password)
-      return res.status(404).json({ message: "Password is required" });
-
-    //Compare old passwords
+    //Compare current password to db value
     //Return error if invalid
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid password." });
 
     //Hash new password
