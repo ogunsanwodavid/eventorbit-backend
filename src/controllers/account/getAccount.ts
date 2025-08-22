@@ -19,7 +19,7 @@ const getAccount = async (
 
   return res.status(200).json({
     message: "User account fetched successfully",
-    userAccount,
+    account: userAccount,
   });
 };
 
