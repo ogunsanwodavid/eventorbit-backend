@@ -34,10 +34,10 @@ const updateEmail = async (
     //Return error if user not found
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    //Prevent Google accounts from updating emails
-    if (user.isGoogle)
+    //Prevent Google sign up accounts without passwords from updating emails
+    if (user.isGoogle && !user.password)
       return res.status(403).json({
-        message: "You signed up with Google. Email cannot be updated manually.",
+        message: "You signed up with Google. Email can't be updated manually.",
       });
 
     //Check if new email isnt same as before
