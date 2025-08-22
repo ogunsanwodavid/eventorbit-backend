@@ -34,6 +34,12 @@ const updateEmail = async (
     //Return error if user not found
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    //Check if email is used
+    const existingUser = await User.findOne({ email: newEmail });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email is already in use" });
+    }
+
     //Prevent Google sign up accounts without passwords from updating emails
     if (user.isGoogle && !user.password)
       return res.status(403).json({
