@@ -51,13 +51,15 @@ const updateProfileInfo = async (
       return;
     }
 
-    //Check profileSlug uniqueness (if provided and changed)
+    //Check profileSlug exists
+    //Make sure another user hasn't taken it
     if (profileSlug && profileSlug !== profile.info.profileSlug) {
       const existingProfile = await Profile.findOne({
         "info.profileSlug": profileSlug,
+        userId: { $ne: userId },
       });
       if (existingProfile) {
-        res.status(400).json({ message: "Profile slug is already taken" });
+        res.status(400).json({ message: "Profile URL is already taken" });
         return;
       }
     }
