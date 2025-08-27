@@ -33,7 +33,7 @@ const updatePolicies = async (
     next();
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Failed to update policies" });
+    return res.status(500).json({ message: "Failed to save policies" });
   }
 };
 

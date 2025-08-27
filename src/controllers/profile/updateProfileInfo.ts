@@ -105,12 +105,11 @@ const updateProfileInfo = async (
       userUpdate.$unset = { firstName: "", lastName: "" }; // Unset firstName/lastName
     }
 
-    await User.updateOne({ _id: userId }, userUpdate, { maxTimeMS: 5000 });
+    await User.updateOne({ _id: userId }, userUpdate);
 
     next();
   } catch (error) {
-    console.error("Profile info update error:", error);
-    res.status(500).json({ message: "Failed to update profile info" });
+    res.status(500).json({ message: "Failed to save profile" });
   }
 };
 

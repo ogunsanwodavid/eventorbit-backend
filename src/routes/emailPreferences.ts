@@ -23,7 +23,7 @@ router.patch(
   updateEmailPreferencesHandler,
   (_, res: Response) => {
     res.status(200).json({
-      message: "Email preferences updated successfully",
+      message: "Email preferences saved successfully",
     });
   }
 );

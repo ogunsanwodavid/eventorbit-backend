@@ -35,7 +35,7 @@ const updateLocation = async (
     next();
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "Failed to update location" });
+    return res.status(500).json({ message: "Failed to save location" });
   }
 };
 

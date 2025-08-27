@@ -50,7 +50,7 @@ const updateProfileSocialUrls = async (
     next();
   } catch (error) {
     console.error("Social URLS update error:", error);
-    res.status(500).json({ message: "Failed to update social URLS info" });
+    res.status(500).json({ message: "Failed to save social URLS" });
   }
 };
 

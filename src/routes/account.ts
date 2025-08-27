@@ -64,7 +64,7 @@ router.patch(
   updateLocationHandler,
   (_, res: Response) => {
     res.status(200).json({
-      message: "Location updated successfully",
+      message: "Location saved successfully",
     });
   }
 );
@@ -78,7 +78,7 @@ router.patch(
   updatePoliciesHandler,
   (_, res: Response) => {
     res.status(200).json({
-      message: "Policies updated successfully",
+      message: "Policies saved successfully",
     });
   }
 );

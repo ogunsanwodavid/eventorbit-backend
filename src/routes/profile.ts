@@ -68,7 +68,7 @@ router.patch(
   updateProfileInfoHandler,
   (_, res: Response) => {
     res.status(200).json({
-      message: "Profile info updated successfully",
+      message: "Profile info saved successfully",
     });
   }
 );
@@ -82,7 +82,7 @@ router.patch(
   updateProfileSocialUrlsHandler,
   (_, res: Response) => {
     res.status(200).json({
-      message: "Profile social URLs updated successfully",
+      message: "Profile social URLs saved successfully",
     });
   }
 );
