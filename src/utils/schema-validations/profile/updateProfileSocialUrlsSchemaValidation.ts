@@ -22,9 +22,14 @@ const updateProfileSocialUrlsSchemaValidation = validateSchema(
       x: z
         .string()
         .url("X link must be a valid URL")
-        .refine((url) => url.startsWith("https://x.com"), {
-          message: "Link must be a valid X link",
-        })
+        .refine(
+          (url) =>
+            url.startsWith("https://x.com") ||
+            url.startsWith("https://twitter.com"),
+          {
+            message: "Link must be a valid X link",
+          }
+        )
         .optional(),
       instagram: z
         .string()
