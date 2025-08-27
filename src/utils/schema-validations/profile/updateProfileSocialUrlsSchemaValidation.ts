@@ -20,7 +20,7 @@ const updateProfileSocialUrlsSchemaValidation = validateSchema(
             url.startsWith("https://facebook.com") ||
             url.startsWith("https://www.facebook.com"),
           {
-            message: "Link must be a valid facebook URL",
+            message: "Link must be a valid Facebook URL",
           }
         )
         .optional(),
@@ -34,7 +34,7 @@ const updateProfileSocialUrlsSchemaValidation = validateSchema(
             url.startsWith("https://twitter.com") ||
             url.startsWith("https://www.twitter.com"),
           {
-            message: "Link must be a valid X / twitter link",
+            message: "Link must be a valid X / Twitter link",
           }
         )
         .optional(),
@@ -46,7 +46,7 @@ const updateProfileSocialUrlsSchemaValidation = validateSchema(
             url.startsWith("https://instagram.com") ||
             url.startsWith("https://www.instagram.com"),
           {
-            message: "Link must be a valid instagram link",
+            message: "Link must be a valid Instagram link",
           }
         )
         .optional(),
