@@ -19,7 +19,7 @@ const getProfileBySlug = async (req: Request, res: Response): Promise<any> => {
     //Return error
     //::if profile not found
     //::if user is disabled
-    if (!profile || !profile.isDisabled) {
+    if (!profile || profile.isDisabled) {
       return res.status(404).json({
         message: "Profile not found",
       });
