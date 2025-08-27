@@ -13,13 +13,15 @@ const getProfileBySlug = async (req: Request, res: Response): Promise<any> => {
     const profile = await Profile.findOne({
       "info.profileSlug": slug,
     })
-      .select("-__v -createdAt -updatedAt") // Exclude unnecessary fields
+      .select("-__v -createdAt -updatedAt") //Exclude unnecessary fields
       .lean();
 
-    //Return error if not found
-    if (!profile) {
+    //Return error
+    //::if profile not found
+    //::if user is disabled
+    if (!profile || !profile.isDisabled) {
       return res.status(404).json({
-        message: "Event not found",
+        message: "Profile not found",
       });
     }
 
