@@ -27,7 +27,7 @@ const getProfileBySlug = async (req: Request, res: Response): Promise<any> => {
 
     res.status(200).json({
       message: "Profile fetched successfully.",
-      data: profile,
+      profile,
     });
   } catch (error) {
     res.status(500).json({
