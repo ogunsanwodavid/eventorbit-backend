@@ -15,9 +15,14 @@ const updateProfileSocialUrlsSchemaValidation = validateSchema(
       facebook: z
         .string()
         .url("Facebook link must be a valid URL")
-        .refine((url) => url.startsWith("https://facebook.com"), {
-          message: "Link must be a valid facebook URL",
-        })
+        .refine(
+          (url) =>
+            url.startsWith("https://facebook.com") ||
+            url.startsWith("https://www.facebook.com"),
+          {
+            message: "Link must be a valid facebook URL",
+          }
+        )
         .optional(),
       x: z
         .string()
@@ -25,18 +30,25 @@ const updateProfileSocialUrlsSchemaValidation = validateSchema(
         .refine(
           (url) =>
             url.startsWith("https://x.com") ||
-            url.startsWith("https://twitter.com"),
+            url.startsWith("https://www.x.com") ||
+            url.startsWith("https://twitter.com") ||
+            url.startsWith("https://www.twitter.com"),
           {
-            message: "Link must be a valid X link",
+            message: "Link must be a valid X / twitter link",
           }
         )
         .optional(),
       instagram: z
         .string()
         .url("Facebook link must be a valid URL")
-        .refine((url) => url.startsWith("https://instagram.com"), {
-          message: "Link must be a valid Instagram link",
-        })
+        .refine(
+          (url) =>
+            url.startsWith("https://instagram.com") ||
+            url.startsWith("https://www.instagram.com"),
+          {
+            message: "Link must be a valid instagram link",
+          }
+        )
         .optional(),
     }),
   })
