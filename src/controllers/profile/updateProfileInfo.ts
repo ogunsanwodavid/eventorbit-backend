@@ -69,19 +69,17 @@ const updateProfileInfo = async (
       { userId },
       {
         $set: {
-          info: {
-            userType,
-            firstName,
-            lastName,
-            organizationName,
-            description,
-            profileSlug,
-            isPrivate,
-            isABusinessSeller,
-            businessAddress,
-            businessEmail,
-            businessPhoneNumber,
-          },
+          "info.userType": userType,
+          "info.firstName": firstName,
+          "info.lastName": lastName,
+          "info.organizationName": organizationName,
+          "info.description": description,
+          "info.profileSlug": profileSlug,
+          "info.isPrivate": isPrivate,
+          "info.isABusinessSeller": isABusinessSeller,
+          "info.businessAddress": businessAddress,
+          "info.businessEmail": businessEmail,
+          "info.businessPhoneNumber": businessPhoneNumber,
         },
       }
     );
