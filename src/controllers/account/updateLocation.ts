@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 
 import { IUser, User } from "../../mongoose/models/user";
 
+import { Profile } from "../../mongoose/models/profile";
+
 type UpdateLocationPayload = {
   location: string;
 };
@@ -13,6 +15,9 @@ const updateLocation = async (
 ): Promise<any> => {
   //Get user object from request
   const { _id: userId } = (req as any)["user"] as IUser;
+
+  //Get user's profile
+  const profile = await Profile.findOne({ userId });
 
   //Destructure user's new location from body
   const { location: newLocation } = req.body;
@@ -28,9 +33,11 @@ const updateLocation = async (
     //::INDICATE USER HAS UPDATED LOCATION MANUALLY
     //::HENCE PREVENT AUTO LOCATION REGENERATION ON SIGN IN
     user.location = newLocation;
+    if (profile) profile.info.location = newLocation;
     user.hasLocationBeenManuallyUpdatedByUser = true;
 
     await user.save();
+    if (profile) profile.save();
 
     next();
   } catch (err) {
