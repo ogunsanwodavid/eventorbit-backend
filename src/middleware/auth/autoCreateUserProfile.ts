@@ -35,6 +35,7 @@ const autoCreateUserProfile = async (
         organizationName: user.organizationName,
         userType: user.userType,
         profileSlug,
+        location: user.location,
       },
       images: {
         profilePicture: user.profilePicture,

@@ -4,6 +4,8 @@ import axios from "axios";
 
 import { IUser } from "../../mongoose/models/user";
 
+import { Profile } from "../../mongoose/models/profile";
+
 interface LocationResponseAPI {
   address: {
     state: string;
@@ -27,6 +29,9 @@ const setUserLocation = async (
     return next();
   }
 
+  //Get user's profile
+  const profile = await Profile.findOne({ userId: user._id });
+
   //If lat and long
   //::Fetch user location info from LocationIQ
   //and save to user object
@@ -44,17 +49,29 @@ const setUserLocation = async (
         }
       );
 
-      const state = locationRes.address.state || "";
-      const country = locationRes.address.country || "";
+      const state = locationRes.address?.state || "";
+      const country = locationRes.address?.country || "";
 
-      user.location = [state, country].filter(Boolean).join(", ");
+      const location = [state, country].filter(Boolean).join(", ");
+
+      //Set location in user and profile collections
+      user.location = location;
+
+      if (profile) {
+        profile.info = {
+          ...profile.info,
+          location,
+        };
+      }
 
       await user.save();
+      if (profile) await profile.save();
     } catch (error: any) {
       console.error(
         "Error fetching location:",
         error.response?.data || error.message
       );
+      next(error);
     }
   }
 

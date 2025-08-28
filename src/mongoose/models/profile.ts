@@ -12,6 +12,7 @@ export interface IProfile extends Document {
     userType: UserType;
     description?: string;
     profileSlug: string;
+    location?: string;
     isPrivate: boolean;
     isABusinessSeller: boolean;
     businessAddress?: string;
@@ -61,6 +62,10 @@ const profileSchema = new Schema<IProfile>(
         type: String,
         required: true,
         unique: true,
+        trim: true,
+      },
+      location: {
+        type: String,
         trim: true,
       },
       isPrivate: {
@@ -123,6 +128,7 @@ profileSchema.post("save", async function (doc: IProfile, next) {
           : undefined,
       userType: doc.info.userType,
       profilePicture: doc.images?.profilePicture,
+      location: doc.info?.location,
     };
 
     //::update changes to user object
