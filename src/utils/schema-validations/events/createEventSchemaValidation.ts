@@ -15,8 +15,8 @@ const createEventSchema = z.object({
       status: z.enum(["live", "drafted", "expired"]).default("drafted"),
       type: z.enum(["regular", "timed-entry"]),
       basics: z.object({
-        name: z.string().min(3),
-        description: z.string().min(10),
+        name: z.string().min(1, "Event name is required"),
+        description: z.string().min(1, "Description is required"),
         category: z.string(),
         visibility: z.enum(["public", "unlisted"]),
         location: LocationSchema,

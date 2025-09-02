@@ -374,8 +374,4 @@ EventSchema.pre("validate", function (next) {
   }
 });
 
-//Add indexes
-/* EventSchema.index({ status: 1, type: 1 });
-EventSchema.index({ "basics.name": "text", "basics.description": "text" }); */
-
 export const EventModel = model<IEvent>("Event", EventSchema);

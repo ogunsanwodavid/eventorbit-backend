@@ -4,10 +4,10 @@ const DurationSchema = z
   .object({
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
-    timeZone: z.string().min(1, "Timezoen is required"),
+    timeZone: z.string().min(1, "Timezone is required"),
   })
   .superRefine((data, ctx) => {
-    // Convert string dates to Date objects if needed
+    //Convert string dates to Date objects if needed
     const startDate =
       data.startDate instanceof Date
         ? data.startDate
@@ -19,7 +19,7 @@ const DurationSchema = z
         ? new Date(data.endDate)
         : null;
 
-    // Ensure end date is after start date
+    //Ensure end date is after start date
     if (endDate && endDate <= startDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
