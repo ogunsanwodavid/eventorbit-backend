@@ -30,12 +30,6 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       hostId: user._id,
       ...eventData,
       alias: eventAlias,
-      additionalDetails: {
-        ...eventData.additionalDetails,
-        socialMediaPhoto: "",
-        eventCoverPhoto: "",
-        additionalPhotos: [],
-      },
     });
 
     const { _id: eventId, hostId, basics } = newEvent;
@@ -74,7 +68,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
           eventData.additionalDetails.eventCoverPhoto,
           "eventorbit/events/covers",
           {
-            public_id: `${hostId}-${eventId}-social`,
+            public_id: `${hostId}-${eventId}-cover`,
             overwrite: true,
             invalidate: true,
             resource_type: "auto",
@@ -91,7 +85,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (
-      eventData.additionalDetails.additionalPhotos &&
+      eventData.additionalDetails?.additionalPhotos &&
       eventData.additionalDetails.additionalPhotos.length > 0
     ) {
       eventData.additionalDetails.additionalPhotos.forEach((base64, index) => {

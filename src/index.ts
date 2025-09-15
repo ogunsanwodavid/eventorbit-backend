@@ -85,6 +85,8 @@ app.use(cookieParser());
 //Set up express session
 app.set("trust proxy", 1);
 
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(
   session({
     secret: expressSessionSecret!,
@@ -92,9 +94,9 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      secure: true,
-      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7, //7 days
+      secure: isProduction, //only secure in prod
+      sameSite: isProduction ? "none" : "lax", //"lax" works for localhost
     },
     store: MongoStore.create({
       mongoUrl: mongoURI!,

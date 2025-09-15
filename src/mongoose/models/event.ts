@@ -249,8 +249,8 @@ const EventSchema = new Schema(
       },
       location: { type: LocationSchema, required: true },
     },
-    duration: { type: DurationSchema, required: false },
-    schedules: { type: [ScheduleSchema] },
+    duration: { type: DurationSchema, required: false, default: undefined },
+    schedules: { type: [ScheduleSchema], required: false, default: undefined },
     tickets: {
       types: {
         type: [TicketTypeSchema],
@@ -271,9 +271,9 @@ const EventSchema = new Schema(
     additionalDetails: {
       contact: { type: String, required: true },
       orderMessage: { type: String, required: true },
-      socialMediaPhoto: { type: String },
-      eventCoverPhoto: { type: String },
-      additionalPhotos: { type: [String] },
+      socialMediaPhoto: { type: String, required: false },
+      eventCoverPhoto: { type: String, required: false },
+      additionalPhotos: { type: [String], required: false, default: undefined },
     },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
@@ -359,10 +359,10 @@ EventSchema.pre("validate", function (next) {
     //Rule 4: Ticket validation
     if (event.tickets?.types) {
       for (const ticket of event.tickets.types) {
-        if (ticket.type === "Paid" && ticket.price === undefined) {
+        if (ticket.type === "paid" && ticket.price === undefined) {
           throw new Error("Paid tickets require a price");
         }
-        if (ticket.type === "Donation" && ticket.minDonation === undefined) {
+        if (ticket.type === "donation" && ticket.minDonation === undefined) {
           throw new Error("Donation tickets require a minimum donation amount");
         }
       }

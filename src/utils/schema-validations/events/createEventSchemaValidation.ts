@@ -4,8 +4,6 @@ import validateSchema from "../validateSchema";
 
 import { base64ImageSchema } from "../base64";
 
-import emptyToUndefined from "../emptyToUndefined";
-
 import LocationSchema from "./LocationSchema";
 import TicketTypeSchema from "./TicketTypeSchema";
 import ScheduleSchema from "./ScheduleSchema";
@@ -24,7 +22,7 @@ const createEventSchema = z.object({
         location: LocationSchema,
       }),
       duration: DurationSchema.optional(),
-      schedules: emptyToUndefined(z.array(ScheduleSchema).min(1).optional()),
+      schedules: z.array(ScheduleSchema).min(1).optional(),
       tickets: z.object({
         types: z.array(TicketTypeSchema).min(1, {
           message: "At least one ticket is required",
@@ -46,9 +44,7 @@ const createEventSchema = z.object({
         orderMessage: z.string(),
         socialMediaPhoto: base64ImageSchema.optional(),
         eventCoverPhoto: base64ImageSchema.optional(),
-        additionalPhotos: emptyToUndefined(
-          z.array(base64ImageSchema).max(3).optional()
-        ),
+        additionalPhotos: z.array(base64ImageSchema).max(3).optional(),
       }),
     })
     .superRefine((data, ctx) => {
