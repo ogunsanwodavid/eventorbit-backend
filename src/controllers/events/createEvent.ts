@@ -120,8 +120,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   } catch (error) {
     console.error("Event creation failed:", error);
     res.status(500).json({
-      status: "error",
-      message: "Failed to create event with photos",
+      message: "Failed to create event",
     });
   }
 };

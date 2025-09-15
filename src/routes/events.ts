@@ -76,9 +76,10 @@ router.post(
   createEventHandler,
   sendCreatedEventEmail,
   autoCreateDefaultCheckoutQuestions,
-  (_, res: Response) => {
+  (req, res: Response) => {
     res.status(201).json({
       message: "Event created successfully",
+      event: (req as any).event,
     });
   }
 );
