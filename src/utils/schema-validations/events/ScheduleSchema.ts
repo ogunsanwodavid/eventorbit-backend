@@ -15,7 +15,7 @@ const ScheduleSchema = z
       .array(TimeSlotSchema)
       .min(1, { message: "At least one time slot is required" }),
     repeatDays: z
-      .array(z.enum(["sat", "mon", "tue", "wed", "thu", "fri", "sat"]))
+      .array(z.enum(["sun", "mon", "tue", "wed", "thu", "fri", "sat"]))
       .optional(),
   })
   .superRefine((data, ctx) => {
