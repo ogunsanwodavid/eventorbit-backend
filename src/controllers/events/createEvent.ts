@@ -40,7 +40,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
     //::OR default stock photos for social media and cover
     const uploadTasks = [];
 
-    if (eventData.additionalDetails.socialMediaPhoto) {
+    if (eventData.additionalDetails?.socialMediaPhoto) {
       uploadTasks.push(
         uploadBase64(
           eventData.additionalDetails.socialMediaPhoto,
@@ -62,7 +62,7 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
         DEFAULT_EVENT_PHOTOS["others"]?.social;
     }
 
-    if (eventData.additionalDetails.eventCoverPhoto) {
+    if (eventData.additionalDetails?.eventCoverPhoto) {
       uploadTasks.push(
         uploadBase64(
           eventData.additionalDetails.eventCoverPhoto,

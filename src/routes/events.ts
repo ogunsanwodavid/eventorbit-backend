@@ -73,15 +73,15 @@ router.post(
   "/create",
   checkAuthStatus,
   createEventSchemaValidation,
-  createEventHandler
-  /*   sendCreatedEventEmail,
+  createEventHandler,
+  sendCreatedEventEmail,
   autoCreateDefaultCheckoutQuestions,
   (req, res: Response) => {
     res.status(201).json({
       message: "Event created successfully",
       event: (req as any).event,
     });
-  } */
+  }
 );
 
 //Get an event by its alias
