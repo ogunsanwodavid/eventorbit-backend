@@ -30,6 +30,16 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       hostId: user._id,
       ...eventData,
       alias: eventAlias,
+      additionalDetails: {
+        ...eventData.additionalDetails,
+        socialMediaPhoto: "",
+        eventCoverPhoto: "",
+        additionalPhotos:
+          eventData.additionalDetails.additionalPhotos &&
+          eventData.additionalDetails.additionalPhotos.length > 0
+            ? []
+            : undefined,
+      },
     });
 
     const { _id: eventId, hostId, basics } = newEvent;
