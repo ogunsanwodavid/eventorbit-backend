@@ -6,9 +6,9 @@ import { IUser } from "../../mongoose/models/user";
 
 import { EventModel } from "../../mongoose/models/event";
 
-import { UpdateEventStatusInput } from "../../utils/schema-validations/events/updateEventStatusSchemaValidation";
+import { PublishEventInput } from "../../utils/schema-validations/events/publishEventSchemaValidation";
 
-const updateEventStatus = async (
+const publishEvent = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,15 +18,11 @@ const updateEventStatus = async (
     const user = (req as any)["user"] as IUser;
 
     //Get event's id from request params
-    const { eventId } = req.params as UpdateEventStatusInput["params"];
-
-    //Event data from request body
-    const { status } = req.body as UpdateEventStatusInput["body"];
+    const { eventId } = req.params as PublishEventInput["params"];
 
     //Validate event ID format
     if (!isValidObjectId(eventId)) {
       return res.status(400).json({
-        status: "fail",
         message: "Invalid event ID format",
       });
     }
@@ -39,33 +35,32 @@ const updateEventStatus = async (
 
     if (!event) {
       return res.status(404).json({
-        message: "Event not found or you don't have permission",
+        message: "Event not found or permission denied",
       });
     }
 
-    //Return error if event isn't regular
-    if (event.type !== "regular") {
+    //Return error if event isn't drafted
+    if (event.status !== "drafted") {
       return res.status(403).json({
-        message: "Only regular events can update Status",
+        message: "You can only publish drafted events",
       });
     }
 
-    //Apply updates
-    event.status = status;
+    //Update event status to live
+    event.status = "live";
 
-    //Save updated event
+    //Save publisned event
     await event.save();
 
     res.status(200).json({
-      message: "Event status updated successfully",
+      message: "Event published successfully",
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      status: "error",
-      message: "Failed to update event status",
+      message: "Failed to publish event",
     });
   }
 };
 
-export default updateEventStatus;
+export default publishEvent;

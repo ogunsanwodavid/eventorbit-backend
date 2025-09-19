@@ -12,11 +12,12 @@ import updateEventTicketsSchemaValidation from "../utils/schema-validations/even
 import updateEventAdditionalDetailsSchemaValidation from "../utils/schema-validations/events/updateEventAdditionalDetailsSchemaValidation";
 import deleteEventSchemaValidation from "../utils/schema-validations/events/deleteEventSchemaValidation";
 import findEventsSchemaValidation from "../utils/schema-validations/events/findEventsSchemaValidation";
-import updateEventStatusSchemaValidation from "../utils/schema-validations/events/updateEventStatusSchemaValidation";
 import getEventTimeSlotsSchemaValidation from "../utils/schema-validations/events/getEventTimeSlotsSchemaValidation";
 import getAttendeesSchemaValidation from "../utils/schema-validations/events/getAttendeesSchemaValidation";
 import getOrdersSchemaValidation from "../utils/schema-validations/events/getOrdersSchemaValidation";
 import getRandomEventsSchemaValidation from "../utils/schema-validations/events/getRandomEventsSchemaValidation";
+import publishEventSchemaValidation from "../utils/schema-validations/events/publishEventSchemaValidation";
+import draftEventSchemaValidation from "../utils/schema-validations/events/draftEventSchemaValidation";
 
 import autoCreateDefaultCheckoutQuestions from "../middleware/events/autoCreateDefaultCheckoutQuestions";
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
@@ -36,11 +37,12 @@ import updateEventTicketsHandler from "../controllers/events/updateEventTickets"
 import updateEventAdditionalDetailsHandler from "../controllers/events/updateEventAdditionalDetails";
 import deleteEventHandler from "../controllers/events/deleteEvent";
 import findEventsHandler from "../controllers/events/findEvents";
-import updateEventStatusHandler from "../controllers/events/updateEventStatus";
 import getEventTimeSlotsHandler from "../controllers/events/getEventTimeSlots";
 import getAttendeesHandler from "../controllers/events/getAttendees";
 import getOrdersHandler from "../controllers/events/getOrders";
 import getRandomEventsHandler from "../controllers/events/getRandomEvents";
+import publishEventHandler from "../controllers/events/publishEvent";
+import draftEventHandler from "../controllers/events/draftEvent";
 
 //Define router
 const router = Router();
@@ -135,12 +137,22 @@ router.get(
   getAttendeesHandler
 );
 
-//Update event status
+//Publish drafted event
+//::Protected endpoint
 router.patch(
-  "/update-status/:eventId",
+  "/publish/:eventId",
   checkAuthStatus,
-  updateEventStatusSchemaValidation,
-  updateEventStatusHandler
+  publishEventSchemaValidation,
+  publishEventHandler
+);
+
+//Draft live event
+//::Protected endpoint
+router.patch(
+  "/draft/:eventId",
+  checkAuthStatus,
+  draftEventSchemaValidation,
+  draftEventHandler
 );
 
 //Update event basics
