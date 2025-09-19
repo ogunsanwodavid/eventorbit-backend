@@ -70,7 +70,7 @@ const getMyEvents = async (req: Request, res: Response): Promise<any> => {
 
     res.status(200).json({
       message: "Your events fetched successfully",
-      data: events,
+      events,
       pagination: {
         total,
         page,
