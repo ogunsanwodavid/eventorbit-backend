@@ -58,7 +58,7 @@ const deleteEvent = async (
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Failed to delete id",
+      message: "Failed to delete event",
     });
   }
 };

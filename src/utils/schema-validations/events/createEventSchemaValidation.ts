@@ -30,7 +30,7 @@ const createEventSchema = z.object({
         urgency: z
           .object({
             indicate: z.coerce.boolean(),
-            percentageSold: z.coerce.number().min(60).max(100).optional(),
+            percentageSold: z.coerce.number().min(30).max(100).optional(),
           })
           .optional(),
         currencies: z.object({
