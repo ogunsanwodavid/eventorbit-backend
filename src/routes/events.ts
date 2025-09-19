@@ -107,7 +107,7 @@ router.get(
 //Get n-number of recently updated events
 //::Protected endpoint
 router.get(
-  "/get-recently-updated/",
+  "/get-recently-updated",
   checkAuthStatus,
   getRecentlyUpdatedSchemaValidation,
   getRecentlyUpdatedHandler
