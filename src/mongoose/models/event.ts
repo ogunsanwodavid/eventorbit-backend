@@ -123,7 +123,7 @@ const TicketUrgencySchema = new Schema({
   indicate: { type: Boolean, required: true },
   percentageSold: {
     type: Number,
-    min: 60,
+    min: 30,
     max: 100,
     required: function () {
       return (this as any).indicate === true;
