@@ -18,6 +18,7 @@ import getOrdersSchemaValidation from "../utils/schema-validations/events/getOrd
 import getRandomEventsSchemaValidation from "../utils/schema-validations/events/getRandomEventsSchemaValidation";
 import publishEventSchemaValidation from "../utils/schema-validations/events/publishEventSchemaValidation";
 import draftEventSchemaValidation from "../utils/schema-validations/events/draftEventSchemaValidation";
+import getRecentlyUpdatedSchemaValidation from "../utils/schema-validations/events/getRecentlyUpdatedSchemaValidation";
 
 import autoCreateDefaultCheckoutQuestions from "../middleware/events/autoCreateDefaultCheckoutQuestions";
 import textSearchMiddleware from "../middleware/events/textSearchMiddleware";
@@ -43,6 +44,7 @@ import getOrdersHandler from "../controllers/events/getOrders";
 import getRandomEventsHandler from "../controllers/events/getRandomEvents";
 import publishEventHandler from "../controllers/events/publishEvent";
 import draftEventHandler from "../controllers/events/draftEvent";
+import getRecentlyUpdatedHandler from "../controllers/events/getRecentlyUpdated";
 
 //Define router
 const router = Router();
@@ -100,6 +102,15 @@ router.get(
   checkAuthStatus,
   getMyEventsSchemaValidation,
   getMyEventsHandler
+);
+
+//Get n-number of recently updated events
+//::Protected endpoint
+router.get(
+  "/get-recently-updated/",
+  checkAuthStatus,
+  getRecentlyUpdatedSchemaValidation,
+  getRecentlyUpdatedHandler
 );
 
 //Get a fixed number of random events
