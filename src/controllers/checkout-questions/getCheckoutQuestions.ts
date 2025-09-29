@@ -12,13 +12,9 @@ import { GetCheckoutQuestionsInput } from "../../utils/schema-validations/checko
 
 const getCheckoutQuestions = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): Promise<any> => {
   try {
-    //Get user object from request
-    const user = (req as any)["user"] as IUser;
-
     //Get event's id from request params
     const { eventId } = req.params as GetCheckoutQuestionsInput["params"];
 
@@ -30,15 +26,14 @@ const getCheckoutQuestions = async (
       });
     }
 
-    //Find event and verify ownership using hostId
+    //Find event
     const event = await EventModel.findOne({
       _id: eventId,
-      hostId: user._id,
     });
 
     if (!event) {
       return res.status(404).json({
-        message: "Event not found or you don't have permission",
+        message: "Event not found",
       });
     }
 
@@ -58,7 +53,6 @@ const getCheckoutQuestions = async (
       checkoutQuestions,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       status: "error",
       message: "Failed to fetch checkout questions",

@@ -16,9 +16,6 @@ const getDiscountCodes = async (
   next: NextFunction
 ): Promise<any> => {
   try {
-    //Get user object from request
-    const user = (req as any)["user"] as IUser;
-
     //Get event's id from request params
     const { eventId } = req.params as GetDiscountCodesInput["params"];
 
@@ -30,10 +27,9 @@ const getDiscountCodes = async (
       });
     }
 
-    //Find event and verify ownership using hostId
+    //Find event
     const event = await EventModel.findOne({
       _id: eventId,
-      hostId: user._id,
     });
 
     if (!event) {
