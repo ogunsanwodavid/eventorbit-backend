@@ -47,45 +47,21 @@ const updateEventAdditionalDetails = async (
       });
     }
 
+    //Event category
+    const category = event.basics.category.toLowerCase() as EventCategory;
+
     //Update contact and order message
     event.additionalDetails.contact = updateData.contact;
     event.additionalDetails.orderMessage = updateData.orderMessage;
-    const category = event.basics.category.toLowerCase() as EventCategory;
 
-    //Handle photo deletions first
-    if (updateData.deletePhotos) {
-      if (updateData.deletePhotos.socialMediaPhoto) {
-        event.additionalDetails.socialMediaPhoto =
-          DEFAULT_EVENT_PHOTOS[category]?.social ||
-          DEFAULT_EVENT_PHOTOS.others.social;
-      }
+    //Handle upload tasks
+    const uploadTasks: Promise<any>[] = [];
 
-      if (updateData.deletePhotos.eventCoverPhoto) {
-        event.additionalDetails.eventCoverPhoto =
-          DEFAULT_EVENT_PHOTOS[category]?.cover ||
-          DEFAULT_EVENT_PHOTOS.others.cover;
-      }
-
-      if (updateData.deletePhotos.additionalPhotos) {
-        //Delete by index (sorted descending to avoid index shifting)
-        updateData.deletePhotos.additionalPhotos
-          .sort((a, b) => b - a) //Sort descending
-          .forEach((index) => {
-            if (event.additionalDetails.additionalPhotos?.[index]) {
-              event.additionalDetails.additionalPhotos.splice(index, 1);
-            }
-          });
-      }
-    }
-
-    //Handle new photo uploads
-    const uploadTasks = [];
-
-    if (updateData.newPhotos) {
-      //Upload social media photo
-      if (updateData.newPhotos.socialMediaPhoto) {
+    //Social Media Photo
+    if (updateData.socialMediaPhoto) {
+      if (updateData.socialMediaPhoto.startsWith("data:image")) {
         uploadTasks.push(
-          uploadBase64(updateData.newPhotos.socialMediaPhoto, "events/social", {
+          uploadBase64(updateData.socialMediaPhoto, "events/social", {
             public_id: `${user._id}-${event._id}-social`,
             overwrite: true,
             invalidate: true,
@@ -94,12 +70,21 @@ const updateEventAdditionalDetails = async (
             event.additionalDetails.socialMediaPhoto = url;
           })
         );
+      } else {
+        event.additionalDetails.socialMediaPhoto = updateData.socialMediaPhoto; //Keep https
       }
+    } else {
+      //Fallback to default
+      event.additionalDetails.socialMediaPhoto =
+        DEFAULT_EVENT_PHOTOS[category]?.social ||
+        DEFAULT_EVENT_PHOTOS.others.social;
+    }
 
-      //Upload event cover photo
-      if (updateData.newPhotos.eventCoverPhoto) {
+    //Event Cover Photo
+    if (updateData.eventCoverPhoto) {
+      if (updateData.eventCoverPhoto.startsWith("data:image")) {
         uploadTasks.push(
-          uploadBase64(updateData.newPhotos.eventCoverPhoto, "events/covers", {
+          uploadBase64(updateData.eventCoverPhoto, "events/covers", {
             public_id: `${user._id}-${event._id}-cover`,
             overwrite: true,
             invalidate: true,
@@ -108,34 +93,37 @@ const updateEventAdditionalDetails = async (
             event.additionalDetails.eventCoverPhoto = url;
           })
         );
+      } else {
+        event.additionalDetails.eventCoverPhoto = updateData.eventCoverPhoto;
       }
+    } else {
+      event.additionalDetails.eventCoverPhoto =
+        DEFAULT_EVENT_PHOTOS[category]?.cover ||
+        DEFAULT_EVENT_PHOTOS.others.cover;
+    }
 
-      //Upload additional photos
-      if (updateData.newPhotos.additionalPhotos?.length) {
-        const currentCount =
-          event.additionalDetails.additionalPhotos?.length || 0;
+    //Additional Photos
+    if (updateData.additionalPhotos?.length) {
+      const currentPhotos: string[] = [];
 
-        updateData.newPhotos.additionalPhotos.forEach((base64, index) => {
-          //Only allow up to 3 photos total
-          if (currentCount + index < 3) {
-            uploadTasks.push(
-              uploadBase64(base64, "events/additionals", {
-                public_id: `${user._id}-${event._id}-additional-${
-                  currentCount + index
-                }`,
-                overwrite: true,
-                invalidate: true,
-                resource_type: "auto",
-              }).then((url) => {
-                if (!event.additionalDetails.additionalPhotos) {
-                  event.additionalDetails.additionalPhotos = [];
-                }
-                event.additionalDetails.additionalPhotos.push(url);
-              })
-            );
-          }
-        });
-      }
+      updateData.additionalPhotos.forEach((photo, index) => {
+        if (photo.startsWith("data:image")) {
+          uploadTasks.push(
+            uploadBase64(photo, "events/additionals", {
+              public_id: `${user._id}-${event._id}-additional-${index}`,
+              overwrite: true,
+              invalidate: true,
+              resource_type: "auto",
+            }).then((url) => {
+              currentPhotos.push(url);
+            })
+          );
+        } else {
+          currentPhotos.push(photo);
+        }
+      });
+
+      event.additionalDetails.additionalPhotos = currentPhotos.slice(0, 3); //Max of 3 images
     }
 
     //Wait for all uploads to complete

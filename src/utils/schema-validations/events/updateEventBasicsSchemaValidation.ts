@@ -9,8 +9,8 @@ const updateEventBasicsSchema = z.object({
     eventId: z.string(),
   }),
   body: z.object({
-    name: z.string().min(3),
-    description: z.string().min(10),
+    name: z.string().min(1, "Event name is required"),
+    description: z.string().min(1, "Description is required"),
     category: z.string(),
     visibility: z.enum(["public", "unlisted"]),
     location: LocationSchema,
