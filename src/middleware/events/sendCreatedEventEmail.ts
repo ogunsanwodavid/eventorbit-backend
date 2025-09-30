@@ -31,6 +31,7 @@ const sendCreatedEventEmail = async (
 
   //Create nodemailer transport
   const transporter = nodemailer.createTransport({
+    port: 2525,
     service: "gmail",
     auth: {
       user: googleAPIEmailUser,
