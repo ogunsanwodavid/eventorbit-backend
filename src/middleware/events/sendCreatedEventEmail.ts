@@ -14,7 +14,7 @@ import path from "path";
 
 import juice from "juice";
 
-import { Resend } from "resend";
+//import { Resend } from "resend";
 
 const sendCreatedEventEmail = async (
   req: Request,
@@ -25,15 +25,15 @@ const sendCreatedEventEmail = async (
   const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
   const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
   const clientUrl = process.env.CLIENT_URL;
-  const resendAPIKey = process.env.RESEND_API_KEY;
-  const resendAPIEmailUser = process.env.RESEND_API_EMAIL_USER;
+  /* const resendAPIKey = process.env.RESEND_API_KEY;
+  const resendAPIEmailUser = process.env.RESEND_API_EMAIL_USER; */
 
   //Throw error if any env variable is missing
   if (!googleAPIEmailUser) throw new Error("Missing google API Email User");
   if (!googleAPIEmailPass) throw new Error("Missing google API Email Pass");
   if (!clientUrl) throw new Error("Missing client url in .env");
-  if (!resendAPIKey) throw new Error("Missing Resend API Key");
-  if (!resendAPIEmailUser) throw new Error("Missing resend API Email User");
+  //if (!resendAPIKey) throw new Error("Missing Resend API Key");
+  //if (!resendAPIEmailUser) throw new Error("Missing resend API Email User");
 
   //Create nodemailer transport
   const transporter = nodemailer.createTransport({
