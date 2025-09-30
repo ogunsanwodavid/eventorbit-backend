@@ -14,8 +14,6 @@ import path from "path";
 
 import juice from "juice";
 
-//import { Resend } from "resend";
-
 const sendCreatedEventEmail = async (
   req: Request,
   res: Response,
@@ -25,15 +23,11 @@ const sendCreatedEventEmail = async (
   const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
   const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
   const clientUrl = process.env.CLIENT_URL;
-  /* const resendAPIKey = process.env.RESEND_API_KEY;
-  const resendAPIEmailUser = process.env.RESEND_API_EMAIL_USER; */
 
   //Throw error if any env variable is missing
   if (!googleAPIEmailUser) throw new Error("Missing google API Email User");
   if (!googleAPIEmailPass) throw new Error("Missing google API Email Pass");
   if (!clientUrl) throw new Error("Missing client url in .env");
-  //if (!resendAPIKey) throw new Error("Missing Resend API Key");
-  //if (!resendAPIEmailUser) throw new Error("Missing resend API Email User");
 
   //Create nodemailer transport
   const transporter = nodemailer.createTransport({
@@ -73,7 +67,7 @@ const sendCreatedEventEmail = async (
         month: "long",
         day: "numeric",
         year: "numeric",
-        timeZone: "Africa/Lagos",
+        timeZone: event.duration.timeZone,
       });
     } else if (event.type === "timed-entry" && event.schedules?.length) {
       const earliestDate = event.schedules
@@ -84,7 +78,7 @@ const sendCreatedEventEmail = async (
         month: "long",
         day: "numeric",
         year: "numeric",
-        timeZone: "Africa/Lagos",
+        timeZone: event.schedules.at(0)?.timeSlots.at(0)?.startTime.timeZone,
       });
     }
     return new Date().toLocaleDateString("en-US", {
@@ -92,7 +86,7 @@ const sendCreatedEventEmail = async (
       month: "long",
       day: "numeric",
       year: "numeric",
-      timeZone: "Africa/Lagos",
+      timeZone: event.duration?.timeZone,
     });
   };
 
@@ -134,22 +128,6 @@ const sendCreatedEventEmail = async (
     subject: `${event.basics.name} has been posted successfully`,
     html: htmlWithInlinedCss,
   });
-
-  /* const resend = new Resend(resendAPIKey);
-
-  const { data, error: resendError } = await resend.emails.send({
-    from: `EventOrbit <ogunsanwodavid123@>`,
-    to: [user.email],
-    subject: `${event.basics.name} has been posted successfully`,
-    html: htmlWithInlinedCss,
-  });
-
-  if (resendError) {
-    console.log(htmlWithInlinedCss, resendError);
-    throw new Error("Resend error");
-  } else {
-    console.log(data);
-  } */
 
   next();
 };
