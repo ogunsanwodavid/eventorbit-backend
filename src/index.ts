@@ -60,7 +60,7 @@ app.use(express.json({ limit: "50mb" }));
 
 //Allowed client side CORS origins
 const allowedOrigins = [
-  "http://localhost:4000",
+  "http://localhost:3000",
   "https://localhost:4000",
   "https://eventorbit.vercel.app",
 ];

@@ -8,7 +8,7 @@ const connectDB = async (uri: string) => {
     await mongoose.connect(uri, {
       //Only use TLS in production
       tls: isProduction,
-      tlsAllowInvalidCertificates: false, // Avoid enabling in prod unless necessary
+      tlsAllowInvalidCertificates: false,
     });
 
     console.log("✅ MongoDB connected");
