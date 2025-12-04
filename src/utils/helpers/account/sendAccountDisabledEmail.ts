@@ -1,5 +1,3 @@
-import nodemailer from "nodemailer";
-
 import { User } from "../../../mongoose/models/user";
 
 import fs from "fs/promises";
@@ -10,25 +8,19 @@ import path from "path";
 
 import juice from "juice";
 
+import { Resend } from "resend";
+
 const sendAccountDisabledEmail = async (to: string) => {
   //Env. variabes
-  const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
-  const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
   const clientUrl = process.env.CLIENT_URL;
+  const resendAPIKey = process.env.RESEND_API_KEY;
 
   //Throw error if any env variable is missing
-  if (!googleAPIEmailUser) throw new Error("Missing google API Email User");
-  if (!googleAPIEmailPass) throw new Error("Missing google API Email Pass");
   if (!clientUrl) throw new Error("Missing client url in .env");
+  if (!resendAPIKey) throw new Error("Missing Resend API key");
 
-  //Create nodemailer transport
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: googleAPIEmailUser,
-      pass: googleAPIEmailPass,
-    },
-  });
+  //Create resend transport
+  const resend = new Resend(resendAPIKey);
 
   //Check for user
   const user = await User.findOne({ email: to });
@@ -77,9 +69,9 @@ const sendAccountDisabledEmail = async (to: string) => {
   const htmlWithInlinedCss = juice(htmlToSend);
 
   //Send mail
-  await transporter.sendMail({
-    from: `"EventOrbit" <${googleAPIEmailUser}>`,
-    to,
+  await resend.emails.send({
+    from: "EventOrbit <no-reply@davidogunsanwo.site>",
+    to: [to],
     subject: "Your Account Has Been Disabled",
     html: htmlWithInlinedCss,
   });

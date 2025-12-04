@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 import { IUser } from "../../mongoose/models/user";
 
-//import nodemailer from "nodemailer";
-
 import fs from "fs/promises";
 
 import handlebars from "handlebars";
@@ -20,26 +18,13 @@ const sendWelcomeEmail = async (
   next: NextFunction
 ): Promise<any> => {
   //Env. variabes
-  const googleAPIEmailUser = process.env.GOOGLE_GMAIL_API_EMAIL_USER;
-  const googleAPIEmailPass = process.env.GOOGLE_GMAIL_API_EMAIL_PASS;
   const clientUrl = process.env.CLIENT_URL;
   const resendAPIKey = process.env.RESEND_API_KEY;
 
   //Throw error if any env variable is missing
-  if (!googleAPIEmailUser) throw new Error("Missing google API Email User");
-  if (!googleAPIEmailPass) throw new Error("Missing google API Email Pass");
   if (!clientUrl) throw new Error("Missing client url in .env");
   if (!resendAPIKey) throw new Error("Missing Resend API key");
 
-  //Create nodemailer transport
-  /* const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: googleAPIEmailUser,
-      pass: googleAPIEmailPass,
-    },
-  });
- */
   //Create resend transport
   const resend = new Resend(resendAPIKey);
 
@@ -88,13 +73,6 @@ const sendWelcomeEmail = async (
   const htmlWithInlinedCss = juice(htmlToSend);
 
   //Send mail
-  /* await transporter.sendMail({
-    from: `"EventOrbit" <${googleAPIEmailUser}>`,
-    to: user.email,
-    subject: `Welcome to EventOrbit ${firstName || organizationName}!`,
-    html: htmlWithInlinedCss,
-  }); */
-
   await resend.emails.send({
     from: "EventOrbit <no-reply@davidogunsanwo.site>",
     to: [user.email],
