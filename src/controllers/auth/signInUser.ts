@@ -42,7 +42,7 @@ const signInUser = async (
         expiresIn: "1d",
       });
 
-      await sendVerificationEmail(user.email, newToken, pageRedirect);
+      await sendVerificationEmail(req, user.email, newToken, pageRedirect);
 
       return res.status(401).json({
         message: "Unverified account. New verification email sent.",

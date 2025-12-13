@@ -52,7 +52,7 @@ const disableAccount = async (
     });
 
     //Send account disabled mail to new email
-    await sendAccountDisabledEmail(email);
+    await sendAccountDisabledEmail(req, email);
 
     //Parse user's object as req for the next function
     (req as any).user = user;

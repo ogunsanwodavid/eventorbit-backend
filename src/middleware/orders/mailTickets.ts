@@ -41,6 +41,7 @@ async function mailTickets(
 
     //Send order confirmation mail
     await sendOrderConfirmationEmail(
+      req,
       user,
       event,
       organizerProfile,

@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 import { IUser } from "../../../mongoose/models/user";
 
 import { IEvent } from "../../../mongoose/models/event";
@@ -17,6 +19,7 @@ import juice from "juice";
 import { Resend } from "resend";
 
 const sendOrderConfirmationEmail = async (
+  req: Request,
   user: IUser,
   event: IEvent,
   organizerProfile: IProfile,
@@ -24,15 +27,16 @@ const sendOrderConfirmationEmail = async (
   pdfBuffer: Buffer
 ) => {
   //Env. variabes
-  const clientUrl = process.env.CLIENT_URL;
   const resendAPIKey = process.env.RESEND_API_KEY;
 
   //Throw error if any env variable is missing
-  if (!clientUrl) throw new Error("Missing client url in .env");
   if (!resendAPIKey) throw new Error("Missing Resend API key");
 
   //Create resend transport
   const resend = new Resend(resendAPIKey);
+
+  //Client URL
+  const clientUrl = `${req.protocol}://${req.get("host")}`;
 
   //Recepient's info
   const { firstName, organizationName } = user;

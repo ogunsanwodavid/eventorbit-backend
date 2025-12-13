@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 import { User } from "../../../mongoose/models/user";
 
 import fs from "fs/promises";
@@ -13,20 +15,22 @@ import { Resend } from "resend";
 import getSafeRedirect from "./getSafeRedirect";
 
 export const sendVerificationEmail = async (
+  req: Request,
   to: string,
   token: string,
   pageRedirect?: string
 ) => {
   //Env. variabes
-  const clientUrl = process.env.CLIENT_URL;
   const resendAPIKey = process.env.RESEND_API_KEY;
 
   //Throw error if any env variable is missing
-  if (!clientUrl) throw new Error("Missing client url in .env");
   if (!resendAPIKey) throw new Error("Missing Resend API key");
 
   //Create resend transport
   const resend = new Resend(resendAPIKey);
+
+  //Client URL
+  const clientUrl = `${req.protocol}://${req.get("host")}`;
 
   //Encoded page redirect url
   const encodedRedirect = encodeURIComponent(getSafeRedirect(pageRedirect));

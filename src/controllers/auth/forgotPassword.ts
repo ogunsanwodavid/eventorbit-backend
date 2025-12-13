@@ -57,7 +57,7 @@ const forgotPassword = async (
     await user.save();
 
     //Send password reset email
-    await sendPasswordResetEmail(email, token, pageRedirect);
+    await sendPasswordResetEmail(req, email, token, pageRedirect);
 
     res.status(201).json({
       message: "Password reset email sent",

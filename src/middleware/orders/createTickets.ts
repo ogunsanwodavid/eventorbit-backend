@@ -62,6 +62,7 @@ const createTickets = async (
 
         //Generate QR code with unique identifier
         const qrCodeUrl = await generateQRCodeForTicket(
+          req,
           String(newOrder._id),
           code
         );

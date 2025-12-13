@@ -77,7 +77,7 @@ const updateEmail = async (
     });
 
     //Send verification email to new email
-    await sendVerificationEmail(newEmail, token);
+    await sendVerificationEmail(req, newEmail, token);
 
     //Parse user's object as req for the next function
     (req as any).user = user;

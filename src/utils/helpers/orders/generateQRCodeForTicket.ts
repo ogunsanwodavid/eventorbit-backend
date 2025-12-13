@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 import path from "path";
 
 import QRCode from "qrcode";
@@ -6,12 +8,15 @@ import sharp from "sharp";
 
 import { uploadStream } from "../../../config/cloudinary";
 
-const clientUrl = process.env.CLIENT_URL;
-
-if (!clientUrl) throw new Error("Missing client url in .env");
-
-async function generateQRCodeForTicket(orderId: string, ticketCode: string) {
+async function generateQRCodeForTicket(
+  req: Request,
+  orderId: string,
+  ticketCode: string
+) {
   try {
+    //Client URL
+    const clientUrl = `${req.protocol}://${req.get("host")}`;
+
     //Create verification URL
     const verificationUrl = `${clientUrl}/tickets/validate/${ticketCode}`;
 

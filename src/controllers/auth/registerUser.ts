@@ -64,7 +64,7 @@ const registerUser = async (
     });
 
     // Send verification email
-    await sendVerificationEmail(email, token, pageRedirect);
+    await sendVerificationEmail(req, email, token, pageRedirect);
 
     //Parse user's object as req for the next function
     (req as any).user = newUser;

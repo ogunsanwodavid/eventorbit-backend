@@ -63,6 +63,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://localhost:4000",
   "https://eventorbit.vercel.app",
+  "https://eventorbit.davidogunsanwo.site",
 ];
 
 //Prevent requests from unallowed orgins
@@ -83,7 +84,7 @@ app.use(
 app.use(cookieParser());
 
 //Set up express session
-app.set("trust proxy", 1);
+app.set("trust proxy", true);
 
 const isProduction = process.env.NODE_ENV === "production";
 

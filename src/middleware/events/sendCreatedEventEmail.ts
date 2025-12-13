@@ -20,15 +20,15 @@ const sendCreatedEventEmail = async (
   next: NextFunction
 ): Promise<any> => {
   //Env. variabes
-  const clientUrl = process.env.CLIENT_URL;
   const resendAPIKey = process.env.RESEND_API_KEY;
 
-  //Throw error if any env variable is missing
-  if (!clientUrl) throw new Error("Missing client url in .env");
   if (!resendAPIKey) throw new Error("Missing Resend API key");
 
   //Create resend transport
   const resend = new Resend(resendAPIKey);
+
+  //Client URL
+  const clientUrl = `${req.protocol}://${req.get("host")}`;
 
   //Get user object from request
   const user = (req as any)["user"] as IUser;
