@@ -4,11 +4,13 @@ import getSafeRedirect from "../../utils/helpers/auth/getSafeRedirect";
 
 //Redirect after google signin
 const googleSignInRedirect = (req: Request, res: Response) => {
-  //Client URL
-  const clientUrl = req.headers.origin || req.headers.referer;
+  //Destructure client URL from req body
+  const { clientUrl, pageRedirect: redirect } = req.body;
 
   //Page redirect
-  const pageRedirect = getSafeRedirect(req.body?.pageRedirect);
+  const pageRedirect = getSafeRedirect(redirect);
+
+  console.log(clientUrl, redirect, pageRedirect);
 
   //Redirect on client-side
   res.redirect(`${clientUrl}${pageRedirect}`);

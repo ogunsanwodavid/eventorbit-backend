@@ -8,7 +8,7 @@ const decodeGoogleSignInState = (
   next: NextFunction
 ) => {
   const state = req.query.state as string;
-  const { latitude, longitude, pageRedirect } = JSON.parse(
+  const { latitude, longitude, pageRedirect, clientUrl } = JSON.parse(
     Buffer.from(state, "base64").toString()
   );
 
@@ -17,6 +17,7 @@ const decodeGoogleSignInState = (
   req.body.latitude = Number(latitude);
   req.body.longitude = Number(longitude);
   req.body.pageRedirect = String(pageRedirect);
+  req.body.clientUrl = String(clientUrl);
 
   next();
 };

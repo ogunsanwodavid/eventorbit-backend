@@ -8,10 +8,15 @@ const parseGoogleSignInState = (
   res: Response,
   next: NextFunction
 ) => {
+  //Client URL
+  const clientUrl = req.headers.origin || req.headers.referer;
+
+  //Request query params
   const { latitude, longitude, pageRedirect } = req.query;
 
   const state = Buffer.from(
     JSON.stringify({
+      clientUrl,
       latitude,
       longitude,
       pageRedirect,
