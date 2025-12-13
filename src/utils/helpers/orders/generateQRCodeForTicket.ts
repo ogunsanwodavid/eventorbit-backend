@@ -15,7 +15,7 @@ async function generateQRCodeForTicket(
 ) {
   try {
     //Client URL
-    const clientUrl = `${req.protocol}://${req.get("host")}`;
+    const clientUrl = req.headers.origin || req.headers.referer;
 
     //Create verification URL
     const verificationUrl = `${clientUrl}/tickets/validate/${ticketCode}`;

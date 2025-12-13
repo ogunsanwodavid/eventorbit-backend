@@ -27,7 +27,7 @@ const sendWelcomeEmail = async (
   const resend = new Resend(resendAPIKey);
 
   //Client URL
-  const clientUrl = `${req.protocol}://${req.get("host")}`;
+  const clientUrl = req.headers.origin || req.headers.referer;
 
   //Get user and is existing user status from request
   const user = (req as any).user as IUser & { isExistingUser: boolean };

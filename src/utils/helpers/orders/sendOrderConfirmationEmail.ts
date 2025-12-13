@@ -36,7 +36,7 @@ const sendOrderConfirmationEmail = async (
   const resend = new Resend(resendAPIKey);
 
   //Client URL
-  const clientUrl = `${req.protocol}://${req.get("host")}`;
+  const clientUrl = req.headers.origin || req.headers.referer;
 
   //Recepient's info
   const { firstName, organizationName } = user;

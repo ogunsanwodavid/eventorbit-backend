@@ -23,7 +23,7 @@ const sendAccountDisabledEmail = async (req: Request, to: string) => {
   const resend = new Resend(resendAPIKey);
 
   //Client URL
-  const clientUrl = `${req.protocol}://${req.get("host")}`;
+  const clientUrl = req.headers.origin || req.headers.referer;
 
   //Check for user
   const user = await User.findOne({ email: to });

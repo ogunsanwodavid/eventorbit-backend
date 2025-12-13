@@ -28,7 +28,7 @@ const sendCreatedEventEmail = async (
   const resend = new Resend(resendAPIKey);
 
   //Client URL
-  const clientUrl = `${req.protocol}://${req.get("host")}`;
+  const clientUrl = req.headers.origin || req.headers.referer;
 
   //Get user object from request
   const user = (req as any)["user"] as IUser;
